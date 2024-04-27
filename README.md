@@ -1,7 +1,8 @@
 # FitPlan: Rep Count & Exercise Planner
+
 FitPlan is your ultimate workout companion, designed to enhance your fitness journey with precision rep counting and personalized exercise planning. Whether you're at home, in the gym, or on the go, FitPlan provides the tools you need to achieve your fitness goals. Track your workouts, plan your routines, and monitor your progress with an app that adapts to your fitness level and preferences.
 
-# Key Features:
+## Key Features
 
 - Automated Rep Counting: Utilize advanced technology to accurately count your reps and sets.
 - Custom Workout Plans: Design and follow personalized workout routines tailored to your goals.
