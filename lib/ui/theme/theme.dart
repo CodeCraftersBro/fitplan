@@ -30,6 +30,16 @@ final themeLight = ThemeData(
       fontSize: 18, // Размер шрифта элементов
     ),
   ),
+  floatingActionButtonTheme: FloatingActionButtonThemeData(
+    backgroundColor: Colors.grey.shade900, // Темно-серый цвет фона для FAB
+    foregroundColor: Colors.white, // Белый цвет для иконки и текста на FAB
+    elevation: 6, // Высота тени под FAB
+    // Если вы хотите изменить размер FAB:
+    sizeConstraints: const BoxConstraints.tightFor(
+      width: 56.0, // Ширина FAB
+      height: 56.0, // Высота FAB
+    ),
+  ),
 );
 
 final ThemeData themeDark = ThemeData(
@@ -60,6 +70,16 @@ final ThemeData themeDark = ThemeData(
     toolbarTextStyle: TextStyle(
       color: Colors.white, // Цвет текста элементов
       fontSize: 18, // Размер шрифта элементов
+    ),
+  ),
+  floatingActionButtonTheme: FloatingActionButtonThemeData(
+    backgroundColor: Colors.grey.shade300, // Светло-серый цвет фона для FAB
+    foregroundColor: Colors.black, // Черный цвет для иконки и текста на FAB
+    elevation: 6, // Высота тени под FAB
+    // Если вы хотите изменить размер FAB:
+    sizeConstraints: const BoxConstraints.tightFor(
+      width: 56.0, // Ширина FAB
+      height: 56.0, // Высота FAB
     ),
   ),
 );

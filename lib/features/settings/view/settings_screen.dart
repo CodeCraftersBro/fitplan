@@ -11,8 +11,7 @@ class SettingsScreen extends StatefulWidget {
 
 class _SettingsScreenState extends State<SettingsScreen> {
   bool notificationsEnabled = false; // Состояние переключателя уведомлений
-  bool unlimitedTrainingEnabled =
-      false; // Состояние переключателя безлимитных тренировок
+  bool unlimitedTrainingEnabled = false; // Состояние  безлимитных тренировок
   bool analyticsEnabled = true; // Состояние переключателя аналитики
   bool darkThemeEnabled = false; // Состояние переключателя темной темы
   @override
@@ -54,14 +53,19 @@ class _SettingsScreenState extends State<SettingsScreen> {
           ),
           SettingsToggleCard(
             title: 'Темная тема',
-            value: false,
-            onChanged: (value) {},
+            value: darkThemeEnabled,
+            onChanged: (value) {
+               setState(() {
+                darkThemeEnabled =
+                    value; // Обновление состояния переключателя
+              });
+            },
           ),
           const SizedBox(height: 16),
           SettingsActionCard(
             title: 'Очистить историю',
             iconData: Icons.delete_sweep_outlined,
-            iconColor: Theme.of(context).primaryColor,
+            iconColor: Theme.of(context).colorScheme.primary,
             onTap: () => _clearHistory(context),
           ),
           SettingsActionCard(
@@ -72,7 +76,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
           SettingsActionCard(
             title: 'Поддержка',
             iconData: Icons.message_outlined,
-            onTap: () {},
+            onTap: () {
+              
+            },
           ),
           const SizedBox(height: 16),
           const Text(

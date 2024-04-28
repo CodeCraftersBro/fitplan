@@ -16,7 +16,7 @@ class MainApp extends StatelessWidget {
     return MaterialApp(
       title: "FitPlan",
       debugShowCheckedModeBanner: false,
-      theme: themeLight,
+      theme: themeDark,
       // home: const HomeScreen(),
       routes: routes,
     );
