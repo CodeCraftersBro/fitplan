@@ -9,6 +9,9 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  table_calendar: ^3.1.1
+  # calendar_agenda: ^0.0.2+3
+  
 
 dev_dependencies:
   flutter_test:
