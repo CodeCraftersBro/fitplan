@@ -1,11 +1,18 @@
 import 'dart:async';
 
 import 'package:fitplan/fitplanapp.dart';
+import 'package:fitplan/repositories/settings/settings_repository.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 void main() {
   runZonedGuarded(() async {
     WidgetsFlutterBinding.ensureInitialized();
-    runApp(const FitPlanApp());
+
+    final preferences = await SharedPreferences.getInstance();
+    
+    runApp(FitPlanApp(
+      preferences: preferences,
+    ));
   }, (error, stack) {});
 }

@@ -1,13 +1,29 @@
 import 'package:equatable/equatable.dart';
+import 'package:fitplan/repositories/settings/settings.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 part 'theme_state.dart';
 
 class ThemeCubit extends Cubit<ThemeState> {
-  ThemeCubit() : super(const ThemeState(Brightness.light));
+  ThemeCubit({
+    required SettingsRepositoryInterface settingsRepository,
+  })  : _settingsRepository = settingsRepository,
+        super(const ThemeState(Brightness.light)) {
+    _init();
+  }
 
-  void setThemeBrightness(Brightness brightness){
+  final SettingsRepositoryInterface _settingsRepository;
+
+  Future<void> _init() async {
+    // Загрузка сохраненного состояния темы при инициализации кубита
+    final isDarkModeEnabled = await _settingsRepository.getDarkModeEnabled();
+    final brightness = isDarkModeEnabled ? Brightness.dark : Brightness.light;
+    emit(ThemeState(brightness));
+  }
+
+  Future<void> setThemeBrightness(Brightness brightness) async {
+    await _settingsRepository.setDarkModeEnabled(brightness == Brightness.dark);
     emit(ThemeState(brightness));
   }
 }

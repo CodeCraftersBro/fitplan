@@ -11,6 +11,7 @@ dependencies:
   flutter:
     sdk: flutter
   flutter_bloc: ^8.1.5
+  shared_preferences: ^2.2.3
   table_calendar: ^3.1.1
   # calendar_agenda: ^0.0.2+3
   
