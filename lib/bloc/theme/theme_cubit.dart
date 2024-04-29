@@ -16,7 +16,6 @@ class ThemeCubit extends Cubit<ThemeState> {
   final SettingsRepositoryInterface _settingsRepository;
 
   Future<void> _init() async {
-    // Загрузка сохраненного состояния темы при инициализации кубита
     final isDarkModeEnabled = await _settingsRepository.getDarkModeEnabled();
     final brightness = isDarkModeEnabled ? Brightness.dark : Brightness.light;
     emit(ThemeState(brightness));

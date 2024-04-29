@@ -16,15 +16,17 @@ class FitPlanApp extends StatefulWidget {
 }
 
 class _FitPlanAppState extends State<FitPlanApp> {
-
-  
   @override
   Widget build(BuildContext context) {
-
-    final settingsRepository = SettingsRepository(preferences: widget.preferences);
+    final settingsRepository =
+        SettingsRepository(preferences: widget.preferences);
 
     return MultiBlocProvider(
-      providers: [BlocProvider(create: (context) => ThemeCubit(settingsRepository: settingsRepository))],
+      providers: [
+        BlocProvider(
+            create: (context) =>
+                ThemeCubit(settingsRepository: settingsRepository)),
+      ],
       child: BlocBuilder<ThemeCubit, ThemeState>(
         builder: (context, state) {
           return MaterialApp(
