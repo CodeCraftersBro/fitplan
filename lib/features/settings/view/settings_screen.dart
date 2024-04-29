@@ -1,6 +1,8 @@
+import 'package:fitplan/bloc/theme/theme_cubit.dart';
 import 'package:fitplan/features/settings/widgets/widgets.dart';
 import 'package:fitplan/ui/ui.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class SettingsScreen extends StatefulWidget {
   const SettingsScreen({super.key});
@@ -13,9 +15,10 @@ class _SettingsScreenState extends State<SettingsScreen> {
   bool notificationsEnabled = false; // Состояние переключателя уведомлений
   bool unlimitedTrainingEnabled = false; // Состояние  безлимитных тренировок
   bool analyticsEnabled = true; // Состояние переключателя аналитики
-  bool darkThemeEnabled = false; // Состояние переключателя темной темы
+  
   @override
   Widget build(BuildContext context) {
+    final isDarkTheme = context.watch<ThemeCubit>().state.isDark;
     return Scaffold(
       appBar: AppBar(
         title: const Text(
@@ -30,8 +33,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
             value: unlimitedTrainingEnabled,
             onChanged: (value) {
               setState(() {
-                unlimitedTrainingEnabled =
-                    value; // Обновление состояния переключателя
+                unlimitedTrainingEnabled = value;
               });
             },
           ),
@@ -40,8 +42,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
             value: notificationsEnabled,
             onChanged: (value) {
               setState(() {
-                notificationsEnabled =
-                    value; // Обновление состояния переключателя
+                notificationsEnabled = value;
               });
               // Здесь может быть код для включения/отключения уведомлений в приложении
             },
@@ -53,12 +54,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
           ),
           SettingsToggleCard(
             title: 'Темная тема',
-            value: darkThemeEnabled,
+            value: isDarkTheme,
             onChanged: (value) {
-               setState(() {
-                darkThemeEnabled =
-                    value; // Обновление состояния переключателя
-              });
+              _setThemeBrightness(context, value);
             },
           ),
           const SizedBox(height: 16),
@@ -76,9 +74,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
           SettingsActionCard(
             title: 'Поддержка',
             iconData: Icons.message_outlined,
-            onTap: () {
-              
-            },
+            onTap: () {},
           ),
           const SizedBox(height: 16),
           const Text(
@@ -95,6 +91,12 @@ class _SettingsScreenState extends State<SettingsScreen> {
         ],
       ),
     );
+  }
+
+  void _setThemeBrightness(BuildContext context, bool value) {
+    context.read<ThemeCubit>().setThemeBrightness(
+          value ? Brightness.dark : Brightness.light,
+        );
   }
 
   _clearHistory(BuildContext context) {}
