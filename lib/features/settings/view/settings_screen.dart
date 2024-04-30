@@ -13,28 +13,31 @@ class SettingsScreen extends StatefulWidget {
 
 class _SettingsScreenState extends State<SettingsScreen> {
   bool notificationsEnabled = false; // Состояние переключателя уведомлений
-  bool unlimitedTrainingEnabled = false; // Состояние  безлимитных тренировок
-  bool analyticsEnabled = true; // Состояние переключателя аналитики
-  
+  bool analyticsEnabled = false; // Состояние переключателя аналитики
+
   @override
   Widget build(BuildContext context) {
     final isDarkTheme = context.watch<ThemeCubit>().state.isDark;
     return Scaffold(
       appBar: AppBar(
         title: const Text(
-          "Settings",
+          "Настройки",
         ),
       ),
       body: Column(
         children: [
           const SizedBox(height: 16),
-          SettingsToggleCard(
+          SettingsActionCard(
             title: 'Безлимитные тренировки',
-            value: unlimitedTrainingEnabled,
+            iconData: Icons.rocket_launch,
+            iconColor: Colors.red,
+            onTap: () {},
+          ),
+          SettingsToggleCard(
+            title: 'Темная тема',
+            value: isDarkTheme,
             onChanged: (value) {
-              setState(() {
-                unlimitedTrainingEnabled = value;
-              });
+              _setThemeBrightness(context, value);
             },
           ),
           SettingsToggleCard(
@@ -44,19 +47,15 @@ class _SettingsScreenState extends State<SettingsScreen> {
               setState(() {
                 notificationsEnabled = value;
               });
-              // Здесь может быть код для включения/отключения уведомлений в приложении
             },
           ),
           SettingsToggleCard(
             title: 'Разрешить аналитику',
-            value: true,
-            onChanged: (value) {},
-          ),
-          SettingsToggleCard(
-            title: 'Темная тема',
-            value: isDarkTheme,
+            value: analyticsEnabled,
             onChanged: (value) {
-              _setThemeBrightness(context, value);
+              setState(() {
+                analyticsEnabled = value;
+              });
             },
           ),
           const SizedBox(height: 16),

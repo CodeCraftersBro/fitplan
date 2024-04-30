@@ -1,8 +1,7 @@
-
-
 import 'package:fitplan/ui/ui.dart';
 import 'package:flutter/material.dart';
 import 'package:table_calendar/table_calendar.dart';
+
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
 
@@ -39,17 +38,25 @@ class _HomeScreenState extends State<HomeScreen> {
               child: Stack(
                 children: [
                   TableCalendar(
-                    firstDay: DateTime.utc(2010, 10, 16),
-                    lastDay: DateTime.utc(2030, 3, 14),
-                    focusedDay: DateTime.now(),
-                    headerVisible: false,
-                    calendarFormat: _calendarFormat,
-                    calendarStyle: CalendarStyle(
-                      markerDecoration: BoxDecoration(
-                        color: Theme.of(context).colorScheme.primary
-                      )
-                    )
-                  ),
+                      firstDay: DateTime.utc(2010, 10, 16),
+                      lastDay: DateTime.utc(2030, 3, 14),
+                      focusedDay: DateTime.now(),
+                      headerVisible: false,
+                      calendarFormat: _calendarFormat,
+                      calendarStyle: CalendarStyle(
+                        selectedDecoration: BoxDecoration(
+                          color: Theme.of(context).colorScheme.primary,
+                          shape: BoxShape.rectangle,
+                          borderRadius: BorderRadius.circular(8.0),
+                        ),
+                        todayTextStyle: TextStyle(color: Theme.of(context).colorScheme.onPrimary),
+                        todayDecoration: BoxDecoration(
+                          color: Theme.of(context).colorScheme.primary,
+                          shape: BoxShape.rectangle,
+                          borderRadius: BorderRadius.circular(8.0),
+                        ),
+                        defaultTextStyle: TextStyle(color: Theme.of(context).colorScheme.onBackground),
+                      )),
                   // CalendarAgenda(
                   //   initialDate: DateTime.now(),
                   //   firstDate: DateTime.now().subtract(Duration(days: 25)),
@@ -67,7 +74,7 @@ class _HomeScreenState extends State<HomeScreen> {
             child: SizedBox(height: 10),
           ),
           SliverList.builder(
-            itemCount: 30,
+            itemCount: 1,
             itemBuilder: (context, index) => BaseContainer(
               margin: const EdgeInsets.symmetric(horizontal: 8)
                   .copyWith(bottom: 20),
