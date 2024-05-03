@@ -14,5 +14,6 @@ class ExerciseType extends Equatable {
   List<Object> get props => [
         id,
         name,
+        icon,
       ];
 }
