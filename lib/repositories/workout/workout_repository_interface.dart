@@ -1,1 +1,3 @@
-abstract interface class WorkoutRepositoryInterface {}
+abstract interface class WorkoutRepositoryInterface {
+  
+}
