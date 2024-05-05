@@ -35,5 +35,16 @@ class ExerciseTypeRepository implements ExerciseTypeRepositoryInterface {
   Future<List<ExerciseType>> getExerciseTypes() async {
     return List.unmodifiable(_localExerciseTypes);
   }
+
+  @override
+  Future<ExerciseType?> getExerciseTypeById(String id) async {
+    try {
+      return _localExerciseTypes.firstWhere(
+        (type) => type.id == id,
+      );
+    } catch (e) {
+      return null;
+    }
+}
  
 }

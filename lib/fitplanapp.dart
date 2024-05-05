@@ -1,5 +1,7 @@
 import 'package:fitplan/bloc/theme/theme_cubit.dart';
+import 'package:fitplan/features/home/bloc/workout_calendar_data_bloc.dart';
 import 'package:fitplan/repositories/settings/settings.dart';
+import 'package:fitplan/repositories/workout/workout.dart';
 import 'package:flutter/material.dart';
 import 'package:fitplan/router/router.dart';
 import 'package:fitplan/ui/theme/theme.dart';
@@ -20,9 +22,14 @@ class _FitPlanAppState extends State<FitPlanApp> {
   Widget build(BuildContext context) {
     final settingsRepository =
         SettingsRepository(preferences: widget.preferences);
+    final workoutRepository = WorkoutRepository();
+
+    
 
     return MultiBlocProvider(
       providers: [
+        BlocProvider(
+        create: (context) => WorkoutCalendarDataBloc(workoutRepository)),
         BlocProvider(
             create: (context) =>
                 ThemeCubit(settingsRepository: settingsRepository)),
