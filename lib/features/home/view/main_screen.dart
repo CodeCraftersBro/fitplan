@@ -17,13 +17,14 @@ class _MainScreenState extends State<MainScreen> {
   final CalendarFormat _calendarFormat = CalendarFormat.week;
   DateTime _selectedDay = DateTime.now();
   DateTime _focusedDay = DateTime.now();
-  List<Workout> _workouts = []; // This will hold the workouts for the selected day
+  // List<Workout> _workouts =
+  //     []; // This will hold the workouts for the selected day
 
   @override
   void initState() {
     super.initState();
     // Initialize workouts for the current day
-    _workouts = [];
+    // _workouts = [];
     context
         .read<WorkoutCalendarDataBloc>()
         .add(LoadWorkoutCalendarData(selectedDate: _selectedDay));
@@ -33,10 +34,12 @@ class _MainScreenState extends State<MainScreen> {
   Widget build(BuildContext context) {
     return BlocBuilder<WorkoutCalendarDataBloc, WorkoutCalendarDataState>(
       builder: (context, state) {
-        if (state is WorkoutCalendarDataLoaded) {
-          _workouts = state.workouts;
-        }
+        List<Workout> workouts = [];
 
+        if (state is WorkoutCalendarDataLoaded) {
+          workouts = state.workouts;
+        }
+        print(workouts);
         return Scaffold(
           appBar: AppBar(
             title: const Text("FitPlan"),
@@ -71,23 +74,22 @@ class _MainScreenState extends State<MainScreen> {
                     color: Theme.of(context).colorScheme.primary,
                     shape: BoxShape.circle,
                   ),
-                  defaultTextStyle:
-                      TextStyle(color: Theme.of(context).colorScheme.onBackground),
+                  defaultTextStyle: TextStyle(
+                      color: Theme.of(context).colorScheme.onBackground),
                 ),
                 onDaySelected: (selectedDay, focusedDay) {
                   setState(() {
                     _selectedDay = selectedDay;
                     _focusedDay = focusedDay;
-                    context
-                        .read<WorkoutCalendarDataBloc>()
-                        .add(LoadWorkoutCalendarData(selectedDate: _selectedDay));
+                    context.read<WorkoutCalendarDataBloc>().add(
+                        LoadWorkoutCalendarData(selectedDate: _selectedDay));
                   });
                 },
               ),
             ),
           ),
           body: SafeArea(
-            child: _workouts.isEmpty
+            child: state is WorkoutCalendarFailure || workouts.isEmpty
                 ? const Center(
                     // child: Image.asset(
                     //   'assets/empty_list.png', // Replace with your image asset
@@ -100,15 +102,97 @@ class _MainScreenState extends State<MainScreen> {
                     ),
                   )
                 : ListView.builder(
-                    itemCount: _workouts.length,
+                    itemCount: workouts.length,
                     itemBuilder: (context, index) {
-                      return ListTile(
-                        title: Text(_workouts[index].exercise.name),
-                      );
+                      return ExerciseItemWidget(workout: workouts[index]);
                     },
                   ),
           ),
         );
+      },
+    );
+  }
+}
+
+class ExerciseItemWidget extends StatelessWidget {
+  const ExerciseItemWidget({
+    super.key,
+    required Workout workout,
+  }) : _workout = workout;
+
+  final Workout _workout;
+
+  @override
+  Widget build(BuildContext context) {
+    // PreviousSetId != null && workout.setId == previousSetId ? Colors.blue : Colors.red,
+    return ExpansionTile(
+      leading: const SizedBox(
+        width: 10,
+        height: 10,
+        child: CircleAvatar(
+          backgroundColor: Colors.black,
+        ),
+      ),
+      title: Row(
+        children: [
+          Text(_workout.setId?.toString() ?? '-'),
+          Text(_workout.exercise.typeId.icon),
+          const SizedBox(width: 16),
+          Text(_workout.exercise.name),
+        ],
+      ),
+      children: [
+        ListView.builder(
+          shrinkWrap: true, // Prevent excessive scrolling
+          physics:
+              const NeverScrollableScrollPhysics(), // Disable scrolling in sub-list
+          itemCount: 3,
+          itemBuilder: (context, stepIndex) {
+            // final step = _workout.steps[stepIndex];
+            return Padding(
+              padding: const EdgeInsets.only(left: 30),
+              child: ListTile(
+                title: Text("text"
+                    // "Set ${stepIndex + 1}: Weight: ${step.weight}, Count: ${step.count}",
+                    ),
+                trailing: IconButton(
+                  icon: const Icon(Icons.more_vert),
+                  onPressed: () => _showStepDetailsBottomSheet(context),
+                ),
+              ),
+            );
+          },
+        ),
+      ],
+    );
+  }
+
+  void _showStepDetailsBottomSheet(BuildContext context) {
+    showModalBottomSheet<void>(
+      context: context,
+      builder: (BuildContext context) {
+        return SafeArea(
+            child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            mainAxisSize: MainAxisSize.min, // Limit bottom sheet height
+            children: [
+              Text(
+                "Set Details",
+                style: Theme.of(context).textTheme.headline6,
+              ),
+              const SizedBox(height: 16.0),
+              // Add additional details or actions here if needed
+              ElevatedButton(
+                onPressed: () {
+                  // Handle button press, e.g., edit step details
+                  Navigator.pop(context); // Close bottom sheet
+                },
+                child: const Text("Edit Set"),
+              ),
+            ],
+          ),
+        ));
       },
     );
   }

@@ -61,14 +61,14 @@ class WorkoutRepository implements WorkoutRepositoryInterface {
           exercise: Exercise(
             id: '5',
             name: 'Lunges',
-            typeId: ExerciseType(id: 'strength', name: 'Strength', icon: '💪'),
+            typeId: ExerciseType(id: 'strength', name: 'Runner', icon: '🏃'),
           ),
         ),
       Workout(
         id: '5',
         sort: 2,
         date: date,
-        setId: 2,
+        setId: 3,
         exercise: Exercise(
           id: '6',
           name: 'Rows',

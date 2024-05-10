@@ -14,12 +14,17 @@ class WorkoutCalendarDataBloc
   WorkoutCalendarDataBloc(this.workoutRepository)
       : super(WorkoutCalendarDataInitial()) {
     on<LoadWorkoutCalendarData>((event, emit) async {
-      log(event.selectedDate.toString());
-      final workoutList =
-          await workoutRepository.getExerciseListByDate(event.selectedDate);
-      emit(
-        WorkoutCalendarDataLoaded(workouts: workoutList),
-      );
+
+      try {
+        final workoutList =
+            await workoutRepository.getExerciseListByDate(event.selectedDate);
+        emit(
+          WorkoutCalendarDataLoaded(workouts: workoutList),
+        );
+      } catch (e) {
+        emit(WorkoutCalendarFailure(e));
+      }
+      
     });
   }
 }
