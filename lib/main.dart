@@ -45,15 +45,15 @@ repositoryEx.getExerciseById('2').then((exercise) {
 });
 
 // Добавить новое упражнение
-repositoryEx.addExercise(Exercise(id: '4', name: 'Выпады', typeId: ExerciseType(id: 'strength', name: 'Силовые', icon: '💪')));
+// repositoryEx.addExercise(Exercise(id: '4', name: 'Выпады', typeId: ExerciseType(id: 'strength', name: 'Силовые', icon: '💪')));
 
-// Обновить упражнение
-repositoryEx.updateExercise(Exercise(id: '2', name: 'Приседания с гантелями', typeId: ExerciseType(id: 'strength', name: 'Силовые', icon: '💪')));
-repositoryEx.getExercises().then((exercises) {
-  print(exercises);
-});
-// Удалить упражнение
-repositoryEx.deleteExercise('1');
+// // Обновить упражнение
+// repositoryEx.updateExercise(Exercise(id: '2', name: 'Приседания с гантелями', typeId: ExerciseType(id: 'strength', name: 'Силовые', icon: '💪')));
+// repositoryEx.getExercises().then((exercises) {
+//   print(exercises);
+// });
+// // Удалить упражнение
+// repositoryEx.deleteExercise('1');
 
 
 

@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:fitplan/features/home/bloc/workout_calendar_data_bloc.dart';
 import 'package:fitplan/repositories/workout/models/models.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:table_calendar/table_calendar.dart';
 
@@ -39,7 +40,7 @@ class _MainScreenState extends State<MainScreen> {
         if (state is WorkoutCalendarDataLoaded) {
           workouts = state.workouts;
         }
-        print(workouts);
+
         return Scaffold(
           appBar: AppBar(
             title: const Text("FitPlan"),
@@ -121,24 +122,45 @@ class ExerciseItemWidget extends StatelessWidget {
   }) : _workout = workout;
 
   final Workout _workout;
+  static const isSet = false;
 
   @override
   Widget build(BuildContext context) {
     // PreviousSetId != null && workout.setId == previousSetId ? Colors.blue : Colors.red,
     return ExpansionTile(
-      leading: const SizedBox(
-        width: 10,
-        height: 10,
-        child: CircleAvatar(
-          backgroundColor: Colors.black,
-        ),
+      leading: Column(
+        children: [
+          (_workout.isSet)?
+            Column(
+              // mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Container(
+                  width: 15,
+                  height: 15,
+                  decoration: const BoxDecoration(
+                      shape: BoxShape.circle, color: Colors.black),
+                ),
+                const DottedLine(height: 40, color: Colors.black),
+                // Container(
+                //   width: 4,
+                //   height: 40,
+                //   decoration: const BoxDecoration(
+                //       shape: BoxShape.rectangle, color: Colors.black),
+                // ),
+              ],
+            ) : 
+            Container(width: 15,
+              height: 15,
+              decoration: const BoxDecoration(
+                  shape: BoxShape.circle, color: Colors.amber),),
+        ],
       ),
       title: Row(
         children: [
-          Text(_workout.setId?.toString() ?? '-'),
-          Text(_workout.exercise.typeId.icon),
+          Text(_workout.isSet.toString() ?? '-'),
+          // Text(_workout.exercise.typeId.icon),
           const SizedBox(width: 16),
-          Text(_workout.exercise.name),
+          // Text(_workout.exercise.name),
         ],
       ),
       children: [
@@ -193,6 +215,56 @@ class ExerciseItemWidget extends StatelessWidget {
             ],
           ),
         ));
+      },
+    );
+  }
+}
+
+
+class MyCustomPainter extends CustomPainter {
+  @override
+  void paint(Canvas canvas, Size size) {
+    final paint = Paint()..color = Colors.black..strokeWidth = 2;
+    const dashLength = 10.0;
+    const dashGap = 5.0;
+
+    for (double x = 0; x < size.width; x += dashLength + dashGap) {
+      canvas.drawLine(Offset(x, 0), Offset(x + dashLength, 0), paint);
+    }
+  }
+
+  @override
+  bool shouldRepaint(covariant CustomPainter oldDelegate) => true;
+}
+
+class DottedLine extends StatelessWidget {
+  final double height;
+  final Color color;
+
+  const DottedLine({Key? key, this.height = 40.0, this.color = Colors.black})
+      : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return LayoutBuilder(
+      builder: (BuildContext context, BoxConstraints constraints) {
+        final boxWidth = constraints.constrainWidth();
+        const dashWidth = 4.0;
+        const dashHeight = 2.0;
+        final dashCount = (height / (2 * dashHeight)).floor();
+        return Flex(
+          direction: Axis.vertical,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: List.generate(dashCount, (_) {
+            return SizedBox(
+              width: dashWidth,
+              height: dashHeight,
+              child: DecoratedBox(
+                decoration: BoxDecoration(color: color),
+              ),
+            );
+          }),
+        );
       },
     );
   }
