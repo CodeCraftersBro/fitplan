@@ -1,9 +1,6 @@
-import 'dart:developer';
-
 import 'package:fitplan/features/home/bloc/workout_calendar_data_bloc.dart';
 import 'package:fitplan/repositories/workout/models/models.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:table_calendar/table_calendar.dart';
 
@@ -90,6 +87,7 @@ class _MainScreenState extends State<MainScreen> {
             ),
           ),
           body: SafeArea(
+            // bottom: false,
             child: state is WorkoutCalendarFailure || workouts.isEmpty
                 ? const Center(
                     // child: Image.asset(
@@ -102,11 +100,161 @@ class _MainScreenState extends State<MainScreen> {
                       size: 100,
                     ),
                   )
-                : ListView.builder(
-                    itemCount: workouts.length,
-                    itemBuilder: (context, index) {
-                      return ExerciseItemWidget(workout: workouts[index]);
-                    },
+                : Padding(
+                    padding: const EdgeInsets.fromLTRB(0, 10, 0, 0),
+                    child: ListView.builder(
+                      padding: const EdgeInsets.only(bottom: 100),
+                      itemCount: workouts.length,
+                      itemBuilder: (context, index) {
+                        Widget lineIndicator;
+                        switch (workouts[index].exerciseIndicator) {
+                          case LineDirection.down:
+                            // lineIndicator = buildDashedLineIndicator(
+                            //     36);
+                            lineIndicator = buildDashedLineIndicator(
+                              LineDirection.down,
+                              70,
+                              context,
+                            ); // Высота от центра вниз
+                            break;
+                          case LineDirection.up:
+                            lineIndicator = buildDashedLineIndicator(
+                              LineDirection.up,
+                              70,
+                              context,
+                            );
+                            break;
+                          case LineDirection.middle:
+                            lineIndicator = buildDashedLineIndicator(
+                              LineDirection.middle,
+                              70,
+                              context,
+                            );
+
+                            break;
+                          default:
+                            lineIndicator =
+                                const SizedBox(height: 72); // Нет линии
+                        }
+
+                        return Padding(
+                          padding: const EdgeInsets.symmetric(
+                              vertical: 0, horizontal: 12),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              (workouts[index].isSet)
+                                  ? Stack(
+                                      alignment: Alignment.center,
+                                      children: [
+                                        const SizedBox(
+                                          width: 10,
+                                          height: 72,
+                                        ),
+                                        lineIndicator,
+                                        Container(
+                                          width: 10,
+                                          height: 10,
+                                          decoration: BoxDecoration(
+                                            shape: BoxShape.circle,
+                                            color: Theme.of(context)
+                                                .colorScheme
+                                                .onPrimary,
+                                            border: Border.all(
+                                                color: Theme.of(context)
+                                                    .colorScheme
+                                                    .primary,
+                                                width: 2),
+                                          ),
+                                        ),
+                                        // Container(
+                                        //   width: 10,
+                                        //   height: 10,
+                                        //   decoration: const BoxDecoration(
+                                        //       shape: BoxShape.circle,
+                                        //       color: Colors.black),
+                                        // ),
+                                      ],
+                                    )
+                                  : const SizedBox(
+                                      width: 10,
+                                      height: 72,
+                                    ),
+                              const SizedBox(width: 10),
+                              Expanded(
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(10),
+                                    color:
+                                        (workouts[index].isSet)?
+                                        Colors.amber
+                                        :Theme.of(context).colorScheme.surface,
+                                  ),
+                                  child: Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                        vertical: 0, horizontal: 12),
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      mainAxisSize: MainAxisSize.max,
+                                      children: [
+                                        Row(
+                                          children: [
+                                            Text(
+                                              workouts[index]
+                                                  .exercise
+                                                  .typeId
+                                                  .icon,
+                                              style: const TextStyle(
+                                                fontSize: 40,
+                                              ),
+                                            ),
+                                            const SizedBox(
+                                              width: 10,
+                                            ),
+                                            Text(
+                                              workouts[index]
+                                                  .exercise
+                                                  .name
+                                                  .toString(),
+                                              style: Theme.of(context)
+                                                  .textTheme
+                                                  .titleMedium
+                                                  ?.copyWith(
+                                                    fontSize: 18,
+                                                  ),
+                                            ),
+                                          ],
+                                        ),
+                                        Row(
+                                          children: [
+                                            Text(
+                                              "Ring: ${workouts[index].id}",
+                                              style: Theme.of(context)
+                                                  .textTheme
+                                                  .titleMedium
+                                                  ?.copyWith(
+                                                    fontSize: 18,
+                                                  ),
+                                            ),
+                                            IconButton(
+                                                onPressed: () {},
+                                                icon:  Icon(
+                                                  Icons.data_saver_on,
+                                                  color: Theme.of(context).colorScheme.primary,
+                                                ))
+                                          ],
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              )
+                            ],
+                          ),
+                        );
+                      },
+                    ),
                   ),
           ),
         );
@@ -115,157 +263,67 @@ class _MainScreenState extends State<MainScreen> {
   }
 }
 
-class ExerciseItemWidget extends StatelessWidget {
-  const ExerciseItemWidget({
-    super.key,
-    required Workout workout,
-  }) : _workout = workout;
-
-  final Workout _workout;
-  static const isSet = false;
-
-  @override
-  Widget build(BuildContext context) {
-    // PreviousSetId != null && workout.setId == previousSetId ? Colors.blue : Colors.red,
-    return ExpansionTile(
-      leading: Column(
-        children: [
-          (_workout.isSet)?
-            Column(
-              // mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Container(
-                  width: 15,
-                  height: 15,
-                  decoration: const BoxDecoration(
-                      shape: BoxShape.circle, color: Colors.black),
-                ),
-                const DottedLine(height: 40, color: Colors.black),
-                // Container(
-                //   width: 4,
-                //   height: 40,
-                //   decoration: const BoxDecoration(
-                //       shape: BoxShape.rectangle, color: Colors.black),
-                // ),
-              ],
-            ) : 
-            Container(width: 15,
-              height: 15,
-              decoration: const BoxDecoration(
-                  shape: BoxShape.circle, color: Colors.amber),),
-        ],
-      ),
-      title: Row(
-        children: [
-          Text(_workout.isSet.toString() ?? '-'),
-          // Text(_workout.exercise.typeId.icon),
-          const SizedBox(width: 16),
-          // Text(_workout.exercise.name),
-        ],
-      ),
-      children: [
-        ListView.builder(
-          shrinkWrap: true, // Prevent excessive scrolling
-          physics:
-              const NeverScrollableScrollPhysics(), // Disable scrolling in sub-list
-          itemCount: 3,
-          itemBuilder: (context, stepIndex) {
-            // final step = _workout.steps[stepIndex];
-            return Padding(
-              padding: const EdgeInsets.only(left: 30),
-              child: ListTile(
-                title: Text("text"
-                    // "Set ${stepIndex + 1}: Weight: ${step.weight}, Count: ${step.count}",
-                    ),
-                trailing: IconButton(
-                  icon: const Icon(Icons.more_vert),
-                  onPressed: () => _showStepDetailsBottomSheet(context),
-                ),
-              ),
-            );
-          },
-        ),
-      ],
-    );
-  }
-
-  void _showStepDetailsBottomSheet(BuildContext context) {
-    showModalBottomSheet<void>(
-      context: context,
-      builder: (BuildContext context) {
-        return SafeArea(
-            child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            mainAxisSize: MainAxisSize.min, // Limit bottom sheet height
-            children: [
-              Text(
-                "Set Details",
-                style: Theme.of(context).textTheme.headline6,
-              ),
-              const SizedBox(height: 16.0),
-              // Add additional details or actions here if needed
-              ElevatedButton(
-                onPressed: () {
-                  // Handle button press, e.g., edit step details
-                  Navigator.pop(context); // Close bottom sheet
-                },
-                child: const Text("Edit Set"),
-              ),
-            ],
-          ),
-        ));
-      },
-    );
-  }
+// Использование DashedLinePainter для создания пунктирной линии
+Widget buildDashedLineIndicator(
+    LineDirection direction, double height, BuildContext context) {
+  return CustomPaint(
+    size: Size(0, height),
+    painter: DashedLinePainter(
+      direction: direction,
+      height: height,
+      lineColor: Theme.of(context).colorScheme.primary,
+    ),
+  );
 }
 
+// enum LineDirection { up, down, middle }
+class DashedLinePainter extends CustomPainter {
+  final LineDirection direction;
+  final double height;
+  final Color lineColor;
+  DashedLinePainter({
+    required this.direction,
+    required this.height,
+    required this.lineColor,
+  });
 
-class MyCustomPainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
-    final paint = Paint()..color = Colors.black..strokeWidth = 2;
-    const dashLength = 10.0;
-    const dashGap = 5.0;
+    final paint = Paint()
+      ..color = lineColor
+      ..strokeWidth = 2;
+    var dashWidth = 8.0;
+    var dashSpace = 2.0;
+    double startY = 0;
 
-    for (double x = 0; x < size.width; x += dashLength + dashGap) {
-      canvas.drawLine(Offset(x, 0), Offset(x + dashLength, 0), paint);
+    // Определяем начальную и конечную точки в зависимости от направления
+    switch (direction) {
+      case LineDirection.up:
+        startY = height / 2 + 4; //+2 fix
+        while (startY >= 0) {
+          canvas.drawLine(
+              Offset(0, startY), Offset(0, startY - dashWidth), paint);
+          startY -= (dashWidth + dashSpace);
+        }
+        break;
+      case LineDirection.down:
+        startY = height / 2 - 4; //-2 fix
+        while (startY <= height) {
+          canvas.drawLine(
+              Offset(0, startY), Offset(0, startY + dashWidth), paint);
+          startY += (dashWidth + dashSpace);
+        }
+        break;
+      case LineDirection.middle:
+        while (startY <= height) {
+          canvas.drawLine(
+              Offset(0, startY), Offset(0, startY + dashWidth), paint);
+          startY += (dashWidth + dashSpace);
+        }
+        break;
     }
   }
 
   @override
-  bool shouldRepaint(covariant CustomPainter oldDelegate) => true;
-}
-
-class DottedLine extends StatelessWidget {
-  final double height;
-  final Color color;
-
-  const DottedLine({Key? key, this.height = 40.0, this.color = Colors.black})
-      : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return LayoutBuilder(
-      builder: (BuildContext context, BoxConstraints constraints) {
-        final boxWidth = constraints.constrainWidth();
-        const dashWidth = 4.0;
-        const dashHeight = 2.0;
-        final dashCount = (height / (2 * dashHeight)).floor();
-        return Flex(
-          direction: Axis.vertical,
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: List.generate(dashCount, (_) {
-            return SizedBox(
-              width: dashWidth,
-              height: dashHeight,
-              child: DecoratedBox(
-                decoration: BoxDecoration(color: color),
-              ),
-            );
-          }),
-        );
-      },
-    );
-  }
+  bool shouldRepaint(CustomPainter oldDelegate) => false;
 }

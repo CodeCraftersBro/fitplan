@@ -16,33 +16,142 @@ class WorkoutRepository implements WorkoutRepositoryInterface {
       Workout(
         id: '1',
         sort: 1,
-        date: DateTime(2024, 5, 16),
+        date: DateTime(2024, 5, 20),
         isSet: true,
-        exercise: const [
-          Exercise(
-            id: '8',
-            name: 'Bicep curls',
-            typeId: ExerciseType(id: 'strength', name: 'Strength', icon: '💪'),
-          ),
-          Exercise(
-            id: '7',
-            name: 'Overhead press',
-            typeId: ExerciseType(id: 'strength', name: 'Strength', icon: '💪'),
-          ),
-        ],
+        exerciseIndicator: LineDirection.down,
+        exercise: const Exercise(
+          id: '8',
+          name: 'Bicep curls',
+          typeId: ExerciseType(id: 'strength', name: 'Strength', icon: '💪'),
+        ),
       ),
       Workout(
         id: '2',
+        sort: 1,
+        date: DateTime(2024, 5, 20),
+        isSet: true,
+        exerciseIndicator: LineDirection.middle,
+        exercise: const Exercise(
+          id: '4',
+          name: 'Bicep curls2',
+          typeId: ExerciseType(id: 'strength', name: 'Strength', icon: '💪'),
+        ),
+      ),
+      Workout(
+        id: '1',
+        sort: 1,
+        date: DateTime(2024, 5, 20),
+        isSet: true,
+        exerciseIndicator: LineDirection.middle,
+        exercise: const Exercise(
+          id: '8',
+          name: 'Bicep curls',
+          typeId: ExerciseType(id: 'strength', name: 'Strength', icon: '💪'),
+        ),
+      ),
+      Workout(
+        id: '8',
         sort: 2,
-        date: DateTime(2024, 4, 2),
+        date: DateTime(2024, 5, 20),
+        isSet: true,
+        exerciseIndicator: LineDirection.middle,
+        exercise: const Exercise(
+          id: '5',
+          name: 'Lunges',
+          typeId: ExerciseType(id: 'run', name: 'Runner', icon: '🏃'),
+        ),
+      ),
+      Workout(
+        id: '3',
+        sort: 1,
+        date: DateTime(2024, 5, 20),
+        isSet: true,
+        exerciseIndicator: LineDirection.up,
+        exercise: const Exercise(
+          id: '2',
+          name: 'Bicep curls3',
+          typeId: ExerciseType(id: 'strength', name: 'Strength', icon: '💪'),
+        ),
+      ),
+      Workout(
+        id: '5',
+        sort: 1,
+        date: DateTime(2024, 5, 20),
         isSet: false,
-        exercise: const [
-          Exercise(
-            id: '5',
-            name: 'Lunges',
-            typeId: ExerciseType(id: 'run', name: 'Runner', icon: '🏃'),
-          ),
-        ],
+        exercise: const Exercise(
+          id: '7',
+          name: 'Overhead press',
+          typeId: ExerciseType(id: 'strength', name: 'Strength', icon: '💪'),
+        ),
+      ),
+      Workout(
+        id: '9',
+        sort: 1,
+        date: DateTime(2024, 5, 20),
+        isSet: false,
+        exercise: const Exercise(
+          id: '7',
+          name: 'Overhead press',
+          typeId: ExerciseType(id: 'strength', name: 'Strength', icon: '🏃'),
+        ),
+      ),
+      Workout(
+        id: '9',
+        sort: 1,
+        date: DateTime(2024, 5, 20),
+        isSet: false,
+        exercise: const Exercise(
+          id: '7',
+          name: 'Overhead press',
+          typeId: ExerciseType(id: 'strength', name: 'Strength', icon: '🏃'),
+        ),
+      ),
+      Workout(
+        id: '1',
+        sort: 1,
+        date: DateTime(2024, 5, 20),
+        isSet: true,
+        exerciseIndicator: LineDirection.down,
+        exercise: const Exercise(
+          id: '8',
+          name: 'Bicep curls',
+          typeId: ExerciseType(id: 'strength', name: 'Strength', icon: '💪'),
+        ),
+      ),
+      Workout(
+        id: '2',
+        sort: 1,
+        date: DateTime(2024, 5, 20),
+        isSet: true,
+        exerciseIndicator: LineDirection.middle,
+        exercise: const Exercise(
+          id: '4',
+          name: 'Bicep curls2',
+          typeId: ExerciseType(id: 'strength', name: 'Strength', icon: '💪'),
+        ),
+      ),
+      Workout(
+        id: '3',
+        sort: 1,
+        date: DateTime(2024, 5, 20),
+        isSet: true,
+        exerciseIndicator: LineDirection.up,
+        exercise: const Exercise(
+          id: '2',
+          name: 'Bicep curls3',
+          typeId: ExerciseType(id: 'strength', name: 'Strength', icon: '💪'),
+        ),
+      ),
+      Workout(
+        id: '8',
+        sort: 2,
+        date: DateTime(2024, 5, 21),
+        isSet: false,
+        exercise: const Exercise(
+          id: '5',
+          name: 'Lunges',
+          typeId: ExerciseType(id: 'run', name: 'Runner', icon: '🏃'),
+        ),
       ),
       // Добавьте больше моковых тренировок по необходимости
     ];
