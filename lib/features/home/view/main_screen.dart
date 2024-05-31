@@ -1,4 +1,5 @@
 import 'package:fitplan/features/home/bloc/workout_calendar_data_bloc.dart';
+import 'package:fitplan/generated/l10n.dart';
 import 'package:fitplan/repositories/workout/models/models.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -10,6 +11,8 @@ class MainScreen extends StatefulWidget {
   @override
   State<MainScreen> createState() => _MainScreenState();
 }
+
+enum LineDirection { up, down, middle }
 
 class _MainScreenState extends State<MainScreen> {
   final CalendarFormat _calendarFormat = CalendarFormat.week;
@@ -40,7 +43,7 @@ class _MainScreenState extends State<MainScreen> {
 
         return Scaffold(
           appBar: AppBar(
-            title: const Text("FitPlan"),
+            title: const Text("settings"),
             actions: <Widget>[
               IconButton(
                 icon: const Icon(Icons.settings),
@@ -177,17 +180,17 @@ class _MainScreenState extends State<MainScreen> {
                                       ],
                                     )
                                   : const SizedBox(
-                                      width: 10,
+                                      width: 0,
                                       height: 72,
                                     ),
-                              const SizedBox(width: 10),
+                              if (workouts[index].isSet) const SizedBox(width: 10),
                               Expanded(
                                 child: Container(
                                   decoration: BoxDecoration(
                                     borderRadius: BorderRadius.circular(10),
                                     color:
                                         (workouts[index].isSet)?
-                                        Colors.amber
+                                         Theme.of(context).colorScheme.surface//Colors.amber
                                         :Theme.of(context).colorScheme.surface,
                                   ),
                                   child: Padding(
@@ -201,22 +204,16 @@ class _MainScreenState extends State<MainScreen> {
                                         Row(
                                           children: [
                                             Text(
-                                              workouts[index]
-                                                  .exercise
-                                                  .typeId
-                                                  .icon,
+                                              workouts[index].date.microsecond.toString(),
                                               style: const TextStyle(
-                                                fontSize: 40,
+                                                fontSize: 10,
                                               ),
                                             ),
                                             const SizedBox(
                                               width: 10,
                                             ),
                                             Text(
-                                              workouts[index]
-                                                  .exercise
-                                                  .name
-                                                  .toString(),
+                                              workouts[index].isSet.toString(),
                                               style: Theme.of(context)
                                                   .textTheme
                                                   .titleMedium
@@ -229,7 +226,7 @@ class _MainScreenState extends State<MainScreen> {
                                         Row(
                                           children: [
                                             Text(
-                                              "Ring: ${workouts[index].id}",
+                                              "Ring: ${workouts[index].sort}",
                                               style: Theme.of(context)
                                                   .textTheme
                                                   .titleMedium

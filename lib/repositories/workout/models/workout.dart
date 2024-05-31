@@ -1,27 +1,17 @@
-import 'package:equatable/equatable.dart';
-import 'package:fitplan/repositories/workout/models/exercise.dart';
+import 'package:realm/realm.dart';
 
-enum LineDirection { up, down, middle }
+part 'workout.realm.dart';
 
-class Workout extends Equatable {
-  final String id;
-  final num sort;
-  final DateTime date;
-  final bool isSet;
-  final LineDirection? exerciseIndicator;
-  final Exercise exercise; 
-  
-  const Workout({
-    required this.id,
-    required this.sort,
-    required this.date,
-    required this.isSet,
-    required this.exercise,
-    this.exerciseIndicator
-  });
-
-  @override
-  List<Object?> get props => [id, sort, date, isSet, exercise,exerciseIndicator]; // Include exercise object
-
+@RealmModel()
+class _Workout {
+  @PrimaryKey()
+  late String id;
+  late int sort;
+  late DateTime date;
+  late bool isSet;
+  late String exerciseIndicator;
+  late String exerciseId; 
   
 }
+
+// enum LineDirection { up, down, middle }

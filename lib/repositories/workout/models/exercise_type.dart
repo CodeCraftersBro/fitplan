@@ -1,19 +1,23 @@
-import 'package:equatable/equatable.dart';
+import 'package:realm/realm.dart';
 
-class ExerciseType extends Equatable {
-  final String id;
-  final String name;
-  final String icon;
+part 'exercise_type.realm.dart';
 
-  const ExerciseType({
-    required this.id,
-    required this.name,
-    required this.icon,
-  });
-  @override
-  List<Object> get props => [
-        id,
-        name,
-        icon,
-      ];
+@RealmModel()
+class _ExerciseType {
+  @PrimaryKey()
+  late String id;
+  late String name;
+  late String icon;
+
+  // const ExerciseType({
+  //   required this.id,
+  //   required this.name,
+  //   required this.icon,
+  // });
+  // @override
+  // List<Object> get props => [
+  //       id,
+  //       name,
+  //       icon,
+  //     ];
 }

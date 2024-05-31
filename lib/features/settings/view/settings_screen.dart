@@ -1,5 +1,6 @@
 import 'package:fitplan/bloc/theme/theme_cubit.dart';
 import 'package:fitplan/features/settings/widgets/widgets.dart';
+import 'package:fitplan/generated/l10n.dart';
 import 'package:fitplan/ui/ui.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -20,28 +21,28 @@ class _SettingsScreenState extends State<SettingsScreen> {
     final isDarkTheme = context.watch<ThemeCubit>().state.isDark;
     return Scaffold(
       appBar: AppBar(
-        title: const Text(
-          "Настройки",
+        title: Text(
+          S.of(context).settings,
         ),
       ),
       body: Column(
         children: [
           const SizedBox(height: 16),
           SettingsActionCard(
-            title: 'Безлимитные тренировки',
+            title: S.of(context).unlimitedWorkouts,
             iconData: Icons.rocket_launch,
             iconColor: Colors.red,
             onTap: () {},
           ),
           SettingsToggleCard(
-            title: 'Темная тема',
+            title: S.of(context).darkTheme,
             value: isDarkTheme,
             onChanged: (value) {
               _setThemeBrightness(context, value);
             },
           ),
           SettingsToggleCard(
-            title: 'Уведомления',
+            title: S.of(context).notifications,
             value: notificationsEnabled,
             onChanged: (value) {
               setState(() {
@@ -50,7 +51,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
             },
           ),
           SettingsToggleCard(
-            title: 'Разрешить аналитику',
+            title: S.of(context).enableAnalytics,
             value: analyticsEnabled,
             onChanged: (value) {
               setState(() {
@@ -60,29 +61,30 @@ class _SettingsScreenState extends State<SettingsScreen> {
           ),
           const SizedBox(height: 16),
           SettingsActionCard(
-            title: 'Очистить историю',
+            title: S.of(context).clearHistory,
             iconData: Icons.delete_sweep_outlined,
             iconColor: Theme.of(context).colorScheme.primary,
             onTap: () => _clearHistory(context),
           ),
           SettingsActionCard(
-            title: 'Сайт разработчика',
+            title: S.of(context).developerWebsite,
             iconData: Icons.web_asset,
             onTap: () {},
           ),
           SettingsActionCard(
-            title: 'Поддержка',
+            title: S.of(context).support,
             iconData: Icons.message_outlined,
             onTap: () {},
           ),
           const SizedBox(height: 16),
           const Text(
-            'Версия приложения: 0.1.0 (Build 0000)\n'
-            'Дата выпуска: 01.01.2024\n'
+            "Версия приложения: 0.1.0 (Build 0000)"
+            // 'Дата выпуска: 01.01.2024\n'
             // '© 2023 Company Name\n'
-            'Для обратной связи: support@example.com',
+            // 'Для обратной связи: support@example.com',
+            ,
             textAlign: TextAlign.center,
-            style: TextStyle(
+            style: const TextStyle(
               fontSize: 14,
               color: Colors.grey,
             ),

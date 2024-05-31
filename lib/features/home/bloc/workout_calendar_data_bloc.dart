@@ -11,13 +11,18 @@ part 'workout_calendar_data_state.dart';
 class WorkoutCalendarDataBloc
     extends Bloc<WorkoutCalendarDataEvent, WorkoutCalendarDataState> {
   final WorkoutRepositoryInterface workoutRepository;
+
+  DateTime _getDateWithoutTime(DateTime dateTime) {
+    return DateTime(dateTime.year, dateTime.month, dateTime.day);
+  }
+
   WorkoutCalendarDataBloc(this.workoutRepository)
       : super(WorkoutCalendarDataInitial()) {
     on<LoadWorkoutCalendarData>((event, emit) async {
 
       try {
         final workoutList =
-            await workoutRepository.getExerciseListByDate(event.selectedDate);
+            await workoutRepository.getExerciseListByDate(_getDateWithoutTime(event.selectedDate));
         emit(
           WorkoutCalendarDataLoaded(workouts: workoutList),
         );
@@ -28,3 +33,4 @@ class WorkoutCalendarDataBloc
     });
   }
 }
+
