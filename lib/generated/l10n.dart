@@ -149,6 +149,36 @@ class S {
       args: [],
     );
   }
+
+  /// `Today`
+  String get today {
+    return Intl.message(
+      'Today',
+      name: 'today',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Unknown state`
+  String get unknownState {
+    return Intl.message(
+      'Unknown state',
+      name: 'unknownState',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Application version: {version} ({buildNumber})`
+  String appVersionAndBuildnumber(Object version, Object buildNumber) {
+    return Intl.message(
+      'Application version: $version ($buildNumber)',
+      name: 'appVersionAndBuildnumber',
+      desc: '',
+      args: [version, buildNumber],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {

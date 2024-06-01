@@ -1,5 +1,7 @@
 PODS:
   - Flutter (1.0.0)
+  - package_info_plus (0.4.5):
+    - Flutter
   - realm (2.3.0):
     - Flutter
   - shared_preferences_foundation (0.0.1):
@@ -8,12 +10,15 @@ PODS:
 
 DEPENDENCIES:
   - Flutter (from `Flutter`)
+  - package_info_plus (from `.symlinks/plugins/package_info_plus/ios`)
   - realm (from `.symlinks/plugins/realm/ios`)
   - shared_preferences_foundation (from `.symlinks/plugins/shared_preferences_foundation/darwin`)
 
 EXTERNAL SOURCES:
   Flutter:
     :path: Flutter
+  package_info_plus:
+    :path: ".symlinks/plugins/package_info_plus/ios"
   realm:
     :path: ".symlinks/plugins/realm/ios"
   shared_preferences_foundation:
@@ -21,6 +26,7 @@ EXTERNAL SOURCES:
 
 SPEC CHECKSUMS:
   Flutter: e0871f40cf51350855a761d2e70bf5af5b9b5de7
+  package_info_plus: 58f0028419748fad15bf008b270aaa8e54380b1c
   realm: 7e090b80b5bd47f051aa57b8fefeac059d7fd412
   shared_preferences_foundation: b4c3b4cddf1c21f02770737f147a3f5da9d39695
 

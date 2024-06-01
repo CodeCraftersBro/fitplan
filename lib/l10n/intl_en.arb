@@ -8,5 +8,8 @@
   "enableAnalytics": "Enable analytics",
   "clearHistory": "Clear history",
   "developerWebsite": "Developer website",
-  "support": "Support"
+  "support": "Support",
+  "today": "Today",
+  "unknownState": "Unknown state",
+  "appVersionAndBuildnumber": "Application version: {version} ({buildNumber})"
 }

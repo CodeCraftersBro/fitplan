@@ -8,5 +8,8 @@
   "enableAnalytics": "Разрешить аналитику",
   "clearHistory": "Очистить историю",
   "support": "Поддержка",
-  "developerWebsite": "Сайт разработчика"
+  "developerWebsite": "Сайт разработчика",
+  "today": "Сегодня",
+  "unknownState": "Неизвестное состояние",
+  "appVersionAndBuildnumber": "Версия приложения: {version} ({buildNumber})"
 }

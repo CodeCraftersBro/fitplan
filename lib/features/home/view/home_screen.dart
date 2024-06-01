@@ -1,6 +1,10 @@
 
+import 'package:fitplan/features/home/bloc/workout_calendar_data_bloc.dart';
 import 'package:fitplan/features/home/view/main_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+
+import '../../../repositories/workout/models/models.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -14,13 +18,46 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      floatingActionButton: FloatingActionButton.extended(
-        label: const Text(
-          "Добавить упражнение",
-          style: TextStyle(fontSize: 18),
-        ),
-        onPressed: () {
-          _showModalAddExercise(context);
+      floatingActionButton: BlocBuilder<WorkoutCalendarDataBloc, WorkoutCalendarDataState>(
+        builder: (context, state) {
+          List<Workout> workouts = [];
+
+          if (state is WorkoutCalendarDataLoaded) {
+            workouts = state.workouts;
+          }
+
+          if (workouts.isNotEmpty) {
+            return Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                //  FloatingActionButton(
+                //   child: Icon(Icons.edit),
+                //   onPressed: () {
+                //     _showModalEditExercise(context);
+                //   },
+                // ),  
+                FloatingActionButton.extended(
+                  label: const Text(
+                    "Добавить упражнение",
+                    style: TextStyle(fontSize: 18),
+                  ),
+                  onPressed: () {
+                    _showModalAddExercise(context);
+                  },
+                ),
+              ],
+            );
+          } else {
+            return FloatingActionButton.extended(
+              label: const Text(
+                "Добавить упражнение",
+                style: TextStyle(fontSize: 18),
+              ),
+              onPressed: () {
+                _showModalAddExercise(context);
+              },
+            );
+          }
         },
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
@@ -28,6 +65,12 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
+ 
+
+  void _showModalEditExercise(BuildContext context) {
+    // Реализация модального окна для редактирования упражнения
+    return ;
+  }
   void _showModalAddExercise(BuildContext context) {
     showModalBottomSheet(
       isScrollControlled: true,

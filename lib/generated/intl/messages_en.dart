@@ -20,9 +20,13 @@ typedef String MessageIfAbsent(String messageStr, List<dynamic> args);
 class MessageLookup extends MessageLookupByLibrary {
   String get localeName => 'en';
 
+  static String m0(version, buildNumber) =>
+      "Application version: ${version} (${buildNumber})";
+
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
         "add_exercise": MessageLookupByLibrary.simpleMessage("Add excrcise"),
+        "appVersionAndBuildnumber": m0,
         "clearHistory": MessageLookupByLibrary.simpleMessage("Clear history"),
         "darkTheme": MessageLookupByLibrary.simpleMessage("Dark theme"),
         "developerWebsite":
@@ -33,6 +37,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "notifications": MessageLookupByLibrary.simpleMessage("Notifications"),
         "settings": MessageLookupByLibrary.simpleMessage("Settings"),
         "support": MessageLookupByLibrary.simpleMessage("Support"),
+        "today": MessageLookupByLibrary.simpleMessage("Today"),
+        "unknownState": MessageLookupByLibrary.simpleMessage("Unknown state"),
         "unlimitedWorkouts":
             MessageLookupByLibrary.simpleMessage("Unlimited workouts")
       };

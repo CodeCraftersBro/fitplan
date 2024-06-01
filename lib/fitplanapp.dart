@@ -1,3 +1,4 @@
+import 'package:fitplan/bloc/app_version/app_version_cubit.dart';
 import 'package:fitplan/bloc/theme/theme_cubit.dart';
 import 'package:fitplan/features/home/bloc/workout_calendar_data_bloc.dart';
 import 'package:fitplan/generated/l10n.dart';
@@ -120,6 +121,10 @@ DateTime _getDateWithoutTime(DateTime dateTime) {
           create: (context) =>
               ThemeCubit(settingsRepository: settingsRepository),
         ),
+        BlocProvider(
+          create: (context) =>
+              AppVersionCubit(),
+        ),
       ],
       child: BlocBuilder<ThemeCubit, ThemeState>(
         builder: (context, state) {
@@ -133,7 +138,7 @@ DateTime _getDateWithoutTime(DateTime dateTime) {
                 GlobalCupertinoLocalizations.delegate,
             ],
             supportedLocales: S.delegate.supportedLocales,
-            locale: const Locale("ru"),
+            // locale: const Locale("ru"),
             theme: state.isDark ? themeDark : themeLight,
             routes: routes,
           );

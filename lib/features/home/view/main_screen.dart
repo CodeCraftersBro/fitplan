@@ -3,6 +3,7 @@ import 'package:fitplan/generated/l10n.dart';
 import 'package:fitplan/repositories/workout/models/models.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:intl/intl.dart';
 import 'package:table_calendar/table_calendar.dart';
 
 class MainScreen extends StatefulWidget {
@@ -31,6 +32,17 @@ class _MainScreenState extends State<MainScreen> {
         .add(LoadWorkoutCalendarData(selectedDate: _selectedDay));
   }
 
+  String _getAppBarTitle() {
+    final now = DateTime.now();
+    if (_selectedDay.year == now.year &&
+        _selectedDay.month == now.month &&
+        _selectedDay.day == now.day) {
+      return S.of(context).today;
+    } else {
+      return DateFormat('dd MMMM yyyy').format(_selectedDay);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<WorkoutCalendarDataBloc, WorkoutCalendarDataState>(
@@ -43,7 +55,7 @@ class _MainScreenState extends State<MainScreen> {
 
         return Scaffold(
           appBar: AppBar(
-            title: const Text("settings"),
+            title: Text(_getAppBarTitle()),
             actions: <Widget>[
               IconButton(
                 icon: const Icon(Icons.settings),
@@ -70,9 +82,9 @@ class _MainScreenState extends State<MainScreen> {
                   selectedTextStyle:
                       TextStyle(color: Theme.of(context).colorScheme.onPrimary),
                   todayTextStyle:
-                      TextStyle(color: Theme.of(context).colorScheme.onPrimary),
+                      TextStyle(color: Theme.of(context).colorScheme.onSurface),
                   todayDecoration: BoxDecoration(
-                    color: Theme.of(context).colorScheme.primary,
+                    color: Theme.of(context).colorScheme.surface,
                     shape: BoxShape.circle,
                   ),
                   defaultTextStyle: TextStyle(
