@@ -11,5 +11,7 @@
   "support": "Support",
   "today": "Today",
   "unknownState": "Unknown state",
-  "appVersionAndBuildnumber": "Application version: {version} ({buildNumber})"
+  "appVersionAndBuildnumber": "Application version: {version} ({buildNumber})",
+  "ringWorkout": "Ring: {ring}",
+  "addExercise": "Добавить упражнение"
 }

@@ -11,7 +11,6 @@ class AppVersionCubit extends Cubit<AppVersionState> {
       final info = await PackageInfo.fromPlatform();
       emit(AppVersionLoaded(version: info.version, buildNumber: info.buildNumber));
     } catch (e) {
-      print(e.toString());
       emit(AppVersionError(message: e.toString()));
     }
   }

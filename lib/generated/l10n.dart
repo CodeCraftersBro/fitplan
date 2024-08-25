@@ -179,6 +179,26 @@ class S {
       args: [version, buildNumber],
     );
   }
+
+  /// `Ring: {ring}`
+  String ringWorkout(Object ring) {
+    return Intl.message(
+      'Ring: $ring',
+      name: 'ringWorkout',
+      desc: '',
+      args: [ring],
+    );
+  }
+
+  /// `Добавить упражнение`
+  String get addExercise {
+    return Intl.message(
+      'Добавить упражнение',
+      name: 'addExercise',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {

@@ -11,5 +11,7 @@
   "developerWebsite": "Сайт разработчика",
   "today": "Сегодня",
   "unknownState": "Неизвестное состояние",
-  "appVersionAndBuildnumber": "Версия приложения: {version} ({buildNumber})"
+  "appVersionAndBuildnumber": "Версия приложения: {version} ({buildNumber})",
+  "ringWorkout": "Подход: {ring}",
+  "addExercise": "Добавить упражнение"
 }

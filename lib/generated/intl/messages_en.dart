@@ -23,8 +23,12 @@ class MessageLookup extends MessageLookupByLibrary {
   static String m0(version, buildNumber) =>
       "Application version: ${version} (${buildNumber})";
 
+  static String m1(ring) => "Ring: ${ring}";
+
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
+        "addExercise":
+            MessageLookupByLibrary.simpleMessage("Добавить упражнение"),
         "add_exercise": MessageLookupByLibrary.simpleMessage("Add excrcise"),
         "appVersionAndBuildnumber": m0,
         "clearHistory": MessageLookupByLibrary.simpleMessage("Clear history"),
@@ -35,6 +39,7 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Enable analytics"),
         "home": MessageLookupByLibrary.simpleMessage("My plan"),
         "notifications": MessageLookupByLibrary.simpleMessage("Notifications"),
+        "ringWorkout": m1,
         "settings": MessageLookupByLibrary.simpleMessage("Settings"),
         "support": MessageLookupByLibrary.simpleMessage("Support"),
         "today": MessageLookupByLibrary.simpleMessage("Today"),

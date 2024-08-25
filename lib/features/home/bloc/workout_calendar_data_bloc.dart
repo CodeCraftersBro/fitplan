@@ -1,5 +1,4 @@
-import 'dart:developer';
-
+import 'package:fitplan/repositories/search/models/models.dart';
 import 'package:fitplan/repositories/workout/models/models.dart';
 import 'package:fitplan/repositories/workout/workout.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -18,19 +17,21 @@ class WorkoutCalendarDataBloc
 
   WorkoutCalendarDataBloc(this.workoutRepository)
       : super(WorkoutCalendarDataInitial()) {
-    on<LoadWorkoutCalendarData>((event, emit) async {
+    on<LoadWorkoutCalendarData>(_onLoadWorkoutCalendarData);
+  }
 
-      try {
-        final workoutList =
-            await workoutRepository.getExerciseListByDate(_getDateWithoutTime(event.selectedDate));
-        emit(
-          WorkoutCalendarDataLoaded(workouts: workoutList),
-        );
-      } catch (e) {
-        emit(WorkoutCalendarFailure(e));
-      }
-      
-    });
+  Future<void> _onLoadWorkoutCalendarData(
+    LoadWorkoutCalendarData event,
+    Emitter<WorkoutCalendarDataState> emit,
+  ) async {
+    try {
+      final workoutList = await workoutRepository
+          .getExerciseListByDate(_getDateWithoutTime(event.selectedDate));
+      emit(
+        WorkoutCalendarDataLoaded(workouts: workoutList),
+      );
+    } catch (e) {
+      emit(WorkoutCalendarFailure(e));
+    }
   }
 }
-

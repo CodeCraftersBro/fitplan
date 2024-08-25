@@ -3,6 +3,6 @@ import 'package:fitplan/features/settings/settings.dart';
 
 
 final routes = {
-  "/": (context) => const HomeScreen(),
+  "/": (context) => const MainScreen(),
   "/settings": (context) => const SettingsScreen()
 };
