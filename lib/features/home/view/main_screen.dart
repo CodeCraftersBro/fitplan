@@ -1,5 +1,6 @@
 import 'package:fitplan/features/home/bloc/workout_calendar_data_bloc.dart';
 import 'package:fitplan/features/search/bloc/exercise_search_bloc.dart';
+import 'package:fitplan/features/workout/workout.dart';
 import 'package:fitplan/generated/l10n.dart';
 import 'package:fitplan/repositories/workout/models/models.dart';
 import 'package:fitplan/features/search/search.dart';
@@ -59,6 +60,16 @@ class _MainScreenState extends State<MainScreen> {
     );
   }
 
+ void _showModalListExercise(BuildContext context, DateTime selectedDate) async {
+   
+    await showModalBottomSheet(
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      elevation: 0,
+      context: context,
+      builder: (context) =>  const WorkoutScreen(),
+    );
+  }
   @override
   Widget build(BuildContext context) {
     return BlocListener<ExerciseSearchBloc, ExerciseSearchState>(
@@ -91,13 +102,15 @@ class _MainScreenState extends State<MainScreen> {
                   return Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
-                      //  FloatingActionButton(
-                      //   child: Icon(Icons.edit),
-                      //   onPressed: () {
-                      //     _showModalEditExercise(context);
-                      //   },
-                      // ),
+                       FloatingActionButton(
+                        heroTag: 'fab1',
+                        child: Icon(Icons.edit),
+                        onPressed: () {
+                          _showModalListExercise(context,_selectedDay);
+                        },
+                      ),
                       FloatingActionButton.extended(
+                        heroTag: 'fab2',
                         label: Text(
                           S.of(context).addExercise,
                           style: const TextStyle(fontSize: 18),

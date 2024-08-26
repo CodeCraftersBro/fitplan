@@ -25,11 +25,6 @@ class ExerciseSearchBloc
       ToggleExerciseSelection() => _onToggleExerciseSelection(event, emit),
       AddSelectedExercisesToWorkout() => _onAddSelectedExercisesToWorkout(event, emit),
     });
-    // on<FetchInitialData>(_onFetchInitialData);
-    // on<SearchExercises>(_onSearchExercises);
-    // on<SelectCategory>(_onSelectCategory);
-    // on<ToggleExerciseSelection>(_onToggleExerciseSelection);
-    // on<AddSelectedExercisesToWorkout>(_onAddSelectedExercisesToWorkout);
   }
 
   Future<void> _onFetchInitialData(
@@ -111,8 +106,8 @@ class ExerciseSearchBloc
 
     if (state is ExerciseSearchLoaded) {
         emit(ExerciseSearchLoaded(items:(state as ExerciseSearchLoaded).items));
-    // } else if (state is ExerciseCategorySelected) {
-    //     emit(ExerciseCategorySelected((state as ExerciseCategorySelected).categoryId));
+    } else if (state is ExerciseSearchCategorySelected) {
+        emit(ExerciseSearchCategorySelected(items:(state as ExerciseSearchCategorySelected).items));
     } else {
         emit(ExerciseSelected(selectedExercises));
     }

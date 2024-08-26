@@ -1,4 +1,3 @@
-import 'package:fitplan/features/home/bloc/workout_calendar_data_bloc.dart';
 import 'package:fitplan/features/search/bloc/exercise_search_bloc.dart';
 import 'package:fitplan/ui/widgets/drag_indicator.dart';
 import 'package:flutter/material.dart';
@@ -208,6 +207,10 @@ class _SearchScreenState extends State<SearchScreen> {
                                           const EdgeInsets.only(bottom: 100),
                                       itemCount: items.length,
                                       itemBuilder: (context, index) {
+                                         final isSelected = context
+                                            .read<ExerciseSearchBloc>()
+                                            .selectedExercises
+                                            .contains(items[index]);
                                         return Padding(
                                           padding: const EdgeInsets.symmetric(
                                               vertical: 8, horizontal: 16),
@@ -254,15 +257,30 @@ class _SearchScreenState extends State<SearchScreen> {
                                                   ),
                                                   Row(
                                                     children: [
-                                                      IconButton(
-                                                          onPressed: () {},
-                                                          icon: Icon(
-                                                            Icons.chevron_right,
-                                                            color: Theme.of(
-                                                                    context)
-                                                                .colorScheme
-                                                                .primary,
-                                                          ))
+                                                      // IconButton(
+                                                      //     onPressed: () {},
+                                                      //     icon: Icon(
+                                                      //       Icons.chevron_right,
+                                                      //       color: Theme.of(
+                                                      //               context)
+                                                      //           .colorScheme
+                                                      //           .primary,
+                                                      //     ))
+                                                      Checkbox(
+                                                              value: isSelected,
+                                                              onChanged:
+                                                                  (value) {
+                                                                context
+                                                                    .read<
+                                                                        ExerciseSearchBloc>()
+                                                                    .add(
+                                                                      ToggleExerciseSelection(
+                                                                          items[
+                                                                              index]),
+                                                                    );
+                                                                setState(() {});
+                                                              },
+                                                            )
                                                     ],
                                                   ),
                                                 ],
@@ -310,11 +328,6 @@ class _SearchScreenState extends State<SearchScreen> {
                                 .selectedExercises,
                             selectedDate: widget.selectedDate));
 
-                    // DateTime _selectedDay = DateTime.now();
-
-                    // context
-                    //   .read<WorkoutCalendarDataBloc>()
-                    //   .add(LoadWorkoutCalendarData(selectedDate: _selectedDay));
 
                     Navigator.pop(context);
                   },

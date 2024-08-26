@@ -54,15 +54,16 @@ class _FitPlanAppState extends State<FitPlanApp> {
   }
 
   Future<void> _printWorkouts() async {
+ 
     await context.read<WorkoutRepository>().deleteAllWorkouts();
 
     
-    // await context.read<ExerciseTypeRepository>().deleteAll();
-    // await context.read<ExerciseTypeRepository>().updateExerciseTypesFromAPI();
+    await context.read<ExerciseTypeRepository>().deleteAll();
+    await context.read<ExerciseTypeRepository>().updateExerciseTypesFromAPI();
 
     
-    // await context.read<ExerciseRepository>().deleteAllExercise();
-    // await context.read<ExerciseRepository>().updateExercise();
+    await context.read<ExerciseRepository>().deleteAllExercise();
+    await context.read<ExerciseRepository>().updateExercise();
     final exercises = await context.read<ExerciseRepository>().getExercises();
     final date = _getDateWithoutTime(DateTime.now());
     var uuid = const uuid_lib.Uuid();
