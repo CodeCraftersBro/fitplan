@@ -7,7 +7,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:realm/realm.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
 import 'repositories/workout/models/models.dart';
 import 'package:fitplan/repositories/workout/workout.dart';
 
@@ -23,7 +22,7 @@ void main() {
       ExerciseType.schema,
     ]);
     final realm = Realm(config);
-
+    
 
     runApp(MultiRepositoryProvider(
       providers: [
@@ -42,12 +41,11 @@ void main() {
         RepositoryProvider(
           create: (context) => ExerciseTypeRepository(realm: realm),
         ),
-        
       ],
       child: const FitPlanApp(
-        // preferences: preferences,
-        // realm: realm,
-      ),
+          // preferences: preferences,
+          // realm: realm,
+          ),
     ));
   }, (error, stack) {});
 }

@@ -1,10 +1,11 @@
 import 'package:fitplan/features/home/bloc/workout_calendar_data_bloc.dart';
+import 'package:fitplan/features/home/widgets/widgets.dart';
 import 'package:fitplan/features/search/bloc/exercise_search_bloc.dart';
+import 'package:fitplan/features/workout/bloc/workout_editor_bloc.dart';
 import 'package:fitplan/features/workout/workout.dart';
 import 'package:fitplan/generated/l10n.dart';
-import 'package:fitplan/repositories/workout/models/models.dart';
+import 'package:fitplan/repositories/workout/entity/entity.dart';
 import 'package:fitplan/features/search/search.dart';
-import 'package:fitplan/repositories/workout/workout.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
@@ -17,20 +18,17 @@ class MainScreen extends StatefulWidget {
   State<MainScreen> createState() => _MainScreenState();
 }
 
-enum LineDirection { up, down, middle }
+
 
 class _MainScreenState extends State<MainScreen> {
   final CalendarFormat _calendarFormat = CalendarFormat.week;
   DateTime _selectedDay = DateTime.now();
   DateTime _focusedDay = DateTime.now();
-  // List<Workout> _workouts =
-  //     []; // This will hold the workouts for the selected day
 
   @override
   void initState() {
     super.initState();
-    // Initialize workouts for the current day
-    // _workouts = [];
+   
     context
         .read<WorkoutCalendarDataBloc>()
         .add(LoadWorkoutCalendarData(selectedDate: _selectedDay));
@@ -47,7 +45,8 @@ class _MainScreenState extends State<MainScreen> {
     }
   }
 
-  void _showModalAddExercise(BuildContext context, DateTime selectedDate) async {
+  void _showModalAddExercise(
+      BuildContext context, DateTime selectedDate) async {
     final bloc = context.read<ExerciseSearchBloc>();
     bloc.add(FetchInitialData());
 
@@ -56,79 +55,96 @@ class _MainScreenState extends State<MainScreen> {
       backgroundColor: Colors.transparent,
       elevation: 0,
       context: context,
-      builder: (context) =>  SearchScreen(selectedDate: selectedDate),
+      builder: (context) => SearchScreen(selectedDate: selectedDate),
     );
   }
 
- void _showModalListExercise(BuildContext context, DateTime selectedDate) async {
-   
-    await showModalBottomSheet(
+  void _showModalListExercise(
+      BuildContext context, DateTime selectedDate,List<WorkoutOverview> workoutOverviewList) async {
+    
+    final workoutOverviewReorderableList = await showModalBottomSheet(
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
       elevation: 0,
       context: context,
-      builder: (context) =>  const WorkoutScreen(),
+      builder: (context) => WorkoutScreen(selectedDate: selectedDate, workoutOverviewList: workoutOverviewList),
     );
+    if (workoutOverviewReorderableList == null) {
+      return;
+    }
+    if (!mounted) return;
+
+    context.read<WorkoutEditorBloc>().add(UpdateWorkoutDate(selectedDate,workoutOverviewReorderableList));
   }
+
   @override
   Widget build(BuildContext context) {
-    return BlocListener<ExerciseSearchBloc, ExerciseSearchState>(
-      listener: (context, state) {
-        if (state is ExerciseSearchLoaded) {
-          context
-              .read<WorkoutCalendarDataBloc>()
-              .add(LoadWorkoutCalendarData(selectedDate: _selectedDay));
-        }
-      },
+    return MultiBlocListener(
+      listeners: [
+        BlocListener<ExerciseSearchBloc, ExerciseSearchState>(
+          listener: (context, state) {
+            if (state is ExerciseSearchLoaded) {
+              context
+                  .read<WorkoutCalendarDataBloc>()
+                  .add(LoadWorkoutCalendarData(selectedDate: _selectedDay));
+            }
+          },
+        ),
+        BlocListener<WorkoutEditorBloc, WorkoutEditorState>(
+          listener: (context, state) {
+
+            if (state is WorkoutEditorLoaded) {
+              context
+                  .read<WorkoutCalendarDataBloc>()
+                  .add(LoadWorkoutCalendarData(selectedDate: _selectedDay));
+            }
+          },
+        ),
+      ],
       child: BlocBuilder<WorkoutCalendarDataBloc, WorkoutCalendarDataState>(
         builder: (context, state) {
-          List<Workout> workouts = [];
+          List<WorkoutOverview> workoutOverviewList= [];
 
-          if (state is WorkoutCalendarDataLoaded) {
-            workouts = state.workouts;
+          if (state is WorkoutCalendarLoaded) {
+            workoutOverviewList = state.workoutList;
           }
 
           return Scaffold(
             floatingActionButton:
                 BlocBuilder<WorkoutCalendarDataBloc, WorkoutCalendarDataState>(
               builder: (context, state) {
-                List<Workout> workouts = [];
 
-                if (state is WorkoutCalendarDataLoaded) {
-                  workouts = state.workouts;
-                }
-
-                if (workouts.isNotEmpty) {
+                if (workoutOverviewList.isNotEmpty) {
                   return Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
-                       FloatingActionButton(
-                        heroTag: 'fab1',
-                        child: Icon(Icons.edit),
+                      FloatingActionButton(
+                        heroTag: 'editor',
+                        child: const Icon(Icons.move_up),
                         onPressed: () {
-                          _showModalListExercise(context,_selectedDay);
+                          _showModalListExercise(context, _selectedDay,workoutOverviewList);
                         },
                       ),
                       FloatingActionButton.extended(
-                        heroTag: 'fab2',
+                        heroTag: 'add',
                         label: Text(
                           S.of(context).addExercise,
                           style: const TextStyle(fontSize: 18),
                         ),
                         onPressed: () {
-                          _showModalAddExercise(context,_selectedDay);
+                          _showModalAddExercise(context, _selectedDay);
                         },
                       ),
                     ],
                   );
                 } else {
                   return FloatingActionButton.extended(
-                    label: const Text(
-                      "Добавить упражнение",
-                      style: TextStyle(fontSize: 18),
+                    label: Text(
+                      S.of(context).addExercise,
+                      style: const TextStyle(fontSize: 18),
                     ),
                     onPressed: () {
-                      _showModalAddExercise(context,_selectedDay);
+                      _showModalAddExercise(context, _selectedDay);
                     },
                   );
                 }
@@ -184,8 +200,7 @@ class _MainScreenState extends State<MainScreen> {
               ),
             ),
             body: SafeArea(
-              // bottom: false,
-              child: state is WorkoutCalendarFailure || workouts.isEmpty
+              child: state is WorkoutCalendarFailure || workoutOverviewList.isEmpty
                   ? const Center(
                       // child: Image.asset(
                       //   'assets/empty_list.png', // Replace with your image asset
@@ -201,11 +216,11 @@ class _MainScreenState extends State<MainScreen> {
                       padding: const EdgeInsets.fromLTRB(0, 10, 0, 0),
                       child: ListView.builder(
                         padding: const EdgeInsets.only(bottom: 100),
-                        itemCount: workouts.length,
+                        itemCount: workoutOverviewList.length,
                         itemBuilder: (context, index) {
                           Widget lineIndicator;
 
-                          switch (workouts[index].exerciseIndicator) {
+                          switch (workoutOverviewList[index].workoutExerciseIndicator) {
                             case "down": // LineDirection.down:
                               // lineIndicator = buildDashedLineIndicator(
                               //     36);
@@ -243,7 +258,7 @@ class _MainScreenState extends State<MainScreen> {
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                (workouts[index].isSet)
+                                (workoutOverviewList[index].workoutIsSet)
                                     ? Stack(
                                         alignment: Alignment.center,
                                         children: [
@@ -273,13 +288,13 @@ class _MainScreenState extends State<MainScreen> {
                                         width: 0,
                                         height: 72,
                                       ),
-                                if (workouts[index].isSet)
+                                if (workoutOverviewList[index].workoutIsSet)
                                   const SizedBox(width: 10),
                                 Expanded(
                                   child: Container(
                                     decoration: BoxDecoration(
                                       borderRadius: BorderRadius.circular(10),
-                                      color: (workouts[index].isSet)
+                                      color: (workoutOverviewList[index].workoutIsSet)
                                           ? Theme.of(context)
                                               .colorScheme
                                               .surface //Colors.amber
@@ -287,8 +302,7 @@ class _MainScreenState extends State<MainScreen> {
                                               .colorScheme
                                               .surface,
                                     ),
-                                    child: WorkoutItemWidget(
-                                        workout: workouts[index]),
+                                    child: WorkoutItemWidget(workoutOverview: workoutOverviewList[index]),
                                   ),
                                 )
                               ],
@@ -303,183 +317,4 @@ class _MainScreenState extends State<MainScreen> {
       ),
     );
   }
-}
-
-class WorkoutItemWidget extends StatelessWidget {
-  final Workout workout;
-
-  const WorkoutItemWidget({super.key, required this.workout});
-
-  @override
-  Widget build(BuildContext context) {
-    return FutureBuilder<Exercise?>(
-      future: context
-          .read<ExerciseRepository>()
-          .getExerciseById(workout.exerciseId),
-      builder: (context, snapshot) {
-        print("object");
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return const CircularProgressIndicator();
-        } else if (snapshot.hasError) {
-          return Text('Error: ${snapshot.error}');
-        } else if (snapshot.hasData && snapshot.data != null) {
-          final exercise = snapshot.data!;
-          return Padding(
-            padding: const EdgeInsets.symmetric(vertical: 0, horizontal: 12),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              mainAxisSize: MainAxisSize.max,
-              children: [
-                Row(
-                  children: [
-                    ExcerseTypeIconWidget(
-                        exerciseTypeId: exercise.exerciseTypeId),
-                    const SizedBox(
-                      width: 10,
-                    ),
-                    Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          exercise.name, //workouts[index].isSet.toString(),
-                          style:
-                              Theme.of(context).textTheme.titleMedium?.copyWith(
-                                    fontSize: 18,
-                                  ),
-                        ),
-                        Text(
-                          S.of(context).ringWorkout(
-                            10
-                          ),
-                          style:
-                              Theme.of(context).textTheme.titleMedium?.copyWith(
-                                    fontSize: 14,
-                                  ),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-                Row(
-                  children: [
-                    IconButton(
-                        onPressed: () {},
-                        icon: Icon(
-                          Icons.data_saver_on,
-                          color: Theme.of(context).colorScheme.primary,
-                        ))
-                  ],
-                ),
-              ],
-            ),
-          );
-        } else {
-          return const Text('Exercise not found');
-        }
-      },
-    );
-  }
-}
-
-class ExcerseTypeIconWidget extends StatelessWidget {
-  final String exerciseTypeId;
-
-  const ExcerseTypeIconWidget({super.key, required this.exerciseTypeId});
-
-  @override
-  Widget build(BuildContext context) {
-    return FutureBuilder<ExerciseType?>(
-      future: context
-          .read<ExerciseTypeRepository>()
-          .getExerciseTypeById(exerciseTypeId),
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return const CircularProgressIndicator(); // Показать индикатор загрузки
-        } else if (snapshot.hasError) {
-          return Text('Ошибка: ${snapshot.error}'); // Показать ошибку
-        } else if (snapshot.hasData && snapshot.data != null) {
-          final exerciseType = snapshot.data!;
-          return Text(
-            exerciseType.icon,
-            style: const TextStyle(
-              fontSize: 40,
-            ),
-          );
-        } else {
-          return const Text(
-            '❓', // Показать иконку вопроса, если категория не найдена
-            style: TextStyle(
-              fontSize: 40,
-            ),
-          );
-        }
-      },
-    );
-  }
-}
-
-// Использование DashedLinePainter для создания пунктирной линии
-Widget buildDashedLineIndicator(
-    LineDirection direction, double height, BuildContext context) {
-  return CustomPaint(
-    size: Size(0, height),
-    painter: DashedLinePainter(
-      direction: direction,
-      height: height,
-      lineColor: Theme.of(context).colorScheme.primary,
-    ),
-  );
-}
-
-// enum LineDirection { up, down, middle }
-class DashedLinePainter extends CustomPainter {
-  final LineDirection direction;
-  final double height;
-  final Color lineColor;
-  DashedLinePainter({
-    required this.direction,
-    required this.height,
-    required this.lineColor,
-  });
-
-  @override
-  void paint(Canvas canvas, Size size) {
-    final paint = Paint()
-      ..color = lineColor
-      ..strokeWidth = 2;
-    var dashWidth = 8.0;
-    var dashSpace = 2.0;
-    double startY = 0;
-
-    // Определяем начальную и конечную точки в зависимости от направления
-    switch (direction) {
-      case LineDirection.up:
-        startY = height / 2 + 4; //+2 fix
-        while (startY >= 0) {
-          canvas.drawLine(
-              Offset(0, startY), Offset(0, startY - dashWidth), paint);
-          startY -= (dashWidth + dashSpace);
-        }
-        break;
-      case LineDirection.down:
-        startY = height / 2 - 4; //-2 fix
-        while (startY <= height) {
-          canvas.drawLine(
-              Offset(0, startY), Offset(0, startY + dashWidth), paint);
-          startY += (dashWidth + dashSpace);
-        }
-        break;
-      case LineDirection.middle:
-        while (startY <= height) {
-          canvas.drawLine(
-              Offset(0, startY), Offset(0, startY + dashWidth), paint);
-          startY += (dashWidth + dashSpace);
-        }
-        break;
-    }
-  }
-
-  @override
-  bool shouldRepaint(CustomPainter oldDelegate) => false;
 }

@@ -1,3 +1,4 @@
+import 'package:fitplan/repositories/workout/entity/entity.dart';
 import 'package:fitplan/repositories/workout/models/workout.dart';
 import 'package:fitplan/repositories/workout/workout_repository_interface.dart';
 import 'package:realm/realm.dart';
@@ -42,4 +43,50 @@ class WorkoutRepository implements WorkoutRepositoryInterface {
       });
     }
   }
+
+  @override
+  Future<int> getNextSortOrderForDate(DateTime date) async {
+    final workouts = await getExerciseListByDate(date);
+
+    if (workouts.isEmpty) {
+      return 1;  
+    } else {
+      // Ищем максимальное значение сортировки и увеличиваем его на 1
+      final maxSortOrder = workouts.map((w) => w.sort).reduce((a, b) => a > b ? a : b);
+      return maxSortOrder + 1;
+    }
+  }
+
+  @override
+  Future<void> updateWorkouts(List<Workout> workouts) async {
+
+
+    //  print("====updateWorkouts ===");
+    // for (int i = 0; i < workouts.length; i++) {
+    //   print(workouts[i].id + " || " + workouts[i].sort.toString());
+    //   final workout = realm.find<Workout>(workouts[i].id);
+    //   if (workout != null) {
+    //     realm.write(() {
+    //       realm.delete(workout);
+    //     });
+    //   }
+    // }
+    
+
+    realm.write(() {
+      for (var workout in workouts) {
+        realm.add(workout, update: true);
+      }
+    });
+
+  }
+
+  @override
+  Future<void> deleteWorkoutsByDate(DateTime date) async {
+    realm.write(() {
+      final workoutsToDelete = realm.all<Workout>().query('date == \$0', [date]);
+      realm.deleteMany(workoutsToDelete);
+    });
+  }
+
 }

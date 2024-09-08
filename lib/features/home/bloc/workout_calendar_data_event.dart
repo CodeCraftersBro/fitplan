@@ -11,12 +11,4 @@ class LoadWorkoutCalendarData extends WorkoutCalendarDataEvent {
   List<Object> get props => [selectedDate];
 }
 
-class AddSelectedExercisesToWorkout1 extends  WorkoutCalendarDataEvent{
-  final List<ExerciseSearch> exercises;
 
-  AddSelectedExercisesToWorkout1(this.exercises);
-
-  @override
-  List<Object> get props => [exercises];
-  
-}

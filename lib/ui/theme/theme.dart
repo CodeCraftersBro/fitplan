@@ -1,3 +1,4 @@
+
 import 'package:flutter/material.dart';
 
 final themeLight = ThemeData(
@@ -39,6 +40,13 @@ final themeLight = ThemeData(
       width: 56.0, // Ширина FAB
       height: 56.0, // Высота FAB
     ),
+  ),
+  // Настройки для ReorderableListView
+  listTileTheme: ListTileThemeData(
+    tileColor: Colors.white, // Цвет фона для элементов списка
+    textColor: Colors.black, // Цвет текста для элементов списка
+    iconColor: Colors.black, // Цвет иконок в элементах списка
+    selectedColor: Colors.grey.shade200, // Цвет фона для выделенного элемента при перетаскивании
   ),
 );
 
@@ -82,4 +90,12 @@ final ThemeData themeDark = ThemeData(
       height: 56.0, // Высота FAB
     ),
   ),
+  // Настройки для ReorderableListView
+  listTileTheme: ListTileThemeData(
+    tileColor: Colors.grey.shade800, // Цвет фона для элементов списка
+    textColor: Colors.white, // Цвет текста для элементов списка
+    iconColor: Colors.white, // Цвет иконок в элементах списка
+    selectedColor: Colors.grey.shade700, // Цвет фона для выделенного элемента при перетаскивании
+  ),
 );
+

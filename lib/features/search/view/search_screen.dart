@@ -55,6 +55,7 @@ class _SearchScreenState extends State<SearchScreen> {
                       padding: const EdgeInsets.all(16.0),
                       child: TextField(
                         onChanged: (query) {
+                          if (query.isEmpty) return;
                           context
                               .read<ExerciseSearchBloc>()
                               .add(SearchExercises(query));

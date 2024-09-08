@@ -2,6 +2,7 @@ import 'package:fitplan/bloc/app_version/app_version_cubit.dart';
 import 'package:fitplan/bloc/theme/theme_cubit.dart';
 import 'package:fitplan/features/search/bloc/exercise_search_bloc.dart';
 import 'package:fitplan/features/home/bloc/workout_calendar_data_bloc.dart';
+import 'package:fitplan/features/workout/bloc/workout_editor_bloc.dart';
 import 'package:fitplan/generated/l10n.dart';
 import 'package:fitplan/repositories/search/search_repository.dart';
 import 'package:fitplan/repositories/settings/settings.dart';
@@ -21,8 +22,6 @@ import 'package:uuid/uuid.dart' as uuid_lib;
 class FitPlanApp extends StatefulWidget {
   const FitPlanApp({super.key});
 
-  
-
   @override
   State<FitPlanApp> createState() => _FitPlanAppState();
 }
@@ -33,8 +32,6 @@ class _FitPlanAppState extends State<FitPlanApp> {
   // late final SearchRepository searchRepository;
 
   // final _appRouter = AppRouter();
-
-  
 
   @override
   void initState() {
@@ -48,103 +45,52 @@ class _FitPlanAppState extends State<FitPlanApp> {
 
     // Получение списка тренировок и вывод в консоль
 
-    
-
     _printWorkouts();
   }
 
   Future<void> _printWorkouts() async {
- 
     await context.read<WorkoutRepository>().deleteAllWorkouts();
-
-    
+    if (!mounted) return;
     await context.read<ExerciseTypeRepository>().deleteAll();
+    if (!mounted) return;
     await context.read<ExerciseTypeRepository>().updateExerciseTypesFromAPI();
-
-    
+    if (!mounted) return;
     await context.read<ExerciseRepository>().deleteAllExercise();
+    if (!mounted) return;
     await context.read<ExerciseRepository>().updateExercise();
     final exercises = await context.read<ExerciseRepository>().getExercises();
     final date = _getDateWithoutTime(DateTime.now());
+
     var uuid = const uuid_lib.Uuid();
     for (var exercise in exercises) {
+      int sortOrder =
+          await context.read<WorkoutRepository>().getNextSortOrderForDate(date);
       if (exercise.exerciseTypeId == '1') {
         var workout = Workout(
-              uuid.v4(),
-              0,//сортировка
-              date,
-              true,
-              'middle', //индикатор
-              exercise.id,
-            );
+          uuid.v4(),
+          sortOrder, //сортировка
+          date,
+          true,
+          'middle', //индикатор
+          exercise.id,
+        );
+        if (!mounted) return;
         await context.read<WorkoutRepository>().addWorkout(workout);
       }
       if (exercise.exerciseTypeId == '4') {
         var workout = Workout(
-              uuid.v4(),
-              0,//сортировка
-              date,
-              false,
-              '', //индикатор
-              exercise.id,
-            );
+          uuid.v4(),
+          sortOrder, //сортировка
+          date,
+          false,
+          '', //индикатор
+          exercise.id,
+        );
+        if (!mounted) return;
         await context.read<WorkoutRepository>().addWorkout(workout);
       }
       print('Exercise: ${exercise.name}, ID: ${exercise.id}');
-      
     }
-    
-   
-
-    
-    // final exercise = Exercise(uuid.v4(), 'Push-up', '10');
-    // var newWorkout = Workout(
-    //   uuid.v4(),
-    //   90,
-    //   date,
-    //   true,
-    //   'down',
-    //   exercise.id,
-    // );
-    // workoutRepository.addWorkout(newWorkout);
-    // newWorkout = Workout(
-    //   uuid.v4(),
-    //   0,
-    //   date,
-    //   true,
-    //   'middle',
-    //   exercise.id,
-    // );
-
-    // workoutRepository.addWorkout(newWorkout);
-    // newWorkout = Workout(
-    //   uuid.v4(),
-    //   0,
-    //   date,
-    //   true,
-    //   'up',
-    //   exercise.id,
-    // );
-
-    // workoutRepository.addWorkout(newWorkout);
-    // newWorkout = Workout(
-    //   uuid.v4(),
-    //   0,
-    //   date,
-    //   false,
-    //   'up',
-    //   exercise.id,
-    // );
-
-    // workoutRepository.addWorkout(newWorkout);
-    // final date = DateTime.now();
-
-    // final workouts = await workoutRepository.getAllWorkouts();
-
-    // print('Workouts on $date:');
-    // for (var workout in workouts) {
-    //   print('Workout ID: ${workout.id}');
-    // }
   }
 
   DateTime _getDateWithoutTime(DateTime dateTime) {
@@ -153,37 +99,36 @@ class _FitPlanAppState extends State<FitPlanApp> {
 
   @override
   Widget build(BuildContext context) {
-    
     return FitPlanScope(
       child: BlocBuilder<ThemeCubit, ThemeState>(
         builder: (context, state) {
-        //   final isIOS = Theme.of(context).platform == TargetPlatform.iOS;
+          // final isIOS = Theme.of(context).platform == TargetPlatform.iOS;
 
-        // if (isIOS) {
-        //   return CupertinoApp(
-        //     title: "FitPlan",
-        //     debugShowCheckedModeBanner: false,
-        //     localizationsDelegates: const [
-        //       S.delegate,
-        //       GlobalMaterialLocalizations.delegate,
-        //       GlobalWidgetsLocalizations.delegate,
-        //       GlobalCupertinoLocalizations.delegate,
-        //     ],
-        //     supportedLocales: S.delegate.supportedLocales,
-        //     theme: CupertinoThemeData(
-        //       brightness: state.isDark ? Brightness.dark : Brightness.light,
-        //     ),
-        //     routes: routes); //routes.map((key, value) => MapEntry(
-        //   //         key,
-        //   //         (context) => CupertinoPageScaffold(
-        //   //           navigationBar: CupertinoNavigationBar(
-        //   //             middle: Text(key),
-        //   //           ),
-        //   //           child: value(context),
-        //   //         ),
-        //   //       )),
-        //   // );
-        // } else {
+          // if (isIOS) {
+          // return CupertinoApp(
+          //     title: "FitPlan",
+          //     debugShowCheckedModeBanner: false,
+          //     localizationsDelegates: const [
+          //       S.delegate,
+          //       GlobalMaterialLocalizations.delegate,
+          //       GlobalWidgetsLocalizations.delegate,
+          //       GlobalCupertinoLocalizations.delegate,
+          //     ],
+          //     supportedLocales: S.delegate.supportedLocales,
+          //     theme: state.isDark
+          //         ? cupertinoThemeDark
+          //         : cupertinoThemeLight,
+          //     routes: routes); //routes.map((key, value) => MapEntry(
+          //         key,
+          //         (context) => CupertinoPageScaffold(
+          //           navigationBar: CupertinoNavigationBar(
+          //             middle: Text(key),
+          //           ),
+          //           child: value(context),
+          //         ),
+          //       )),
+          // );
+          // } else {
           return MaterialApp(
             title: "FitPlan",
             debugShowCheckedModeBanner: false,
@@ -198,25 +143,31 @@ class _FitPlanAppState extends State<FitPlanApp> {
             theme: state.isDark ? themeDark : themeLight,
             routes: routes,
           );
-        // }
-      },
-      ),);
+          // }
+        },
+      ),
+    );
   }
 }
 
 class FitPlanScope extends StatelessWidget {
-  const FitPlanScope({
-    super.key,
-    required this.child
-  });
+  const FitPlanScope({super.key, required this.child});
 
   final Widget child;
+
   @override
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
         BlocProvider(
-          create: (context) => WorkoutCalendarDataBloc(context.read<WorkoutRepository>()),
+          create: (context) => WorkoutCalendarDataBloc(
+              context.read<WorkoutRepository>(),
+              context.read<ExerciseRepository>(),
+              context.read<ExerciseTypeRepository>()),
+        ),
+        BlocProvider(
+          create: (context) =>
+              WorkoutEditorBloc(context.read<WorkoutRepository>()),
         ),
         // BlocProvider(
         //   create: (context) => ExerciseSearchBloc(
@@ -224,7 +175,7 @@ class FitPlanScope extends StatelessWidget {
         //     exerciseRepository: exerciseRepository,
         //   ),
         // ),
-         BlocProvider(
+        BlocProvider(
           create: (context) {
             final bloc = ExerciseSearchBloc(
               searchRepository: context.read<SearchRepository>(),
@@ -234,8 +185,8 @@ class FitPlanScope extends StatelessWidget {
           },
         ),
         BlocProvider(
-          create: (context) =>
-              ThemeCubit(settingsRepository: context.read<SettingsRepository>()),
+          create: (context) => ThemeCubit(
+              settingsRepository: context.read<SettingsRepository>()),
         ),
         BlocProvider(
           create: (context) => AppVersionCubit(),
@@ -245,5 +196,3 @@ class FitPlanScope extends StatelessWidget {
     );
   }
 }
-
-

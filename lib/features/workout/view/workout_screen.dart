@@ -1,93 +1,112 @@
+import 'package:fitplan/features/workout/widgets/widgets.dart';
+import 'package:fitplan/repositories/workout/entity/entity.dart';
+import 'package:fitplan/repositories/workout/models/models.dart';
+import 'package:fitplan/repositories/workout/workout.dart';
 import 'package:fitplan/ui/widgets/drag_indicator.dart';
 import 'package:flutter/material.dart';
-
+import 'package:flutter_bloc/flutter_bloc.dart';
 class WorkoutScreen extends StatefulWidget {
-  const WorkoutScreen({super.key});
+  final DateTime selectedDate;
+  final List<WorkoutOverview> workoutOverviewList;
+
+  const WorkoutScreen({super.key, required this.selectedDate, required this.workoutOverviewList});
 
   @override
   State<WorkoutScreen> createState() => _WorkoutScreenState();
 }
 
 class _WorkoutScreenState extends State<WorkoutScreen> {
-  List<WorkoutItem> workoutItems = [
-    WorkoutItem(name: "Barbell split squat", isSuperset: true),
-    WorkoutItem(name: "Push-ups", isSuperset: true),
-    WorkoutItem(name: "Barbell bicep curl", isSuperset: true),
-    WorkoutItem(name: "Seated cable row", isSuperset: true),
-    WorkoutItem(name: "Step climber", isSuperset: true),
-    WorkoutItem(name: "Barbell bicep curl", isSuperset: false),
-    WorkoutItem(name: "Treadmill", isSuperset: false),
-    WorkoutItem(name: "Dumbbell concentration curl", isSuperset: false),
-    WorkoutItem(name: "Турник", isSuperset: true),
-    WorkoutItem(name: "Topo", isSuperset: true),
-    WorkoutItem(name: "Back stretching", isSuperset: true),
-  ];
-
+  late List<WorkoutOverview> workoutItems =[]; 
 
   Set<int> selectedIndices = {};
 
+  @override
+  void initState() {
+    super.initState();
+    workoutItems = widget.workoutOverviewList; 
+  }
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-        color: Theme.of(context).colorScheme.background,
-        borderRadius: const BorderRadius.only(
-          topLeft: Radius.circular(20),
-          topRight: Radius.circular(20),
-        ),
-      ),
-      margin: const EdgeInsets.only(top: 60),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          const Center(
-            child: DragIndicator(),
-          ),
-          Expanded(
-            child: ReorderableListView(
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
-              onReorder: _onReorder,
-              children: [
-                for (int index = 0; index < workoutItems.length; index++)
-                  _buildListItem(workoutItems[index], index),
-              ],
+    return Scaffold(
+      backgroundColor: Colors.transparent,
+      body: DraggableScrollableSheet(
+        initialChildSize: 1,
+        minChildSize: 0.5,
+        maxChildSize: 1,
+        expand: false,
+        builder: (_, controller) {
+          return Container(
+            decoration: BoxDecoration(
+              color: Theme.of(context).colorScheme.background,
+              borderRadius: const BorderRadius.only(
+                topLeft: Radius.circular(20),
+                topRight: Radius.circular(20),
+              ),
             ),
-          ),
-          Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Row(
+            margin: const EdgeInsets.only(top: 60),
+            child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                if (selectedIndices.isEmpty)
-                  ElevatedButton(
-                    onPressed: () {
-                      // Handle save action
-                    },
-                    child: const Text('Сохранить'),
-                  )
-                else if (selectedIndices.length == 1)
-                  TextButton(
-                    onPressed: _deleteSelectedItems,
-                    child: Text(
-                      'Удалить',
-                      style: TextStyle(color: Colors.red),
-                    ),
-                  )
-                else if (_areSelectedItemsConsecutive())
-                  TextButton(
-                    onPressed: _makeSuperset,
-                    child: Text(
-                      'Суперсет',
-                      style: TextStyle(color: Colors.white),
-                    ),
-                  )
+                const Center(child: DragIndicator()),
+                Expanded(
+                  child: ReorderableListView(
+                    padding: const EdgeInsets.symmetric(horizontal: 0, vertical: 20),
+                    onReorder: _onReorder,
+                    children: [
+                      for (int index = 0; index < workoutItems.length; index++)
+                        WorkoutReorderableItemWidget(
+                          key: ValueKey(workoutItems[index].workoutId),
+                          workoutOverview: workoutItems[index],
+                          index: index,
+                          selectedIndices: selectedIndices.toList(),
+                          onSelected: (int selectedIndex) {
+                            setState(() {
+                              if (selectedIndices.contains(selectedIndex)) {
+                                selectedIndices.remove(selectedIndex);
+                              } else {
+                                selectedIndices.add(selectedIndex);
+                              }
+                            });
+                          },
+                        ),
+                    ],
+                  ),
+                ),
               ],
             ),
-          ),
-        ],
+          );
+        },
       ),
+      floatingActionButton: _buildFloatingActionButtons(),
     );
+  }
+
+  Widget _buildFloatingActionButtons() {
+    if (selectedIndices.isEmpty) {
+      return FloatingActionButton(
+        onPressed: _saveWorkouts,
+        heroTag: 'save',
+        tooltip: 'Сохранить',
+        child: const Icon(Icons.save),
+      );
+    } else if (selectedIndices.length == 1) {
+      return FloatingActionButton(
+        heroTag: 'delete',
+        onPressed: _deleteSelectedItems,
+        tooltip: 'Удалить',
+        child: const Icon(Icons.delete),
+      );
+    } else if (_areSelectedItemsConsecutive()) {
+      return FloatingActionButton(
+        heroTag: 'superset',
+        onPressed: _makeSuperset,
+        tooltip: 'Суперсет',
+        child: const Icon(Icons.link, color: Colors.white),
+      );
+    } else {
+      return Container();
+    }
   }
 
   void _onReorder(int oldIndex, int newIndex) {
@@ -95,10 +114,10 @@ class _WorkoutScreenState extends State<WorkoutScreen> {
       if (newIndex > oldIndex) {
         newIndex -= 1;
       }
-      final WorkoutItem item = workoutItems.removeAt(oldIndex);
+      final WorkoutOverview item = workoutItems.removeAt(oldIndex);
       workoutItems.insert(newIndex, item);
 
-      // Update selected indices after reordering
+      // Обновляем selectedIndices после reorder
       Set<int> updatedIndices = {};
       for (var index in selectedIndices) {
         if (index == oldIndex) {
@@ -115,51 +134,6 @@ class _WorkoutScreenState extends State<WorkoutScreen> {
     });
   }
 
-
- Widget _buildListItem22(WorkoutItem item, int index) {
-    return ListTile(
-      key: ValueKey(item),
-      leading: Icon(
-        item.isSuperset ? Icons.radio_button_checked : Icons.radio_button_unchecked,
-        color: item.isSuperset ? Colors.white : Colors.grey,
-      ),
-      title: Text(item.name),
-      trailing: const Icon(Icons.drag_handle),
-      onTap: () {
-        // Handle item tap if needed
-      },
-    );
-  }
-   Widget _buildListItem(WorkoutItem item, int index) {
-    final isSelected = selectedIndices.contains(index);
-
-    return GestureDetector(
-      key: ValueKey(index), 
-      onTap: () {
-        setState(() {
-          if (isSelected) {
-            selectedIndices.remove(index);
-          } else {
-            selectedIndices.add(index);
-          }
-        });
-      },
-      child: Container(
-        // Ensure each item has a unique key
-        // key: ValueKey(index), 
-        color: isSelected ? Colors.grey.shade700 : Colors.transparent,
-        child: ListTile(
-          leading: Icon(
-            Icons.fitness_center,
-            color: Colors.white,
-          ),
-          title: Text(item.name, style: TextStyle(color: Colors.white)),
-          trailing: const Icon(Icons.drag_handle, color: Colors.white),
-        ),
-      ),
-    );
-  }
-
   bool _areSelectedItemsConsecutive() {
     if (selectedIndices.length < 2) return false;
 
@@ -172,9 +146,18 @@ class _WorkoutScreenState extends State<WorkoutScreen> {
     return true;
   }
 
+  void _saveWorkouts() {
+    print("====_saveWorkouts ===");
+    for (int i = 0; i < workoutItems.length; i++) {
+      print(workoutItems[i].workoutId + " || " + workoutItems[i].workoutSort.toString());
+    }
+
+    Navigator.pop(context, workoutItems);
+  }
+
   void _deleteSelectedItems() {
     setState(() {
-      // workoutItems.removeWhere((_, index) => selectedIndices.contains(index));
+      workoutItems.removeWhere((item) => selectedIndices.contains(workoutItems.indexOf(item)));
       selectedIndices.clear();
     });
   }
@@ -182,16 +165,10 @@ class _WorkoutScreenState extends State<WorkoutScreen> {
   void _makeSuperset() {
     setState(() {
       for (var index in selectedIndices) {
-        // workoutItems[index].isSuperset = true;
+        // Логика создания суперсета для выбранных элементов
       }
       selectedIndices.clear();
     });
   }
 }
 
-class WorkoutItem {
-  final String name;
-  final bool isSuperset;
-
-  WorkoutItem({required this.name, required this.isSuperset});
-}

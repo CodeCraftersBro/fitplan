@@ -13,3 +13,4 @@ FitPlan is your ultimate workout companion, designed to enhance your fitness jou
 - Social Sharing: Share your progress with friends and the FitPlan community for motivation.
 
 FitPlan is ideal for fitness enthusiasts of all levels looking to streamline their workout experience. Download FitPlan and start your journey to a fitter, healthier you!
+

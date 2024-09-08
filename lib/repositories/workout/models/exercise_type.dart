@@ -8,16 +8,4 @@ class _ExerciseType {
   late String id;
   late String name;
   late String icon;
-
-  // const ExerciseType({
-  //   required this.id,
-  //   required this.name,
-  //   required this.icon,
-  // });
-  // @override
-  // List<Object> get props => [
-  //       id,
-  //       name,
-  //       icon,
-  //     ];
 }

@@ -7,17 +7,26 @@ sealed class WorkoutCalendarDataState extends Equatable {
   List<Object> get props => [];
 }
 
-final class WorkoutCalendarDataInitial extends WorkoutCalendarDataState {}
+final class WorkoutCalendarInitial extends WorkoutCalendarDataState {}
 
 final class WorkoutCalendarLoading extends WorkoutCalendarDataState {}
 
-final class WorkoutCalendarDataLoaded extends WorkoutCalendarDataState {
-  final List<Workout> workouts;
+// final class WorkoutCalendarDataLoaded extends WorkoutCalendarDataState {
+//   final List<Workout> workouts;
 
-  const WorkoutCalendarDataLoaded({required this.workouts});
+//   const WorkoutCalendarDataLoaded({required this.workouts});
+//   @override
+//   List<Object> get props => [workouts];
+// }
+
+final class WorkoutCalendarLoaded extends WorkoutCalendarDataState {
+  final List<WorkoutOverview> workoutList;
+
+  const WorkoutCalendarLoaded({required this.workoutList});
   @override
-  List<Object> get props => [workouts];
+  List<Object> get props => [workoutList];
 }
+
 
 final class WorkoutCalendarFailure extends WorkoutCalendarDataState {
   final Object exception;
@@ -26,3 +35,5 @@ final class WorkoutCalendarFailure extends WorkoutCalendarDataState {
   @override
   List<Object> get props => [exception];
 }
+
+
