@@ -71,6 +71,7 @@ class _FitPlanAppState extends State<FitPlanApp> {
           sortOrder, //сортировка
           date,
           true,
+          0,
           'middle', //индикатор
           exercise.id,
         );
@@ -83,6 +84,7 @@ class _FitPlanAppState extends State<FitPlanApp> {
           sortOrder, //сортировка
           date,
           false,
+          0,
           '', //индикатор
           exercise.id,
         );

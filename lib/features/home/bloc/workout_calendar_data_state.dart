@@ -24,7 +24,7 @@ final class WorkoutCalendarLoaded extends WorkoutCalendarDataState {
 
   const WorkoutCalendarLoaded({required this.workoutList});
   @override
-  List<Object> get props => [workoutList];
+  List<Object> get props => [];
 }
 
 

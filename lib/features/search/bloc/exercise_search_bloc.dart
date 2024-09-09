@@ -129,6 +129,7 @@ class ExerciseSearchBloc
               0,
               date,
               false,
+              0,
               '',
               exerciseSearch.exerciseId,
             );

@@ -16,13 +16,21 @@ void main() {
 
     final preferences = await SharedPreferences.getInstance();
 
-    final config = Configuration.local([
-      Workout.schema,
-      Exercise.schema,
-      ExerciseType.schema,
-    ]);
+    final config = Configuration.local(
+      [
+        Workout.schema,
+        Exercise.schema,
+        ExerciseType.schema,
+      ],
+      schemaVersion: 2,
+      migrationCallback: (migration, oldSchemaVersion) {
+        if (oldSchemaVersion < 2) {
+          // Здесь можно выполнить действия по миграции, если они необходимы
+          // Например, если требуется изменить данные, можно написать логику здесь
+        }
+      },
+    );
     final realm = Realm(config);
-    
 
     runApp(MultiRepositoryProvider(
       providers: [

@@ -94,6 +94,7 @@ class _MainScreenState extends State<MainScreen> {
           listener: (context, state) {
 
             if (state is WorkoutEditorLoaded) {
+               
               context
                   .read<WorkoutCalendarDataBloc>()
                   .add(LoadWorkoutCalendarData(selectedDate: _selectedDay));

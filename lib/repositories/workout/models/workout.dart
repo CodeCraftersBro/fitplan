@@ -9,9 +9,8 @@ class _Workout {
   late int sort;
   late DateTime date;
   late bool isSet;
+  late int setId;
   late String exerciseIndicator;
   late String exerciseId; 
   
 }
-
-// enum LineDirection { up, down, middle }

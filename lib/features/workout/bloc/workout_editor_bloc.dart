@@ -57,6 +57,7 @@ class WorkoutEditorBloc extends Bloc<WorkoutEditorEvent, WorkoutEditorState> {
           sortOrder, 
           dateWithoutTime,
           event.workoutOverviewList[i].workoutIsSet,
+          event.workoutOverviewList[i].workoutSetId,
           event.workoutOverviewList[i].workoutExerciseIndicator,
           event.workoutOverviewList[i].workoutExerciseId,
         );

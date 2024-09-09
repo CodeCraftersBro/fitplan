@@ -13,6 +13,7 @@ class Workout extends _Workout with RealmEntity, RealmObjectBase, RealmObject {
     int sort,
     DateTime date,
     bool isSet,
+    int setId,
     String exerciseIndicator,
     String exerciseId,
   ) {
@@ -20,6 +21,7 @@ class Workout extends _Workout with RealmEntity, RealmObjectBase, RealmObject {
     RealmObjectBase.set(this, 'sort', sort);
     RealmObjectBase.set(this, 'date', date);
     RealmObjectBase.set(this, 'isSet', isSet);
+    RealmObjectBase.set(this, 'setId', setId);
     RealmObjectBase.set(this, 'exerciseIndicator', exerciseIndicator);
     RealmObjectBase.set(this, 'exerciseId', exerciseId);
   }
@@ -45,6 +47,11 @@ class Workout extends _Workout with RealmEntity, RealmObjectBase, RealmObject {
   bool get isSet => RealmObjectBase.get<bool>(this, 'isSet') as bool;
   @override
   set isSet(bool value) => RealmObjectBase.set(this, 'isSet', value);
+
+  @override
+  int get setId => RealmObjectBase.get<int>(this, 'setId') as int;
+  @override
+  set setId(int value) => RealmObjectBase.set(this, 'setId', value);
 
   @override
   String get exerciseIndicator =>
@@ -77,6 +84,7 @@ class Workout extends _Workout with RealmEntity, RealmObjectBase, RealmObject {
       'sort': sort.toEJson(),
       'date': date.toEJson(),
       'isSet': isSet.toEJson(),
+      'setId': setId.toEJson(),
       'exerciseIndicator': exerciseIndicator.toEJson(),
       'exerciseId': exerciseId.toEJson(),
     };
@@ -90,6 +98,7 @@ class Workout extends _Workout with RealmEntity, RealmObjectBase, RealmObject {
         'sort': EJsonValue sort,
         'date': EJsonValue date,
         'isSet': EJsonValue isSet,
+        'setId': EJsonValue setId,
         'exerciseIndicator': EJsonValue exerciseIndicator,
         'exerciseId': EJsonValue exerciseId,
       } =>
@@ -98,6 +107,7 @@ class Workout extends _Workout with RealmEntity, RealmObjectBase, RealmObject {
           fromEJson(sort),
           fromEJson(date),
           fromEJson(isSet),
+          fromEJson(setId),
           fromEJson(exerciseIndicator),
           fromEJson(exerciseId),
         ),
@@ -113,6 +123,7 @@ class Workout extends _Workout with RealmEntity, RealmObjectBase, RealmObject {
       SchemaProperty('sort', RealmPropertyType.int),
       SchemaProperty('date', RealmPropertyType.timestamp),
       SchemaProperty('isSet', RealmPropertyType.bool),
+      SchemaProperty('setId', RealmPropertyType.int),
       SchemaProperty('exerciseIndicator', RealmPropertyType.string),
       SchemaProperty('exerciseId', RealmPropertyType.string),
     ]);
