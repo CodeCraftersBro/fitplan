@@ -8,4 +8,6 @@ class _ExerciseType {
   late String id;
   late String name;
   late String icon;
+  late String category; 
 }
+

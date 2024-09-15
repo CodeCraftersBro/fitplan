@@ -2,11 +2,8 @@ import 'dart:developer';
 
 import 'package:fitplan/features/workout/widgets/widgets.dart';
 import 'package:fitplan/repositories/workout/entity/entity.dart';
-import 'package:fitplan/repositories/workout/models/models.dart';
-import 'package:fitplan/repositories/workout/workout.dart';
 import 'package:fitplan/ui/widgets/drag_indicator.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 
 class WorkoutScreen extends StatefulWidget {
   final DateTime selectedDate;

@@ -22,7 +22,7 @@ void main() {
         Exercise.schema,
         ExerciseType.schema,
       ],
-      schemaVersion: 2,
+      schemaVersion: 3,
       migrationCallback: (migration, oldSchemaVersion) {
         if (oldSchemaVersion < 2) {
           // Здесь можно выполнить действия по миграции, если они необходимы

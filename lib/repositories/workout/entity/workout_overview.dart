@@ -14,8 +14,9 @@ class WorkoutOverview {
   final String workoutExerciseTypeId;
   final String workoutExerciseTypeName;
   final String workoutExerciseTypeIcon;
+  final String workoutExerciseTypeCategory;
 
-  WorkoutOverview({
+  WorkoutOverview( {
     required this.workoutId,
     required this.workoutSort,
     required this.workoutIsSet,
@@ -26,6 +27,7 @@ class WorkoutOverview {
     required this.workoutExerciseTypeId,
     required this.workoutExerciseTypeName,
     required this.workoutExerciseTypeIcon,
+    required this.workoutExerciseTypeCategory,
   });
 
   WorkoutOverview copyWith({
@@ -38,6 +40,7 @@ class WorkoutOverview {
     String? workoutExerciseName,
     String? workoutExerciseTypeId,
     String? workoutExerciseTypeName,
+    String? workoutExerciseTypeCategory,
     String? workoutExerciseTypeIcon,
   }) {
     return WorkoutOverview(
@@ -50,7 +53,8 @@ class WorkoutOverview {
       workoutExerciseName: workoutExerciseName ?? this.workoutExerciseName,
       workoutExerciseTypeId: workoutExerciseTypeId ?? this.workoutExerciseTypeId,
       workoutExerciseTypeName: workoutExerciseTypeName ?? this.workoutExerciseTypeName,
-      workoutExerciseTypeIcon: workoutExerciseTypeIcon ?? this.workoutExerciseTypeIcon,
+      workoutExerciseTypeIcon: workoutExerciseTypeIcon ?? this.workoutExerciseTypeIcon, 
+      workoutExerciseTypeCategory: workoutExerciseTypeCategory ?? this.workoutExerciseTypeCategory
     );
   }
 }

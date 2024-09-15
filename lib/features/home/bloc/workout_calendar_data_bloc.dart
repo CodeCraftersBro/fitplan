@@ -98,7 +98,8 @@ class WorkoutCalendarDataBloc
           workoutExerciseName: exercise.name, 
           workoutExerciseTypeId: exerciseType.id, 
           workoutExerciseTypeName: exerciseType.name, 
-          workoutExerciseTypeIcon: exerciseType.icon,
+          workoutExerciseTypeIcon: exerciseType.icon, 
+          workoutExerciseTypeCategory: exerciseType.category,
         );
 
         workoutEntities.add(workoutEntity);

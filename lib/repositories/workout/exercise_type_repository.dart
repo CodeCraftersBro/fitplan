@@ -12,17 +12,17 @@ class ExerciseTypeRepository implements ExerciseTypeRepositoryInterface {
     // var uuid = const uuid_lib.Uuid();
     // Пример обновления данных из API
     // Здесь вы можете сделать запрос к вашему API и обновить данные в Realm
-    final List<ExerciseType> exerciseTypesFromAPI = [
-      
-      ExerciseType('1','Arms','💪'),
-      ExerciseType('2','Legs','🦵'),
-      ExerciseType('3','Stretching','🧘‍♂️'),
-      ExerciseType('4','Shoulders','🤾‍♂️'),
-      ExerciseType('5','Back','🧗'),
-      ExerciseType('6','Abs','🤸'),
-      ExerciseType('7','Chest','🏋️‍♀️'),
-      ExerciseType('8','Cardio','🫀'),
+   final List<ExerciseType> exerciseTypesFromAPI = [
+      ExerciseType('1', 'Arms', '💪', 'Strength'),
+      ExerciseType('2', 'Legs', '🦵', 'Strength'),
+      ExerciseType('3', 'Stretching', '🧘‍♂️', 'Stretching'),
+      ExerciseType('4', 'Shoulders', '🤾‍♂️', 'Strength'),
+      ExerciseType('5', 'Back', '🧗', 'Strength'),
+      ExerciseType('6', 'Abs', '🤸', 'Strength'),
+      ExerciseType('7', 'Chest', '🏋️‍♀️', 'Strength'),
+      ExerciseType('8', 'Cardio', '🫀', 'Cardio'),
     ];
+
 
     realm.write(() {
       for (var exerciseType in exerciseTypesFromAPI) {

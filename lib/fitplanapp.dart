@@ -7,17 +7,15 @@ import 'package:fitplan/generated/l10n.dart';
 import 'package:fitplan/repositories/search/search_repository.dart';
 import 'package:fitplan/repositories/settings/settings.dart';
 import 'package:fitplan/repositories/workout/workout.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fitplan/router/router.dart';
 import 'package:fitplan/ui/theme/theme.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
-import 'package:realm/realm.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
-import 'repositories/workout/models/models.dart';
-import 'package:uuid/uuid.dart' as uuid_lib;
+
+// import 'repositories/workout/models/models.dart';
+// import 'package:uuid/uuid.dart' as uuid_lib;
 
 class FitPlanApp extends StatefulWidget {
   const FitPlanApp({super.key});
@@ -58,41 +56,41 @@ class _FitPlanAppState extends State<FitPlanApp> {
     await context.read<ExerciseRepository>().deleteAllExercise();
     if (!mounted) return;
     await context.read<ExerciseRepository>().updateExercise();
-    final exercises = await context.read<ExerciseRepository>().getExercises();
-    final date = _getDateWithoutTime(DateTime.now());
+    // final exercises = await context.read<ExerciseRepository>().getExercises();
+    // final date = _getDateWithoutTime(DateTime.now());
 
-    var uuid = const uuid_lib.Uuid();
-    for (var exercise in exercises) {
-      int sortOrder =
-          await context.read<WorkoutRepository>().getNextSortOrderForDate(date);
-      if (exercise.exerciseTypeId == '1') {
-        var workout = Workout(
-          uuid.v4(),
-          sortOrder, //сортировка
-          date,
-          true,
-          0,
-          'middle', //индикатор
-          exercise.id,
-        );
-        if (!mounted) return;
-        await context.read<WorkoutRepository>().addWorkout(workout);
-      }
-      if (exercise.exerciseTypeId == '4') {
-        var workout = Workout(
-          uuid.v4(),
-          sortOrder, //сортировка
-          date,
-          false,
-          0,
-          '', //индикатор
-          exercise.id,
-        );
-        if (!mounted) return;
-        await context.read<WorkoutRepository>().addWorkout(workout);
-      }
-      print('Exercise: ${exercise.name}, ID: ${exercise.id}');
-    }
+    // var uuid = const uuid_lib.Uuid();
+    // for (var exercise in exercises) {
+    //   int sortOrder =
+    //       await context.read<WorkoutRepository>().getNextSortOrderForDate(date);
+    //   if (exercise.exerciseTypeId == '1') {
+    //     var workout = Workout(
+    //       uuid.v4(),
+    //       sortOrder, //сортировка
+    //       date,
+    //       true,
+    //       0,
+    //       'middle', //индикатор
+    //       exercise.id,
+    //     );
+    //     if (!mounted) return;
+    //     await context.read<WorkoutRepository>().addWorkout(workout);
+    //   }
+    //   if (exercise.exerciseTypeId == '4') {
+    //     var workout = Workout(
+    //       uuid.v4(),
+    //       sortOrder, //сортировка
+    //       date,
+    //       false,
+    //       0,
+    //       '', //индикатор
+    //       exercise.id,
+    //     );
+    //     if (!mounted) return;
+    //     await context.read<WorkoutRepository>().addWorkout(workout);
+    //   }
+    //   print('Exercise: ${exercise.name}, ID: ${exercise.id}');
+    // }
   }
 
   DateTime _getDateWithoutTime(DateTime dateTime) {

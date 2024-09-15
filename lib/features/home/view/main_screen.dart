@@ -45,6 +45,8 @@ class _MainScreenState extends State<MainScreen> {
     }
   }
 
+ 
+
   void _showModalAddExercise(
       BuildContext context, DateTime selectedDate) async {
     final bloc = context.read<ExerciseSearchBloc>();
@@ -69,7 +71,11 @@ class _MainScreenState extends State<MainScreen> {
       context: context,
       builder: (context) => WorkoutScreen(selectedDate: selectedDate, workoutOverviewList: workoutOverviewList),
     );
+    if (!mounted) return;
     if (workoutOverviewReorderableList == null) {
+      context
+        .read<WorkoutCalendarDataBloc>()
+        .add(LoadWorkoutCalendarData(selectedDate: _selectedDay));
       return;
     }
     if (!mounted) return;

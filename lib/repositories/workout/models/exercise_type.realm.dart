@@ -13,10 +13,12 @@ class ExerciseType extends _ExerciseType
     String id,
     String name,
     String icon,
+    String category,
   ) {
     RealmObjectBase.set(this, 'id', id);
     RealmObjectBase.set(this, 'name', name);
     RealmObjectBase.set(this, 'icon', icon);
+    RealmObjectBase.set(this, 'category', category);
   }
 
   ExerciseType._();
@@ -37,6 +39,12 @@ class ExerciseType extends _ExerciseType
   set icon(String value) => RealmObjectBase.set(this, 'icon', value);
 
   @override
+  String get category =>
+      RealmObjectBase.get<String>(this, 'category') as String;
+  @override
+  set category(String value) => RealmObjectBase.set(this, 'category', value);
+
+  @override
   Stream<RealmObjectChanges<ExerciseType>> get changes =>
       RealmObjectBase.getChanges<ExerciseType>(this);
 
@@ -53,6 +61,7 @@ class ExerciseType extends _ExerciseType
       'id': id.toEJson(),
       'name': name.toEJson(),
       'icon': icon.toEJson(),
+      'category': category.toEJson(),
     };
   }
 
@@ -63,11 +72,13 @@ class ExerciseType extends _ExerciseType
         'id': EJsonValue id,
         'name': EJsonValue name,
         'icon': EJsonValue icon,
+        'category': EJsonValue category,
       } =>
         ExerciseType(
           fromEJson(id),
           fromEJson(name),
           fromEJson(icon),
+          fromEJson(category),
         ),
       _ => raiseInvalidEJson(ejson),
     };
@@ -80,6 +91,7 @@ class ExerciseType extends _ExerciseType
       SchemaProperty('id', RealmPropertyType.string, primaryKey: true),
       SchemaProperty('name', RealmPropertyType.string),
       SchemaProperty('icon', RealmPropertyType.string),
+      SchemaProperty('category', RealmPropertyType.string),
     ]);
   }();
 

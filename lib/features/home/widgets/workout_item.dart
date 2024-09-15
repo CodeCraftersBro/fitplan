@@ -1,3 +1,7 @@
+
+import 'dart:developer';
+
+import 'package:fitplan/features/perform/perform.dart';
 import 'package:fitplan/repositories/workout/entity/entity.dart';
 import 'package:flutter/material.dart';
 
@@ -35,7 +39,7 @@ class WorkoutItemWidget extends StatelessWidget {
                         ),
                   ),
                   Text(
-                    "Круг №"+workoutOverview.workoutSort.toString(),
+                    "Подход №"+workoutOverview.workoutSort.toString(),
                     style: Theme.of(context).textTheme.titleMedium?.copyWith(
                           fontSize: 14,
                         ),
@@ -47,7 +51,9 @@ class WorkoutItemWidget extends StatelessWidget {
           Row(
             children: [
               IconButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    _showModalPerform(context,workoutOverview);
+                  },
                   icon: Icon(
                     Icons.wrap_text,
                     color: Theme.of(context).colorScheme.primary,
@@ -58,5 +64,36 @@ class WorkoutItemWidget extends StatelessWidget {
       ),
     );
     ;
+  }
+}
+
+void _showModalPerform(BuildContext context, WorkoutOverview workoutOverview) async {
+  // Пример данных, которые вы можете передавать в PerformScreen
+  final List<Map<String, String>> existingSets = [
+    // {'weight': '20', 'reps': '12'},
+    // {'weight': '30', 'reps': '10'},
+  ];
+
+  log(workoutOverview.workoutExerciseTypeName);
+  log(workoutOverview.workoutExerciseTypeCategory);
+  // Открываем PerformScreen с переданными данными
+  final performData = await showModalBottomSheet(
+    isScrollControlled: true,
+    backgroundColor: Colors.transparent,
+    elevation: 0,
+    context: context,
+    builder: (context) => PerformScreen(
+      exerciseName: workoutOverview.workoutExerciseName,
+      exerciseType: workoutOverview.workoutExerciseTypeCategory,
+      existingSets: existingSets, // Передаем данные на экран
+    ),
+  );
+
+  // Обрабатываем данные, если пользователь ввел новые данные
+  if (performData != null) {
+    // performData содержит новые или отредактированные данные от экрана
+    print("Полученные данные: $performData");
+
+    // Здесь вы можете сделать что-то с полученными данными, например, сохранить их в базе данных
   }
 }
