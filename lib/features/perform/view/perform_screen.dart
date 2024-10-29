@@ -80,7 +80,7 @@ class _PerformScreenState extends State<PerformScreen> {
                       // Заголовок упражнения
                       Text(
                         widget.exerciseName,
-                        style: Theme.of(context).textTheme.headline5?.copyWith(
+                        style: Theme.of(context).textTheme.headlineSmall?.copyWith(
                               fontWeight: FontWeight.bold,
                             ),
                       ),
@@ -209,7 +209,7 @@ class _PerformScreenState extends State<PerformScreen> {
                 "${index + 1}",
                 style: Theme.of(context)
                     .textTheme
-                    .headline6
+                    .titleLarge
                     ?.copyWith(fontWeight: FontWeight.bold),
               ),
               const SizedBox(width: 16),
@@ -272,7 +272,7 @@ class _PerformScreenState extends State<PerformScreen> {
                 "${index + 1}",
                 style: Theme.of(context)
                     .textTheme
-                    .headline6
+                    .titleLarge
                     ?.copyWith(fontWeight: FontWeight.bold),
               ),
               const SizedBox(width: 16),
