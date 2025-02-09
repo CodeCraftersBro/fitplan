@@ -23,7 +23,19 @@ class MessageLookup extends MessageLookupByLibrary {
   static String m0(version, buildNumber) =>
       "Версия приложения: ${version} (${buildNumber})";
 
-  static String m1(ring) => "Подход: ${ring}";
+  static String m1(count) =>
+      "${Intl.plural(count, one: '${count} сессия', few: '${count} сессии', many: '${count} сессий', other: '${count} сессии')}";
+
+  static String m2(count) =>
+      "${Intl.plural(count, one: '${count} повторение', few: '${count} повторения', many: '${count} повторений', other: '${count} повторения')}";
+
+  static String m3(count) =>
+      "${Intl.plural(count, one: '${count} подход', few: '${count} подхода', many: '${count} подходов', other: '${count} подхода')}";
+
+  static String m4(count) =>
+      "${Intl.plural(count, one: '${count} упражнение', few: '${count} упражнения', many: '${count} упражнений', other: '${count} упражнения')}";
+
+  static String m5(ring) => "Подход: ${ring}";
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
@@ -41,7 +53,12 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Разрешить аналитику"),
         "home": MessageLookupByLibrary.simpleMessage("Мои тренировки"),
         "notifications": MessageLookupByLibrary.simpleMessage("Уведомления"),
-        "ringWorkout": m1,
+        "reps_cardio": m1,
+        "reps_generic": m2,
+        "reps_none": MessageLookupByLibrary.simpleMessage("Нет данных"),
+        "reps_strength": m3,
+        "reps_stretching": m4,
+        "ringWorkout": m5,
         "settings": MessageLookupByLibrary.simpleMessage("Настройки"),
         "support": MessageLookupByLibrary.simpleMessage("Поддержка"),
         "today": MessageLookupByLibrary.simpleMessage("Сегодня"),

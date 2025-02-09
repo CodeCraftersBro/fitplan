@@ -1,5 +1,6 @@
 import 'package:fitplan/features/home/bloc/workout_calendar_data_bloc.dart';
 import 'package:fitplan/features/home/widgets/widgets.dart';
+import 'package:fitplan/features/perform/bloc/exercise_repeat_bloc.dart';
 import 'package:fitplan/features/search/bloc/exercise_search_bloc.dart';
 import 'package:fitplan/features/workout/bloc/workout_editor_bloc.dart';
 import 'package:fitplan/features/workout/workout.dart';
@@ -100,13 +101,22 @@ class _MainScreenState extends State<MainScreen> {
           listener: (context, state) {
 
             if (state is WorkoutEditorLoaded) {
-               
               context
                   .read<WorkoutCalendarDataBloc>()
                   .add(LoadWorkoutCalendarData(selectedDate: _selectedDay));
             }
           },
         ),
+        // BlocListener<ExerciseRepeatBloc, ExerciseRepeatState>(
+        //   listener: (context, state) {
+
+        //     if (state is ExerciseRepeatsLoaded) {
+        //       context
+        //           .read<WorkoutCalendarDataBloc>()
+        //           .add(LoadWorkoutCalendarData(selectedDate: _selectedDay));
+        //     }
+        //   },
+        // ),
       ],
       child: BlocBuilder<WorkoutCalendarDataBloc, WorkoutCalendarDataState>(
         builder: (context, state) {
@@ -309,7 +319,7 @@ class _MainScreenState extends State<MainScreen> {
                                               .colorScheme
                                               .surface,
                                     ),
-                                    child: WorkoutItemWidget(workoutOverview: workoutOverviewList[index]),
+                                    child: WorkoutItemWidget(workoutOverview: workoutOverviewList[index],selectedDate: _selectedDay),
                                   ),
                                 )
                               ],

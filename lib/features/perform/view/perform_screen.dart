@@ -24,6 +24,7 @@ class _PerformScreenState extends State<PerformScreen> {
   @override
   void initState() {
     super.initState();
+    
     _initializeControllers();
   }
 
@@ -89,7 +90,8 @@ class _PerformScreenState extends State<PerformScreen> {
                       // Ввод данных в зависимости от типа упражнения
                       if (widget.exerciseType == 'Strength')
                         _buildStrengthFields(),
-                      if (widget.exerciseType == 'Cardio') _buildCardioFields(),
+                      if (widget.exerciseType == 'Cardio') 
+                        _buildCardioFields(),
                       if (widget.exerciseType == 'Stretching')
                         _buildStretchingFields(),
 

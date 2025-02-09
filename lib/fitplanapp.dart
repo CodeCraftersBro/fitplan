@@ -1,5 +1,6 @@
 import 'package:fitplan/bloc/app_version/app_version_cubit.dart';
 import 'package:fitplan/bloc/theme/theme_cubit.dart';
+import 'package:fitplan/features/perform/bloc/exercise_repeat_bloc.dart';
 import 'package:fitplan/features/search/bloc/exercise_search_bloc.dart';
 import 'package:fitplan/features/home/bloc/workout_calendar_data_bloc.dart';
 import 'package:fitplan/features/workout/bloc/workout_editor_bloc.dart';
@@ -43,19 +44,37 @@ class _FitPlanAppState extends State<FitPlanApp> {
 
     // Получение списка тренировок и вывод в консоль
 
-    _printWorkouts();
+    _initEventWorkouts();
   }
 
-  Future<void> _printWorkouts() async {
-    await context.read<WorkoutRepository>().deleteAllWorkouts();
+  Future<void> _initEventWorkouts() async {
+
+
     if (!mounted) return;
-    await context.read<ExerciseTypeRepository>().deleteAll();
-    if (!mounted) return;
-    await context.read<ExerciseTypeRepository>().updateExerciseTypesFromAPI();
-    if (!mounted) return;
-    await context.read<ExerciseRepository>().deleteAllExercise();
-    if (!mounted) return;
-    await context.read<ExerciseRepository>().updateExercise();
+
+    // Проверяем, есть ли уже упражнения в ExerciseTypeRepository
+    final exerciseTypes = await context.read<ExerciseTypeRepository>().getExerciseTypes();
+    if (exerciseTypes.isEmpty) {
+        await context.read<ExerciseTypeRepository>().updateExerciseTypesFromAPI();
+        if (!mounted) return;
+    }
+
+    // Проверяем, есть ли уже упражнения в ExerciseRepository
+    final exercises = await context.read<ExerciseRepository>().getExercises();
+    if (exercises.isEmpty) {
+        await context.read<ExerciseRepository>().updateExercise();
+        if (!mounted) return;
+    }
+    
+    // await context.read<WorkoutRepository>().deleteAllWorkouts();
+    // if (!mounted) return;
+    // await context.read<ExerciseTypeRepository>().deleteAll();
+    // if (!mounted) return;
+    // await context.read<ExerciseTypeRepository>().updateExerciseTypesFromAPI();
+    // if (!mounted) return;
+    // await context.read<ExerciseRepository>().deleteAllExercise();
+    // if (!mounted) return;
+    // await context.read<ExerciseRepository>().updateExercise();
     // final exercises = await context.read<ExerciseRepository>().getExercises();
     // final date = _getDateWithoutTime(DateTime.now());
 
@@ -138,7 +157,7 @@ class _FitPlanAppState extends State<FitPlanApp> {
               GlobalWidgetsLocalizations.delegate,
               GlobalCupertinoLocalizations.delegate,
             ],
-            // locale: const Locale('ru'),
+            locale: const Locale('ru'),
             supportedLocales: S.delegate.supportedLocales,
             theme: state.isDark ? themeDark : themeLight,
             routes: routes,
@@ -163,12 +182,21 @@ class FitPlanScope extends StatelessWidget {
           create: (context) => WorkoutCalendarDataBloc(
               context.read<WorkoutRepository>(),
               context.read<ExerciseRepository>(),
-              context.read<ExerciseTypeRepository>()),
+              context.read<ExerciseTypeRepository>(),
+              context.read<ExerciseRepeatRepository>()
+              ),
         ),
         BlocProvider(
           create: (context) =>
               WorkoutEditorBloc(context.read<WorkoutRepository>()),
         ),
+        BlocProvider(
+          create: (context) =>
+              ExerciseRepeatBloc(
+                exerciseRepeatRepository: context.read<ExerciseRepeatRepository>()
+              ),
+        ),
+        
         // BlocProvider(
         //   create: (context) => ExerciseSearchBloc(
         //     exerciseTypeRepository: exerciseTypeRepository,

@@ -21,8 +21,9 @@ void main() {
         Workout.schema,
         Exercise.schema,
         ExerciseType.schema,
+        ExerciseRepeat.schema,
       ],
-      schemaVersion: 3,
+      schemaVersion: 4,
       migrationCallback: (migration, oldSchemaVersion) {
         if (oldSchemaVersion < 2) {
           // Здесь можно выполнить действия по миграции, если они необходимы
@@ -31,7 +32,6 @@ void main() {
       },
     );
     final realm = Realm(config);
-
     runApp(MultiRepositoryProvider(
       providers: [
         RepositoryProvider(
@@ -48,6 +48,9 @@ void main() {
         ),
         RepositoryProvider(
           create: (context) => ExerciseTypeRepository(realm: realm),
+        ),
+        RepositoryProvider(
+          create: (context) => ExerciseRepeatRepository(realm: realm),
         ),
       ],
       child: const FitPlanApp(

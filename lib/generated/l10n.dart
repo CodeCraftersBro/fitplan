@@ -190,13 +190,63 @@ class S {
     );
   }
 
-  /// `Добавить упражнение`
+  /// `Add`
   String get addExercise {
     return Intl.message(
-      'Добавить упражнение',
+      'Add',
       name: 'addExercise',
       desc: '',
       args: [],
+    );
+  }
+
+  /// `No data`
+  String get reps_none {
+    return Intl.message(
+      'No data',
+      name: 'reps_none',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `{count} sets`
+  String reps_strength(Object count) {
+    return Intl.message(
+      '$count sets',
+      name: 'reps_strength',
+      desc: '',
+      args: [count],
+    );
+  }
+
+  /// `{count} sessions`
+  String reps_cardio(Object count) {
+    return Intl.message(
+      '$count sessions',
+      name: 'reps_cardio',
+      desc: '',
+      args: [count],
+    );
+  }
+
+  /// `{count} exercises`
+  String reps_stretching(Object count) {
+    return Intl.message(
+      '$count exercises',
+      name: 'reps_stretching',
+      desc: '',
+      args: [count],
+    );
+  }
+
+  /// `{count} reps`
+  String reps_generic(Object count) {
+    return Intl.message(
+      '$count reps',
+      name: 'reps_generic',
+      desc: '',
+      args: [count],
     );
   }
 }

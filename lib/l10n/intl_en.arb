@@ -13,5 +13,10 @@
   "unknownState": "Unknown state",
   "appVersionAndBuildnumber": "Application version: {version} ({buildNumber})",
   "ringWorkout": "Ring: {ring}",
-  "addExercise": "Добавить упражнение"
+  "addExercise": "Add",
+  "reps_none": "No data",
+  "reps_strength": "{count} sets",
+  "reps_cardio": "{count} sessions",
+  "reps_stretching": "{count} exercises",
+  "reps_generic": "{count} reps"
 }

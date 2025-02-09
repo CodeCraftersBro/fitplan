@@ -59,6 +59,7 @@ class Exercise extends _Exercise
 
   static EJsonValue _toEJson(Exercise value) => value.toEJson();
   static Exercise _fromEJson(EJsonValue ejson) {
+    if (ejson is! Map<String, dynamic>) return raiseInvalidEJson(ejson);
     return switch (ejson) {
       {
         'id': EJsonValue id,
@@ -77,7 +78,7 @@ class Exercise extends _Exercise
   static final schema = () {
     RealmObjectBase.registerFactory(Exercise._);
     register(_toEJson, _fromEJson);
-    return SchemaObject(ObjectType.realmObject, Exercise, 'Exercise', [
+    return const SchemaObject(ObjectType.realmObject, Exercise, 'Exercise', [
       SchemaProperty('id', RealmPropertyType.string, primaryKey: true),
       SchemaProperty('name', RealmPropertyType.string),
       SchemaProperty('exerciseTypeId', RealmPropertyType.string),

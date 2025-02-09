@@ -23,12 +23,19 @@ class MessageLookup extends MessageLookupByLibrary {
   static String m0(version, buildNumber) =>
       "Application version: ${version} (${buildNumber})";
 
-  static String m1(ring) => "Ring: ${ring}";
+  static String m1(count) => "${count} sessions";
+
+  static String m2(count) => "${count} reps";
+
+  static String m3(count) => "${count} sets";
+
+  static String m4(count) => "${count} exercises";
+
+  static String m5(ring) => "Ring: ${ring}";
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
-        "addExercise":
-            MessageLookupByLibrary.simpleMessage("Добавить упражнение"),
+        "addExercise": MessageLookupByLibrary.simpleMessage("Add"),
         "add_exercise": MessageLookupByLibrary.simpleMessage("Add excrcise"),
         "appVersionAndBuildnumber": m0,
         "clearHistory": MessageLookupByLibrary.simpleMessage("Clear history"),
@@ -39,7 +46,12 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Enable analytics"),
         "home": MessageLookupByLibrary.simpleMessage("My plan"),
         "notifications": MessageLookupByLibrary.simpleMessage("Notifications"),
-        "ringWorkout": m1,
+        "reps_cardio": m1,
+        "reps_generic": m2,
+        "reps_none": MessageLookupByLibrary.simpleMessage("No data"),
+        "reps_strength": m3,
+        "reps_stretching": m4,
+        "ringWorkout": m5,
         "settings": MessageLookupByLibrary.simpleMessage("Settings"),
         "support": MessageLookupByLibrary.simpleMessage("Support"),
         "today": MessageLookupByLibrary.simpleMessage("Today"),

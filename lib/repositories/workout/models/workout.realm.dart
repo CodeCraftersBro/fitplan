@@ -92,6 +92,7 @@ class Workout extends _Workout with RealmEntity, RealmObjectBase, RealmObject {
 
   static EJsonValue _toEJson(Workout value) => value.toEJson();
   static Workout _fromEJson(EJsonValue ejson) {
+    if (ejson is! Map<String, dynamic>) return raiseInvalidEJson(ejson);
     return switch (ejson) {
       {
         'id': EJsonValue id,
@@ -118,7 +119,7 @@ class Workout extends _Workout with RealmEntity, RealmObjectBase, RealmObject {
   static final schema = () {
     RealmObjectBase.registerFactory(Workout._);
     register(_toEJson, _fromEJson);
-    return SchemaObject(ObjectType.realmObject, Workout, 'Workout', [
+    return const SchemaObject(ObjectType.realmObject, Workout, 'Workout', [
       SchemaProperty('id', RealmPropertyType.string, primaryKey: true),
       SchemaProperty('sort', RealmPropertyType.int),
       SchemaProperty('date', RealmPropertyType.timestamp),
