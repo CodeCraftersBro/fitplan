@@ -1,4 +1,6 @@
+
 part of 'exercise_repeat_bloc.dart';
+
 
 sealed class ExerciseRepeatEvent extends Equatable {
   const ExerciseRepeatEvent();
@@ -28,4 +30,13 @@ class AddExerciseRepeat extends ExerciseRepeatEvent {
 
   @override
   List<Object> get props => [workoutOverview, performData];
+}
+
+class ExerciseRepeatError extends ExerciseRepeatState {
+  final String message;
+
+  const ExerciseRepeatError({required this.message});
+
+  @override
+  List<Object> get props => [message];
 }

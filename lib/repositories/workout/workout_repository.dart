@@ -1,104 +1,111 @@
-import 'package:fitplan/repositories/workout/models/workout.dart';
 import 'package:fitplan/repositories/workout/workout_repository_interface.dart';
-import 'package:realm/realm.dart';
+import 'package:fitplan/repositories/workout/database.dart';
+import 'package:drift/drift.dart';
 
 class WorkoutRepository implements WorkoutRepositoryInterface {
-  final Realm realm;
+  final AppDatabase database;
 
-  WorkoutRepository({required this.realm});
+  WorkoutRepository({required this.database});
 
   @override
   Future<List<Workout>> getExerciseListByDate(DateTime date) async {
-    final workouts = realm.all<Workout>().query('date == \$0', [date]);
-    return workouts.toList();
+    return await (database.select(database.workouts)
+          ..where((tbl) => tbl.date.equals(date)))
+        .get();
   }
 
   @override
   Future<void> addWorkout(Workout workout) async {
-    realm.write(() {
-      realm.add(workout);
+    await database.into(database.workouts).insert(
+      WorkoutsCompanion(
+        id: Value(workout.id),
+        sort: Value(workout.sort),
+        date: Value(workout.date),
+        isSet: Value(workout.isSet),
+        setId: Value(workout.setId),
+        exerciseIndicator: Value(workout.exerciseIndicator),
+        exerciseId: Value(workout.exerciseId),
+      ),
+    );
+  }
+
+   Future<void> addWorkouts(List<WorkoutsCompanion> workouts) async {
+    await database.batch((batch) {
+      batch.insertAll(database.workouts, workouts, mode: InsertMode.insertOrReplace);
     });
   }
 
+
   @override
   Future<List<Workout>> getAllWorkouts() async {
-    final workouts = realm.all<Workout>();
-    return workouts.toList();
+    return await database.select(database.workouts).get();
   }
 
   @override
   Future<void> deleteAllWorkouts() async {
-    realm.write(() {
-      realm.deleteAll<Workout>();
-    });
+    await database.delete(database.workouts).go();
   }
 
   @override
   Future<void> deleteWorkoutById(String id) async {
-    final workout = realm.find<Workout>(id);
-    if (workout != null) {
-      realm.write(() {
-        realm.delete(workout);
-      });
-    }
+    await (database.delete(database.workouts)
+          ..where((tbl) => tbl.id.equals(id)))
+        .go();
   }
 
   @override
   Future<int> getNextSortOrderForDate(DateTime date) async {
-    final workouts = await getExerciseListByDate(date);
+    final query = await (database.select(database.workouts)
+          ..where((tbl) => tbl.date.equals(date)))
+        .get();
 
-    if (workouts.isEmpty) {
+    if (query.isEmpty) {
       return 1;
     } else {
-      // Ищем максимальное значение сортировки и увеличиваем его на 1
-      final maxSortOrder =
-          workouts.map((w) => w.sort).reduce((a, b) => a > b ? a : b);
+      final maxSortOrder = query.map((w) => w.sort).reduce((a, b) => a > b ? a : b);
       return maxSortOrder + 1;
     }
   }
 
   @override
   Future<int> getNextSetIdForDate(DateTime date) async {
-    // Получаем все тренировки для указанной даты
-    final workouts = realm.all<Workout>().query('date == \$0', [date]);
+    final query = await (database.select(database.workouts)
+          ..where((tbl) => tbl.date.equals(date)))
+        .get();
 
-    // Если на эту дату нет тренировок, то первый номер сета будет 1
-    if (workouts.isEmpty) {
+    if (query.isEmpty) {
       return 1;
     } else {
-      // Находим максимальное значение setId и увеличиваем его на 1
-      final maxSetId =
-          workouts.map((w) => w.setId).reduce((a, b) => a > b ? a : b);
+      final maxSetId = query.map((w) => w.setId).reduce((a, b) => a > b ? a : b);
       return maxSetId + 1;
     }
   }
 
   @override
   Future<void> updateWorkouts(List<Workout> workouts) async {
-    //  print("====updateWorkouts ===");
-    // for (int i = 0; i < workouts.length; i++) {
-    //   print(workouts[i].id + " || " + workouts[i].sort.toString());
-    //   final workout = realm.find<Workout>(workouts[i].id);
-    //   if (workout != null) {
-    //     realm.write(() {
-    //       realm.delete(workout);
-    //     });
-    //   }
-    // }
-
-    realm.write(() {
+    await database.batch((batch) {
       for (var workout in workouts) {
-        realm.add(workout, update: true);
+        batch.insert(
+          database.workouts,
+          WorkoutsCompanion(
+            id: Value(workout.id),
+            sort: Value(workout.sort),
+            date: Value(workout.date),
+            isSet: Value(workout.isSet),
+            setId: Value(workout.setId),
+            exerciseIndicator: Value(workout.exerciseIndicator),
+            exerciseId: Value(workout.exerciseId),
+          ),
+          mode: InsertMode.insertOrReplace, // Обновляет записи, если они уже есть
+        );
       }
     });
   }
 
   @override
   Future<void> deleteWorkoutsByDate(DateTime date) async {
-    realm.write(() {
-      final workoutsToDelete =
-          realm.all<Workout>().query('date == \$0', [date]);
-      realm.deleteMany(workoutsToDelete);
-    });
+    await (database.delete(database.workouts)
+          ..where((tbl) => tbl.date.equals(date)))
+        .go();
   }
 }

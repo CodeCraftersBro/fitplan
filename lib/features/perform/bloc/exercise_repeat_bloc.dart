@@ -1,22 +1,20 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:equatable/equatable.dart';
-import 'package:fitplan/repositories/workout/entity/entity.dart';
-import 'package:fitplan/repositories/workout/models/models.dart';
 import 'package:fitplan/repositories/workout/workout.dart';
+import 'package:fitplan/repositories/workout/entity/workout_overview.dart'; 
+import 'package:fitplan/repositories/workout/database.dart';
 import 'package:uuid/uuid.dart' as uuid_lib;
+import 'package:drift/drift.dart';
+
 part 'exercise_repeat_event.dart';
 part 'exercise_repeat_state.dart';
-
-
 
 class ExerciseRepeatBloc extends Bloc<ExerciseRepeatEvent, ExerciseRepeatState> {
   final ExerciseRepeatRepository exerciseRepeatRepository;
 
-  
   ExerciseRepeatBloc({
     required this.exerciseRepeatRepository,
   }) : super(ExerciseRepeatInitial()) {
-
     on<ExerciseRepeatEvent>((event, emit) async => switch (event) {
       LoadExerciseRepeats() => _onLoadExerciseRepeats(event, emit),
       AddExerciseRepeat() => _onAddExerciseRepeat(event, emit),
@@ -27,7 +25,6 @@ class ExerciseRepeatBloc extends Bloc<ExerciseRepeatEvent, ExerciseRepeatState> 
     LoadExerciseRepeats event,
     Emitter<ExerciseRepeatState> emit,
   ) async {
-    
     try {
       final repeats = await exerciseRepeatRepository.getExerciseRepeatsByDate(event.date);
 
@@ -38,42 +35,38 @@ class ExerciseRepeatBloc extends Bloc<ExerciseRepeatEvent, ExerciseRepeatState> 
 
       emit(ExerciseRepeatsLoaded(repeats: filteredRepeats));
     } catch (e) {
-      // emit(ExerciseSearchError(message: e.toString()));
+      emit(ExerciseRepeatError(message: e.toString()));
     }
   }
-
 
   Future<void> _onAddExerciseRepeat(
     AddExerciseRepeat event,
     Emitter<ExerciseRepeatState> emit,
   ) async {
-    
     try {
-      List<ExerciseRepeat> newRepeats = [];
+      List<ExerciseRepeatsCompanion> newRepeats = [];
+      var uuid = const uuid_lib.Uuid();
 
       for (var data in event.performData) {
-         var uuid = const uuid_lib.Uuid();
-        final exerciseRepeat = ExerciseRepeat(
-          uuid.v4(),
-          1, 
-          DateTime.now(),
-          event.workoutOverview.workoutId,
-          event.workoutOverview.workoutExerciseId,
-          event.workoutOverview.workoutExerciseTypeCategory,
-          weight: data['weight'] != null ? int.tryParse(data['weight']!) : null,
-          reps: data['reps'] != null ? int.tryParse(data['reps']!) : null,
-          distance: data['distance'] != null ? double.tryParse(data['distance']!) : null,
-          duration: data['duration'] != null ? int.tryParse(data['duration']!) : null,
-          stretchDuration: data['stretchDuration'] != null ? int.tryParse(data['stretchDuration']!) : null,
+        final exerciseRepeat = ExerciseRepeatsCompanion(
+          id: Value(uuid.v4()),
+          sort: Value(1), 
+          date: Value(DateTime.now()),
+          workoutId: Value(event.workoutOverview.workoutId),
+          exerciseId: Value(event.workoutOverview.workoutExerciseId),
+          exerciseType: Value(event.workoutOverview.workoutExerciseTypeCategory),
+          weight: Value(data['weight'] != null ? int.tryParse(data['weight']!) : null),
+          reps: Value(data['reps'] != null ? int.tryParse(data['reps']!) : null),
+          distance: Value(data['distance'] != null ? double.tryParse(data['distance']!) : null),
+          duration: Value(data['duration'] != null ? int.tryParse(data['duration']!) : null),
+          stretchDuration: Value(data['stretchDuration'] != null ? int.tryParse(data['stretchDuration']!) : null),
         );
 
         newRepeats.add(exerciseRepeat);
       }
 
       // Сохраняем все повторения в базу данных
-      for (var repeat in newRepeats) {
-        await exerciseRepeatRepository.addExerciseRepeat(repeat);
-      }
+      await exerciseRepeatRepository.addExerciseRepeats(newRepeats);
 
       // Загружаем обновленный список повторений для текущего упражнения
       final updatedRepeats = await exerciseRepeatRepository.getExerciseRepeatsByDate(DateTime.now());
@@ -82,10 +75,8 @@ class ExerciseRepeatBloc extends Bloc<ExerciseRepeatEvent, ExerciseRepeatState> 
       ).toList();
 
       emit(ExerciseRepeatsLoaded(repeats: filteredRepeats));
-     
     } catch (e) {
-      // emit(ExerciseSearchError(message: e.toString()));
+      emit(ExerciseRepeatError(message: e.toString()));
     }
   }
-  
 }

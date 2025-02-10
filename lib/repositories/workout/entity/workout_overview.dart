@@ -1,4 +1,4 @@
-import 'package:fitplan/repositories/workout/models/exercise_repeat.dart';
+import 'package:fitplan/repositories/workout/database.dart';
 
 class WorkoutOverview {
   final String workoutId;

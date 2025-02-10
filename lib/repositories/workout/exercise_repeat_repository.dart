@@ -1,50 +1,36 @@
-import 'package:realm/realm.dart';
-import 'package:fitplan/repositories/workout/exercise_repeat_repository_interface.dart';
-import 'package:fitplan/repositories/workout/models/models.dart';
+import 'package:fitplan/repositories/workout/database.dart';
+import 'package:drift/drift.dart';
 
-class ExerciseRepeatRepository implements ExerciseRepeatRepositoryInterface {
-  final Realm realm;
+class ExerciseRepeatRepository {
+  final AppDatabase database;
 
-  ExerciseRepeatRepository({required this.realm});
+  ExerciseRepeatRepository({required this.database});
 
-  @override
-  Future<void> addExerciseRepeat(ExerciseRepeat repeat) async {
-    realm.write(() {
-      realm.add(repeat);
+  Future<void> addExerciseRepeat(ExerciseRepeatsCompanion repeat) async {
+    await database.into(database.exerciseRepeats).insert(repeat);
+  }
+
+  Future<void> addExerciseRepeats(List<ExerciseRepeatsCompanion> repeats) async {
+    await database.batch((batch) {
+      batch.insertAll(database.exerciseRepeats, repeats, mode: InsertMode.insertOrReplace);
     });
   }
 
-  @override
-  Future<void> updateExerciseRepeat(ExerciseRepeat repeat) async {
-    realm.write(() {
-      realm.add(repeat, update: true);
-    });
-  }
-
-  @override
   Future<void> deleteExerciseRepeat(String id) async {
-    final repeat = realm.find<ExerciseRepeat>(id);
-    if (repeat != null) {
-      realm.write(() {
-        realm.delete(repeat);
-      });
-    }
+    await (database.delete(database.exerciseRepeats)
+          ..where((tbl) => tbl.id.equals(id)))
+        .go();
   }
 
-  @override
-  Future<List<ExerciseRepeat>> getExerciseRepeatsByWorkout(String workoutId) async {
-    final repeats = realm.all<ExerciseRepeat>().query('workoutId == \$0', [workoutId]);
-    return repeats.toList();
-  }
-
-  @override
   Future<List<ExerciseRepeat>> getExerciseRepeatsByDate(DateTime date) async {
-    final repeats = realm.all<ExerciseRepeat>().query('date == \$0', [date]);
-    return repeats.toList();
+    return await (database.select(database.exerciseRepeats)
+          ..where((tbl) => tbl.date.equals(date)))
+        .get();
   }
 
-  @override
-  Future<ExerciseRepeat?> getExerciseRepeatById(String id) async {
-    return realm.find<ExerciseRepeat>(id);
+  Future<List<ExerciseRepeat>> getExerciseRepeatsByWorkout(String workoutId) async {
+    return await (database.select(database.exerciseRepeats)
+          ..where((tbl) => tbl.workoutId.equals(workoutId)))
+        .get();
   }
 }

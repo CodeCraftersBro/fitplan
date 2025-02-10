@@ -1,51 +1,87 @@
 import 'package:fitplan/repositories/workout/exercise_type_repository_interface.dart';
-import 'package:fitplan/repositories/workout/models/models.dart';
-import 'package:realm/realm.dart';
-// import 'package:uuid/uuid.dart' as uuid_lib;
-class ExerciseTypeRepository implements ExerciseTypeRepositoryInterface {
-  final Realm realm;
+import 'package:fitplan/repositories/workout/database.dart';
+import 'package:drift/drift.dart';
 
-  ExerciseTypeRepository({required this.realm});
+class ExerciseTypeRepository implements ExerciseTypeRepositoryInterface {
+  final AppDatabase database;
+
+  ExerciseTypeRepository({required this.database});
 
   @override
   Future<void> updateExerciseTypesFromAPI() async {
-    // var uuid = const uuid_lib.Uuid();
-    // Пример обновления данных из API
-    // Здесь вы можете сделать запрос к вашему API и обновить данные в Realm
-   final List<ExerciseType> exerciseTypesFromAPI = [
-      ExerciseType('1', 'Arms', '💪', 'Strength'),
-      ExerciseType('2', 'Legs', '🦵', 'Strength'),
-      ExerciseType('3', 'Stretching', '🧘‍♂️', 'Stretching'),
-      ExerciseType('4', 'Shoulders', '🤾‍♂️', 'Strength'),
-      ExerciseType('5', 'Back', '🧗', 'Strength'),
-      ExerciseType('6', 'Abs', '🤸', 'Strength'),
-      ExerciseType('7', 'Chest', '🏋️‍♀️', 'Strength'),
-      ExerciseType('8', 'Cardio', '🫀', 'Cardio'),
+    final List<ExerciseTypesCompanion> exerciseTypesFromAPI = [
+      ExerciseTypesCompanion(
+        id: Value('1'),
+        name: Value('Arms'),
+        icon: Value("💪"),
+        category: Value('Strength'),
+      ),
+      ExerciseTypesCompanion(
+        id: Value('2'),
+        name: Value('Legs'),
+        icon: Value('🦵'),
+        category: Value('Strength'),
+      ),
+      ExerciseTypesCompanion(
+        id: Value('3'),
+        name: Value('Stretching'),
+        icon: Value('🧘‍♂️'),
+        category: Value('Stretching'),
+      ),
+      ExerciseTypesCompanion(
+        id: Value('4'),
+        name: Value('Shoulders'),
+        icon: Value('🤾‍♂️'),
+        category: Value('Strength'),
+      ),
+      ExerciseTypesCompanion(
+        id: Value('5'),
+        name: Value('Back'),
+        icon: Value('🧗'),
+        category: Value('Strength'),
+      ),
+      ExerciseTypesCompanion(
+        id: Value('6'),
+        name: Value('Abs'),
+        icon: Value('🤸'),
+        category: Value('Strength'),
+      ),
+      ExerciseTypesCompanion(
+        id: Value('7'),
+        name: Value('Chest'),
+        icon: Value('🏋️‍♀️'),
+        category: Value('Strength'),
+      ),
+      ExerciseTypesCompanion(
+        id: Value('8'),
+        name: Value('Cardio'),
+        icon: Value('🫀'),
+        category: Value('Cardio'),
+      ),
     ];
 
-
-    realm.write(() {
-      for (var exerciseType in exerciseTypesFromAPI) {
-        realm.add(exerciseType, update: true);
-      }
+    await database.batch((batch) {
+      batch.insertAll(
+        database.exerciseTypes,
+        exerciseTypesFromAPI,
+        mode: InsertMode.insertOrReplace, // 🔥 Обновляет данные, если уже есть
+      );
     });
   }
 
   @override
   Future<List<ExerciseType>> getExerciseTypes() async {
-    final exerciseTypes = realm.all<ExerciseType>();
-    return exerciseTypes.toList();
+    return await database.select(database.exerciseTypes).get();
   }
 
   @override
   Future<ExerciseType?> getExerciseTypeById(String id) async {
-    final exerciseType = realm.find<ExerciseType>(id);
-    return exerciseType;
+    return await (database.select(database.exerciseTypes)
+          ..where((tbl) => tbl.id.equals(id)))
+        .getSingleOrNull();
   }
 
-   Future<void> deleteAll() async {
-    realm.write(() {
-      realm.deleteAll<ExerciseType>();
-    });
+  Future<void> deleteAll() async {
+    await database.delete(database.exerciseTypes).go();
   }
 }

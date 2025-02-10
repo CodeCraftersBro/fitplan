@@ -1,38 +1,38 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:realm/realm.dart';
-import 'package:fitplan/repositories/workout/models/models.dart';
-import 'package:fitplan/repositories/workout/workout.dart';
+import 'package:fitplan/repositories/workout/database.dart';
+import 'package:fitplan/repositories/workout/exercise_repeat_repository.dart';
+import 'package:drift/drift.dart';
 
 void main() {
-  late Realm realm;
+  late AppDatabase database;
   late ExerciseRepeatRepository repository;
 
   setUp(() {
-    final config = Configuration.inMemory([ExerciseRepeat.schema]);
-    realm = Realm(config);
-    repository = ExerciseRepeatRepository(realm: realm);
+    database = AppDatabase(); // Используем в памяти SQLite
+    repository = ExerciseRepeatRepository(database: database);
   });
 
-  tearDown(() {
-    realm.close();
+  tearDown(() async {
+    await database.close();
   });
 
   test('Добавление повторения', () async {
-    final repeat = ExerciseRepeat(
-      'repeat_1',
-       1,
-      DateTime.now(),
-      'workout_1',
-      'exercise_1',
-      'strength',
-      weight: 50,
-      reps: 10
+    final repeat = ExerciseRepeatsCompanion(
+      id: Value('repeat_1'),
+      sort: Value(1),
+      date: Value(DateTime.now()),
+      workoutId: Value('workout_1'),
+      exerciseId: Value('exercise_1'),
+      exerciseType: Value('strength'),
+      weight: Value(50),
+      reps: Value(10),
     );
 
-  await repository.addExerciseRepeat(repeat);
+    await repository.addExerciseRepeat(repeat);
 
-  final savedRepeat = realm.find<ExerciseRepeat>('repeat_1');
-
+    final savedRepeat = await (database.select(database.exerciseRepeats)
+          ..where((tbl) => tbl.id.equals('repeat_1')))
+        .getSingleOrNull();
 
     expect(savedRepeat, isNotNull);
     expect(savedRepeat!.weight, 50);
@@ -40,33 +40,35 @@ void main() {
   });
 
   test('Обновление повторения', () async {
-    final repeat = ExerciseRepeat(
-      'repeat_2',
-      1,
-      DateTime.now(),
-      'workout_1',
-      'exercise_1',
-      'strength',
-      weight: 40,
-      reps: 8,
+    final repeat = ExerciseRepeatsCompanion(
+      id: Value('repeat_2'),
+      sort: Value(1),
+      date: Value(DateTime.now()),
+      workoutId: Value('workout_1'),
+      exerciseId: Value('exercise_1'),
+      exerciseType: Value('strength'),
+      weight: Value(40),
+      reps: Value(8),
     );
 
     await repository.addExerciseRepeat(repeat);
 
-    final updatedRepeat = ExerciseRepeat(
-      'repeat_2',
-      1,
-      DateTime.now(),
-      'workout_1',
-      'exercise_1',
-      'strength',
-      weight: 60, // Новый вес
-      reps: 12, // Новое количество повторений
+    final updatedRepeat = ExerciseRepeatsCompanion(
+      id: Value('repeat_2'),
+      sort: Value(1),
+      date: Value(DateTime.now()),
+      workoutId: Value('workout_1'),
+      exerciseId: Value('exercise_1'),
+      exerciseType: Value('strength'),
+      weight: Value(60),
+      reps: Value(12),
     );
 
     await repository.updateExerciseRepeat(updatedRepeat);
 
-    final savedRepeat = realm.find<ExerciseRepeat>('repeat_2');
+    final savedRepeat = await (database.select(database.exerciseRepeats)
+          ..where((tbl) => tbl.id.equals('repeat_2')))
+        .getSingleOrNull();
 
     expect(savedRepeat, isNotNull);
     expect(savedRepeat!.weight, 60);
@@ -74,85 +76,87 @@ void main() {
   });
 
   test('Удаление повторения', () async {
-    final repeat = ExerciseRepeat(
-      'repeat_3',
-      1,
-      DateTime.now(),
-      'workout_1',
-      'exercise_1',
-      'strength',
-      weight: 45,
-      reps: 9,
+    final repeat = ExerciseRepeatsCompanion(
+      id: Value('repeat_3'),
+      sort: Value(1),
+      date: Value(DateTime.now()),
+      workoutId: Value('workout_1'),
+      exerciseId: Value('exercise_1'),
+      exerciseType: Value('strength'),
+      weight: Value(45),
+      reps: Value(9),
     );
 
     await repository.addExerciseRepeat(repeat);
     await repository.deleteExerciseRepeat('repeat_3');
 
-    final deletedRepeat = realm.find<ExerciseRepeat>('repeat_3');
+    final deletedRepeat = await (database.select(database.exerciseRepeats)
+          ..where((tbl) => tbl.id.equals('repeat_3')))
+        .getSingleOrNull();
 
     expect(deletedRepeat, isNull);
   });
 
-  // test('Получение повторений по тренировке', () async {
-  //   final repeat1 = ExerciseRepeat(
-  //     id: 'repeat_4',
-  //     sort: 1,
-  //     date: DateTime.now(),
-  //     workoutId: 'workout_1',
-  //     exerciseId: 'exercise_1',
-  //     exerciseType: 'strength',
-  //     weight: 50,
-  //     reps: 10,
-  //   );
+  test('Получение повторений по тренировке', () async {
+    final repeat1 = ExerciseRepeatsCompanion(
+      id: Value('repeat_4'),
+      sort: Value(1),
+      date: Value(DateTime.now()),
+      workoutId: Value('workout_1'),
+      exerciseId: Value('exercise_1'),
+      exerciseType: Value('strength'),
+      weight: Value(50),
+      reps: Value(10),
+    );
 
-  //   final repeat2 = ExerciseRepeat(
-  //     id: 'repeat_5',
-  //     sort: 2,
-  //     date: DateTime.now(),
-  //     workoutId: 'workout_1',
-  //     exerciseId: 'exercise_2',
-  //     exerciseType: 'cardio',
-  //     distance: 5.0,
-  //     duration: 1800,
-  //   );
+    final repeat2 = ExerciseRepeatsCompanion(
+      id: Value('repeat_5'),
+      sort: Value(2),
+      date: Value(DateTime.now()),
+      workoutId: Value('workout_1'),
+      exerciseId: Value('exercise_2'),
+      exerciseType: Value('cardio'),
+      distance: Value(5.0),
+      duration: Value(1800),
+    );
 
-  //   await repository.addExerciseRepeat(repeat1);
-  //   await repository.addExerciseRepeat(repeat2);
+    await repository.addExerciseRepeat(repeat1);
+    await repository.addExerciseRepeat(repeat2);
 
-  //   final workoutRepeats = await repository.getExerciseRepeatsByWorkout('workout_1');
+    final workoutRepeats = await repository.getExerciseRepeatsByWorkout('workout_1');
 
-  //   expect(workoutRepeats.length, 2);
-  // });
+    expect(workoutRepeats.length, 2);
+  });
 
-  // test('Получение повторений по дате', () async {
-  //   final now = DateTime.now();
+  test('Получение повторений по дате', () async {
+    final now = DateTime.now();
 
-  //   final repeat1 = ExerciseRepeat(
-  //     id: 'repeat_6',
-  //     sort: 1,
-  //     date: now,
-  //     workoutId: 'workout_2',
-  //     exerciseId: 'exercise_3',
-  //     exerciseType: 'stretching',
-  //     stretchDuration: 60,
-  //   );
+    final repeat1 = ExerciseRepeatsCompanion(
+      id: Value('repeat_6'),
+      sort: Value(1),
+      date: Value(now),
+      workoutId: Value('workout_2'),
+      exerciseId: Value('exercise_3'),
+      exerciseType: Value('stretching'),
+      stretchDuration: Value(60),
+    );
 
-  //   final repeat2 = ExerciseRepeat(
-  //     id: 'repeat_7',
-  //     sort: 2,
-  //     date: now,
-  //     workoutId: 'workout_2',
-  //     exerciseId: 'exercise_4',
-  //     exerciseType: 'strength',
-  //     weight: 70,
-  //     reps: 8,
-  //   );
+    final repeat2 = ExerciseRepeatsCompanion(
+      id: Value('repeat_7'),
+      sort: Value(2),
+      date: Value(now),
+      workoutId: Value('workout_2'),
+      exerciseId: Value('exercise_4'),
+      exerciseType: Value('strength'),
+      weight: Value(70),
+      reps: Value(8),
+    );
 
-  //   await repository.addExerciseRepeat(repeat1);
-  //   await repository.addExerciseRepeat(repeat2);
+    await repository.addExerciseRepeat(repeat1);
+    await repository.addExerciseRepeat(repeat2);
 
-  //   final dateRepeats = await repository.getExerciseRepeatsByDate(now);
+    final dateRepeats = await repository.getExerciseRepeatsByDate(now);
 
-  //   expect(dateRepeats.length, 2);
-  // });
+    expect(dateRepeats.length, 2);
+  });
 }

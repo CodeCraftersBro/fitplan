@@ -1,27 +1,28 @@
-import 'package:realm/realm.dart';
+import 'package:drift/drift.dart';
+import 'exercise.dart';
+import 'workout.dart';
 
-part 'exercise_repeat.realm.dart';
 
-@RealmModel()
-class _ExerciseRepeat {
-  @PrimaryKey()
-  late String id;
-  late int sort;
-  late DateTime date;
 
-  late String workoutId;
-  late String exerciseId;
+@DataClassName('ExerciseRepeat')
+class ExerciseRepeats extends Table {
+  // TextColumn get id => text().customConstraint('PRIMARY KEY NOT NULL')();
+  TextColumn get id => text()(); 
+  IntColumn get sort => integer()();
+  DateTimeColumn get date => dateTime()();
 
-  late String exerciseType; // "strength", "cardio", "stretching"
+  TextColumn get workoutId => text().references(Workouts, #id)();
+  TextColumn get exerciseId => text().references(Exercises, #id)();
+  TextColumn get exerciseType => text()(); // "strength", "cardio", "stretching"
 
-  // Данные для силовых упражнений (вес + количество повторений)
-  late int? weight; // Вес (в кг)
-  int? reps; // Количество повторений
+  // Данные для силовых упражнений
+  IntColumn get weight => integer().nullable()(); // Вес (в кг)
+  IntColumn get reps => integer().nullable()(); // Количество повторений
 
-  // Данные для кардио (расстояние + время)
-  double? distance; // Расстояние (в км)
-  int? duration; // Время (в секундах)
+  // Данные для кардио
+  RealColumn get distance => real().nullable()(); // Расстояние (в км)
+  IntColumn get duration => integer().nullable()(); // Время (в секундах)
 
-  // Данные для растяжки / планки (только время)
-  int? stretchDuration; // Время (в секундах)
+  // Данные для растяжки / планки
+  IntColumn get stretchDuration => integer().nullable()(); // Время (в секундах)
 }
