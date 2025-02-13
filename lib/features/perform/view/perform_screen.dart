@@ -24,7 +24,7 @@ class _PerformScreenState extends State<PerformScreen> {
   @override
   void initState() {
     super.initState();
-    
+
     _initializeControllers();
   }
 
@@ -81,23 +81,24 @@ class _PerformScreenState extends State<PerformScreen> {
                       // Заголовок упражнения
                       Text(
                         widget.exerciseName,
-                        style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                              fontWeight: FontWeight.bold,
-                            ),
+                        style:
+                            Theme.of(context).textTheme.headlineSmall?.copyWith(
+                                  fontWeight: FontWeight.bold,
+                                ),
                       ),
                       const SizedBox(height: 20),
 
                       // Ввод данных в зависимости от типа упражнения
                       if (widget.exerciseType == 'Strength')
                         _buildStrengthFields(),
-                      if (widget.exerciseType == 'Cardio') 
-                        _buildCardioFields(),
+                      if (widget.exerciseType == 'Cardio') _buildCardioFields(),
                       if (widget.exerciseType == 'Stretching')
                         _buildStretchingFields(),
 
                       const SizedBox(height: 20),
+
                       Row(
-                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
                           // Кнопка добавления подхода
                           FloatingActionButton.extended(
@@ -176,7 +177,10 @@ class _PerformScreenState extends State<PerformScreen> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         if (index == 0)
-                          const Text("Повторы",style: TextStyle(fontSize: 16),),
+                          const Text(
+                            "Повторы",
+                            style: TextStyle(fontSize: 16),
+                          ),
                         TextField(
                           controller: setsControllers[index]['reps']!,
                           keyboardType: TextInputType.number,
@@ -187,6 +191,17 @@ class _PerformScreenState extends State<PerformScreen> {
                           ),
                         ),
                       ],
+                    ),
+                  ),
+                  IconButton(
+                    onPressed: () {
+                      setState(() {
+                        setsControllers.removeAt(index);
+                      });
+                    },
+                    icon: const Icon(
+                      Icons.delete,
+                      color: Colors.red,
                     ),
                   ),
                 ],
@@ -221,7 +236,8 @@ class _PerformScreenState extends State<PerformScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     if (index == 0)
-                      const Text("Дистанция (км)", style: TextStyle(fontSize: 16)),
+                      const Text("Дистанция (км)",
+                          style: TextStyle(fontSize: 16)),
                     TextField(
                       controller: setsControllers[index]['distance']!,
                       keyboardType: TextInputType.number,
@@ -241,7 +257,8 @@ class _PerformScreenState extends State<PerformScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     if (index == 0)
-                      const Text("Время (минуты)", style: TextStyle(fontSize: 16)),
+                      const Text("Время (минуты)",
+                          style: TextStyle(fontSize: 16)),
                     TextField(
                       controller: setsControllers[index]['time']!,
                       keyboardType: TextInputType.number,
@@ -252,6 +269,17 @@ class _PerformScreenState extends State<PerformScreen> {
                       ),
                     ),
                   ],
+                ),
+              ),
+              IconButton(
+                onPressed: () {
+                  setState(() {
+                    setsControllers.removeAt(index);
+                  });
+                },
+                icon: const Icon(
+                  Icons.delete,
+                  color: Colors.red,
                 ),
               ),
             ],
@@ -284,7 +312,8 @@ class _PerformScreenState extends State<PerformScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     if (index == 0)
-                      const Text("Время (секунды)", style: TextStyle(fontSize: 16)),
+                      const Text("Время (секунды)",
+                          style: TextStyle(fontSize: 16)),
                     TextField(
                       controller: setsControllers[index]['time']!,
                       keyboardType: TextInputType.number,
@@ -295,6 +324,17 @@ class _PerformScreenState extends State<PerformScreen> {
                       ),
                     ),
                   ],
+                ),
+              ),
+              IconButton(
+                onPressed: () {
+                  setState(() {
+                    setsControllers.removeAt(index);
+                  });
+                },
+                icon: const Icon(
+                  Icons.delete,
+                  color: Colors.red,
                 ),
               ),
             ],
@@ -330,7 +370,8 @@ class _PerformScreenState extends State<PerformScreen> {
           sets.add({'weight': weight, 'reps': reps});
         }
       }
-      print("Силовые данные: $sets"); // Для демонстрации, замените на реальную логику
+      print(
+          "Силовые данные: $sets"); // Для демонстрации, замените на реальную логику
     }
 
     // Для кардио
@@ -358,8 +399,7 @@ class _PerformScreenState extends State<PerformScreen> {
       print("Растяжка данные: $sets"); // Для демонстрации
     }
 
-     Navigator.pop(context, sets);
-
+    Navigator.pop(context, sets);
   }
 
   @override
