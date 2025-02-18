@@ -39,32 +39,37 @@ class MessageLookup extends MessageLookupByLibrary {
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
-        "addExercise":
-            MessageLookupByLibrary.simpleMessage("Добавить упражнение"),
-        "add_exercise":
-            MessageLookupByLibrary.simpleMessage("Добавить упражнение"),
-        "appVersionAndBuildnumber": m0,
-        "clearHistory":
-            MessageLookupByLibrary.simpleMessage("Очистить историю"),
-        "darkTheme": MessageLookupByLibrary.simpleMessage("Темная тема"),
-        "developerWebsite":
-            MessageLookupByLibrary.simpleMessage("Сайт разработчика"),
-        "enableAnalytics":
-            MessageLookupByLibrary.simpleMessage("Разрешить аналитику"),
-        "home": MessageLookupByLibrary.simpleMessage("Мои тренировки"),
-        "notifications": MessageLookupByLibrary.simpleMessage("Уведомления"),
-        "reps_cardio": m1,
-        "reps_generic": m2,
-        "reps_none": MessageLookupByLibrary.simpleMessage("Нет данных"),
-        "reps_strength": m3,
-        "reps_stretching": m4,
-        "ringWorkout": m5,
-        "settings": MessageLookupByLibrary.simpleMessage("Настройки"),
-        "support": MessageLookupByLibrary.simpleMessage("Поддержка"),
-        "today": MessageLookupByLibrary.simpleMessage("Сегодня"),
-        "unknownState":
-            MessageLookupByLibrary.simpleMessage("Неизвестное состояние"),
-        "unlimitedWorkouts":
-            MessageLookupByLibrary.simpleMessage("Безлимитные тренировки")
-      };
+    "addExercise": MessageLookupByLibrary.simpleMessage("Добавить упражнение"),
+    "add_exercise": MessageLookupByLibrary.simpleMessage("Добавить упражнение"),
+    "appVersionAndBuildnumber": m0,
+    "clearHistory": MessageLookupByLibrary.simpleMessage("Очистить историю"),
+    "darkTheme": MessageLookupByLibrary.simpleMessage("Темная тема"),
+    "developerWebsite": MessageLookupByLibrary.simpleMessage(
+      "Сайт разработчика",
+    ),
+    "enableAnalytics": MessageLookupByLibrary.simpleMessage(
+      "Разрешить аналитику",
+    ),
+    "home": MessageLookupByLibrary.simpleMessage("Мои тренировки"),
+    "nothingFound": MessageLookupByLibrary.simpleMessage(
+      "Ничего не найдено, попробуйте еще.",
+    ),
+    "notifications": MessageLookupByLibrary.simpleMessage("Уведомления"),
+    "reps_cardio": m1,
+    "reps_generic": m2,
+    "reps_none": MessageLookupByLibrary.simpleMessage("Нет данных"),
+    "reps_strength": m3,
+    "reps_stretching": m4,
+    "ringWorkout": m5,
+    "searchCaption": MessageLookupByLibrary.simpleMessage("Искать"),
+    "settings": MessageLookupByLibrary.simpleMessage("Настройки"),
+    "support": MessageLookupByLibrary.simpleMessage("Поддержка"),
+    "today": MessageLookupByLibrary.simpleMessage("Сегодня"),
+    "unknownState": MessageLookupByLibrary.simpleMessage(
+      "Неизвестное состояние",
+    ),
+    "unlimitedWorkouts": MessageLookupByLibrary.simpleMessage(
+      "Безлимитные тренировки",
+    ),
+  };
 }

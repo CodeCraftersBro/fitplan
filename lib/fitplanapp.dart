@@ -157,7 +157,7 @@ class _FitPlanAppState extends State<FitPlanApp> {
               GlobalWidgetsLocalizations.delegate,
               GlobalCupertinoLocalizations.delegate,
             ],
-            locale: const Locale('ru'),
+            // locale: const Locale('ru'),
             supportedLocales: S.delegate.supportedLocales,
             theme: state.isDark ? themeDark : themeLight,
             routes: routes,

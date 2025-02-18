@@ -1,4 +1,5 @@
 import 'package:fitplan/features/search/bloc/exercise_search_bloc.dart';
+import 'package:fitplan/generated/l10n.dart';
 import 'package:fitplan/ui/widgets/drag_indicator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -61,7 +62,7 @@ class _SearchScreenState extends State<SearchScreen> {
                               .add(SearchExercises(query));
                         },
                         decoration: InputDecoration(
-                          hintText: "Искать",
+                          hintText: S.of(context).searchCaption,
                           prefixIcon: Icon(Icons.search,
                               color: Theme.of(context).colorScheme.onSurface),
                           border: OutlineInputBorder(
@@ -195,9 +196,10 @@ class _SearchScreenState extends State<SearchScreen> {
                                         );
                                       });
                                 } else {
-                                  return const Center(
+                                  return Center(
                                     child: Text(
-                                        "Ничего не найдено, попробуйте еще"),
+                                        S.of(context).nothingFound
+                                        ),
                                   );
                                 }
                               case ExerciseSearchCategorySelected():
@@ -291,9 +293,9 @@ class _SearchScreenState extends State<SearchScreen> {
                                         );
                                       });
                                 } else {
-                                  return const Center(
+                                  return Center(
                                     child: Text(
-                                        "Ничего не найдено, попробуйте еще"),
+                                        S.of(context).nothingFound),
                                   );
                                 }
 
@@ -301,8 +303,8 @@ class _SearchScreenState extends State<SearchScreen> {
                                 return Center(
                                     child: Text('Ошибка: ${state.message}'));
                               default:
-                                return const Center(
-                                    child: Text('Неизвестное состояние'));
+                                return  Center(
+                                    child: Text(S.of(context).unknownState));
                             }
                           },
                         ),
@@ -332,10 +334,10 @@ class _SearchScreenState extends State<SearchScreen> {
 
                     Navigator.pop(context);
                   },
-                  label: const Text(
-                    'Добавить',
-                    style: TextStyle(fontSize: 18),
-                  ),
+                  label: Text(
+                      S.of(context).addExercise,
+                      style: const TextStyle(fontSize: 18),
+                    ),
                 );
               } else {
                 return SizedBox.shrink();

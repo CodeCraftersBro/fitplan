@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:fitplan/features/home/widgets/widgets.dart';
 import 'package:fitplan/repositories/workout/entity/entity.dart';
 import 'package:flutter/material.dart';
@@ -139,26 +137,26 @@ class WorkoutReorderableItemWidget extends StatelessWidget {
                                                 .colorScheme
                                                 .onSurface),
                               ),
-                              Text(
-                                "${workoutOverview.workoutSort} : ${workoutOverview.workoutId}",
-                                style: isSelected
-                                    ? Theme.of(context)
-                                        .textTheme
-                                        .titleMedium
-                                        ?.copyWith(
-                                            fontSize: 10,
-                                            color: Theme.of(context)
-                                                .colorScheme
-                                                .surface)
-                                    : Theme.of(context)
-                                        .textTheme
-                                        .titleMedium
-                                        ?.copyWith(
-                                            fontSize: 10,
-                                            color: Theme.of(context)
-                                                .colorScheme
-                                                .onSurface),
-                              ),
+                              // Text(
+                              //   "",
+                              //   style: isSelected
+                              //       ? Theme.of(context)
+                              //           .textTheme
+                              //           .titleMedium
+                              //           ?.copyWith(
+                              //               fontSize: 10,
+                              //               color: Theme.of(context)
+                              //                   .colorScheme
+                              //                   .surface)
+                              //       : Theme.of(context)
+                              //           .textTheme
+                              //           .titleMedium
+                              //           ?.copyWith(
+                              //               fontSize: 10,
+                              //               color: Theme.of(context)
+                              //                   .colorScheme
+                              //                   .onSurface),
+                              // ),
                             ],
                           ),
                         ],

@@ -1,6 +1,5 @@
 import 'package:fitplan/features/home/bloc/workout_calendar_data_bloc.dart';
 import 'package:fitplan/features/home/widgets/widgets.dart';
-import 'package:fitplan/features/perform/bloc/exercise_repeat_bloc.dart';
 import 'package:fitplan/features/search/bloc/exercise_search_bloc.dart';
 import 'package:fitplan/features/workout/bloc/workout_editor_bloc.dart';
 import 'package:fitplan/features/workout/workout.dart';

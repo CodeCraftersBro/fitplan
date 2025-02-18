@@ -40,7 +40,7 @@ class _PerformScreenState extends State<PerformScreen> {
             'weight': TextEditingController(text: set['weight'] ?? ''),
             'reps': TextEditingController(text: set['reps'] ?? ''),
             'distance': TextEditingController(text: set['distance'] ?? ''),
-            'time': TextEditingController(text: set['time'] ?? ''),
+            'duration': TextEditingController(text: set['duration'] ?? ''),
           });
         }
       } else {
@@ -73,48 +73,52 @@ class _PerformScreenState extends State<PerformScreen> {
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
                 const Center(child: DragIndicator()),
-                Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      // Заголовок упражнения
-                      Text(
-                        widget.exerciseName,
-                        style:
-                            Theme.of(context).textTheme.headlineSmall?.copyWith(
-                                  fontWeight: FontWeight.bold,
-                                ),
-                      ),
-                      const SizedBox(height: 20),
-
-                      // Ввод данных в зависимости от типа упражнения
-                      if (widget.exerciseType == 'Strength')
-                        _buildStrengthFields(),
-                      if (widget.exerciseType == 'Cardio') _buildCardioFields(),
-                      if (widget.exerciseType == 'Stretching')
-                        _buildStretchingFields(),
-
-                      const SizedBox(height: 20),
-
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                Expanded(
+                  child: SingleChildScrollView(
+                    child: Padding(
+                      padding: const EdgeInsets.all(16.0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          // Кнопка добавления подхода
-                          FloatingActionButton.extended(
-                            onPressed: _addSet,
-                            tooltip: 'Добавить подход',
-                            label: const Text('Добавить подход'),
+                          // Заголовок упражнения
+                          Text(
+                            widget.exerciseName,
+                            style:
+                                Theme.of(context).textTheme.headlineSmall?.copyWith(
+                                      fontWeight: FontWeight.bold,
+                                    ),
                           ),
-                          // Кнопка сохранения
-                          // FloatingActionButton.extended(
-                          //   onPressed: _saveWorkout,
-                          //   label: const Text('Сохранить'),
-                          //   icon: const Icon(Icons.save),
-                          // ),
+                          const SizedBox(height: 20),
+                    
+                          // Ввод данных в зависимости от типа упражнения
+                          if (widget.exerciseType == 'Strength')
+                            _buildStrengthFields(),
+                          if (widget.exerciseType == 'Cardio') _buildCardioFields(),
+                          if (widget.exerciseType == 'Stretching')
+                            _buildStretchingFields(),
+                    
+                          const SizedBox(height: 20),
+                    
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            children: [
+                              // Кнопка добавления подхода
+                              FloatingActionButton.extended(
+                                onPressed: _addSet,
+                                tooltip: 'Добавить подход',
+                                label: const Text('Добавить подход'),
+                              ),
+                              // Кнопка сохранения
+                              // FloatingActionButton.extended(
+                              //   onPressed: _saveWorkout,
+                              //   label: const Text('Сохранить'),
+                              //   icon: const Icon(Icons.save),
+                              // ),
+                            ],
+                          ),
                         ],
                       ),
-                    ],
+                    ),
                   ),
                 ),
               ],
@@ -123,12 +127,22 @@ class _PerformScreenState extends State<PerformScreen> {
         },
       ),
       // Кнопка "Сохранить" фиксированная внизу экрана
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-      floatingActionButton: FloatingActionButton.extended(
+      floatingActionButtonLocation: FloatingActionButtonLocation.endContained,
+
+       floatingActionButton: FloatingActionButton(
         onPressed: _saveWorkout,
-        label: const Text('Сохранить'),
-        icon: const Icon(Icons.save),
+        heroTag: 'save',
+        tooltip: 'Сохранить',
+        child: const Icon(Icons.save),
       ),
+
+      // floatingActionButton: FloatingActionButton.extended(
+      //   onPressed: _saveWorkout,
+      //   label: const Text('Сохранить'),
+      //   icon: const Icon(Icons.save),
+      // ),
+
+      
     );
   }
 
@@ -260,7 +274,7 @@ class _PerformScreenState extends State<PerformScreen> {
                       const Text("Время (минуты)",
                           style: TextStyle(fontSize: 16)),
                     TextField(
-                      controller: setsControllers[index]['time']!,
+                      controller: setsControllers[index]['duration']!,
                       keyboardType: TextInputType.number,
                       decoration: InputDecoration(
                         border: OutlineInputBorder(
@@ -351,7 +365,7 @@ class _PerformScreenState extends State<PerformScreen> {
         'weight': TextEditingController(),
         'reps': TextEditingController(),
         'distance': TextEditingController(),
-        'time': TextEditingController(),
+        'duration': TextEditingController(),
       });
     });
   }
@@ -378,10 +392,10 @@ class _PerformScreenState extends State<PerformScreen> {
     if (widget.exerciseType == 'Cardio') {
       for (var controllerMap in setsControllers) {
         final distance = controllerMap['distance']!.text;
-        final time = controllerMap['time']!.text;
+        final duration = controllerMap['duration']!.text;
 
-        if (distance.isNotEmpty && time.isNotEmpty) {
-          sets.add({'distance': distance, 'time': time});
+        if (distance.isNotEmpty && duration.isNotEmpty) {
+          sets.add({'distance': distance, 'duration': duration});
         }
       }
       print("Кардио данные: $sets"); // Для демонстрации

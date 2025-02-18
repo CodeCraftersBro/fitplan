@@ -99,7 +99,7 @@ void _showModalPerform(BuildContext context, WorkoutOverview workoutOverview,Dat
       if (repeat.weight != null) "weight": repeat.weight.toString(),
       if (repeat.reps != null) "reps": repeat.reps.toString(),
       if (repeat.distance != null) "distance": repeat.distance.toString(),
-      if (repeat.duration != null) "time": repeat.duration.toString(),
+      if (repeat.duration != null) "duration": repeat.duration.toString(),
       if (repeat.stretchDuration != null) "stretchDuration": repeat.stretchDuration.toString(),
     };
   }).toList();
