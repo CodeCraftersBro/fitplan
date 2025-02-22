@@ -242,6 +242,31 @@ class S {
       args: [],
     );
   }
+
+  /// `Duration (minutes)`
+  String get duration {
+    return Intl.message(
+      'Duration (minutes)',
+      name: 'duration',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Distance (km)`
+  String get distance {
+    return Intl.message('Distance (km)', name: 'distance', desc: '', args: []);
+  }
+
+  /// `Repetitions`
+  String get repeats {
+    return Intl.message('Repetitions', name: 'repeats', desc: '', args: []);
+  }
+
+  /// `Weight`
+  String get weight {
+    return Intl.message('Weight', name: 'weight', desc: '', args: []);
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {

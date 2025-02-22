@@ -26,3 +26,12 @@ final class WorkoutEditorFailure extends WorkoutEditorState {
   @override
   List<Object> get props => [exception];
 }
+
+/// 🔄 **Новое состояние: обновление порядка упражнений**
+final class WorkoutReordered extends WorkoutEditorState {
+  final List<Workout> reorderedWorkouts;
+
+  const WorkoutReordered({required this.reorderedWorkouts});
+  @override
+  List<Object> get props => [reorderedWorkouts];
+}

@@ -1,3 +1,6 @@
+import 'dart:developer';
+
+import 'package:fitplan/generated/l10n.dart';
 import 'package:fitplan/ui/widgets/drag_indicator.dart';
 import 'package:flutter/material.dart';
 
@@ -83,22 +86,25 @@ class _PerformScreenState extends State<PerformScreen> {
                           // Заголовок упражнения
                           Text(
                             widget.exerciseName,
-                            style:
-                                Theme.of(context).textTheme.headlineSmall?.copyWith(
-                                      fontWeight: FontWeight.bold,
-                                    ),
+                            style: Theme.of(context)
+                                .textTheme
+                                .headlineSmall
+                                ?.copyWith(
+                                  fontWeight: FontWeight.bold,
+                                ),
                           ),
                           const SizedBox(height: 20),
-                    
+
                           // Ввод данных в зависимости от типа упражнения
                           if (widget.exerciseType == 'Strength')
                             _buildStrengthFields(),
-                          if (widget.exerciseType == 'Cardio') _buildCardioFields(),
+                          if (widget.exerciseType == 'Cardio')
+                            _buildCardioFields(),
                           if (widget.exerciseType == 'Stretching')
                             _buildStretchingFields(),
-                    
+
                           const SizedBox(height: 20),
-                    
+
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                             children: [
@@ -129,7 +135,7 @@ class _PerformScreenState extends State<PerformScreen> {
       // Кнопка "Сохранить" фиксированная внизу экрана
       floatingActionButtonLocation: FloatingActionButtonLocation.endContained,
 
-       floatingActionButton: FloatingActionButton(
+      floatingActionButton: FloatingActionButton(
         onPressed: _saveWorkout,
         heroTag: 'save',
         tooltip: 'Сохранить',
@@ -141,8 +147,6 @@ class _PerformScreenState extends State<PerformScreen> {
       //   label: const Text('Сохранить'),
       //   icon: const Icon(Icons.save),
       // ),
-
-      
     );
   }
 
@@ -171,7 +175,8 @@ class _PerformScreenState extends State<PerformScreen> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         if (index == 0)
-                          const Text("Вес", style: TextStyle(fontSize: 16)),
+                          Text(S.of(context).weight,
+                              style: TextStyle(fontSize: 16)),
                         TextField(
                           controller: setsControllers[index]['weight']!,
                           keyboardType: TextInputType.number,
@@ -191,8 +196,8 @@ class _PerformScreenState extends State<PerformScreen> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         if (index == 0)
-                          const Text(
-                            "Повторы",
+                          Text(
+                            S.of(context).repeats,
                             style: TextStyle(fontSize: 16),
                           ),
                         TextField(
@@ -250,7 +255,7 @@ class _PerformScreenState extends State<PerformScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     if (index == 0)
-                      const Text("Дистанция (км)",
+                      Text(S.of(context).distance,
                           style: TextStyle(fontSize: 16)),
                     TextField(
                       controller: setsControllers[index]['distance']!,
@@ -271,7 +276,7 @@ class _PerformScreenState extends State<PerformScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     if (index == 0)
-                      const Text("Время (минуты)",
+                      Text(S.of(context).duration,
                           style: TextStyle(fontSize: 16)),
                     TextField(
                       controller: setsControllers[index]['duration']!,
@@ -326,7 +331,7 @@ class _PerformScreenState extends State<PerformScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     if (index == 0)
-                      const Text("Время (секунды)",
+                      Text(S.of(context).duration,
                           style: TextStyle(fontSize: 16)),
                     TextField(
                       controller: setsControllers[index]['time']!,
@@ -384,8 +389,7 @@ class _PerformScreenState extends State<PerformScreen> {
           sets.add({'weight': weight, 'reps': reps});
         }
       }
-      print(
-          "Силовые данные: $sets"); // Для демонстрации, замените на реальную логику
+      log("Силовые данные: $sets"); 
     }
 
     // Для кардио
@@ -398,7 +402,7 @@ class _PerformScreenState extends State<PerformScreen> {
           sets.add({'distance': distance, 'duration': duration});
         }
       }
-      print("Кардио данные: $sets"); // Для демонстрации
+      log("Кардио данные: $sets"); 
     }
 
     // Для растяжки
@@ -410,7 +414,7 @@ class _PerformScreenState extends State<PerformScreen> {
           sets.add({'time': time});
         }
       }
-      print("Растяжка данные: $sets"); // Для демонстрации
+      log("Растяжка данные: $sets"); 
     }
 
     Navigator.pop(context, sets);

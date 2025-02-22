@@ -123,13 +123,18 @@ class _WorkoutScreenState extends State<WorkoutScreen> {
   }
 
   void _onReorder(int oldIndex, int newIndex) {
-    log('_onReorder');
+    log('=======_onReorder======');
     setState(() {
       if (newIndex > oldIndex) {
         newIndex -= 1;
       }
+      
       final WorkoutOverview item = workoutItems.removeAt(oldIndex);
       workoutItems.insert(newIndex, item);
+   
+       log("🏋️‍♂️  Reorder");
+      workoutItems.forEach((exercise) => log("${exercise.workoutExerciseName} - Sort: ${exercise.workoutSort}"));
+
 
       // Обновляем selectedIndices после reorder
       Set<int> updatedIndices = {};
@@ -145,7 +150,10 @@ class _WorkoutScreenState extends State<WorkoutScreen> {
         }
       }
       selectedIndices = updatedIndices;
+      
     });
+
+   
   }
 
   bool _areSelectedItemsConsecutive() {

@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:fitplan/repositories/workout/workout_repository_interface.dart';
 import 'package:fitplan/repositories/workout/database.dart';
 import 'package:drift/drift.dart';
@@ -9,9 +11,12 @@ class WorkoutRepository implements WorkoutRepositoryInterface {
 
   @override
   Future<List<Workout>> getExerciseListByDate(DateTime date) async {
-    return await (database.select(database.workouts)
-          ..where((tbl) => tbl.date.equals(date)))
-        .get();
+    final query = database.select(database.workouts)
+    ..where((tbl) => tbl.date.equals(date));
+
+  query.orderBy([(tbl) => OrderingTerm.asc(tbl.sort)]); // ✅ Применяем сортировку отдельно
+ log("📌 Загрузка упражнений для даты $date в отсортированном порядке");
+  return await query.get(); // ✅ Теперь можно вызвать `.get()`
   }
 
   @override
@@ -29,12 +34,11 @@ class WorkoutRepository implements WorkoutRepositoryInterface {
     );
   }
 
-   Future<void> addWorkouts(List<WorkoutsCompanion> workouts) async {
+  Future<void> addWorkouts(List<WorkoutsCompanion> workouts) async {
     await database.batch((batch) {
       batch.insertAll(database.workouts, workouts, mode: InsertMode.insertOrReplace);
     });
   }
-
 
   @override
   Future<List<Workout>> getAllWorkouts() async {
@@ -53,32 +57,28 @@ class WorkoutRepository implements WorkoutRepositoryInterface {
         .go();
   }
 
+  /// 🔄 **Оптимизированный метод получения следующего `sort`**
   @override
   Future<int> getNextSortOrderForDate(DateTime date) async {
-    final query = await (database.select(database.workouts)
-          ..where((tbl) => tbl.date.equals(date)))
-        .get();
+    final maxSort = await (database.select(database.workouts)
+          ..where((tbl) => tbl.date.equals(date))
+          ..orderBy([(tbl) => OrderingTerm.desc(tbl.sort)])
+          ..limit(1))
+        .getSingleOrNull();
 
-    if (query.isEmpty) {
-      return 1;
-    } else {
-      final maxSortOrder = query.map((w) => w.sort).reduce((a, b) => a > b ? a : b);
-      return maxSortOrder + 1;
-    }
+    return (maxSort?.sort ?? 0) + 1;
   }
 
+  /// 🔄 **Оптимизированный метод получения следующего `setId`**
   @override
   Future<int> getNextSetIdForDate(DateTime date) async {
-    final query = await (database.select(database.workouts)
-          ..where((tbl) => tbl.date.equals(date)))
-        .get();
+    final maxSetId = await (database.select(database.workouts)
+          ..where((tbl) => tbl.date.equals(date))
+          ..orderBy([(tbl) => OrderingTerm.desc(tbl.setId)])
+          ..limit(1))
+        .getSingleOrNull();
 
-    if (query.isEmpty) {
-      return 1;
-    } else {
-      final maxSetId = query.map((w) => w.setId).reduce((a, b) => a > b ? a : b);
-      return maxSetId + 1;
-    }
+    return (maxSetId?.setId ?? 0) + 1;
   }
 
   @override
@@ -107,5 +107,31 @@ class WorkoutRepository implements WorkoutRepositoryInterface {
     await (database.delete(database.workouts)
           ..where((tbl) => tbl.date.equals(date)))
         .go();
+  }
+
+  /// 🔄 **Обновление сортировки тренировки**
+  Future<void> updateWorkoutSort({required String workoutId, required int newSort}) async {
+     log("🛠 Обновление `sort` в базе для ID: $workoutId -> новый `sort`: $newSort");
+
+      await (database.update(database.workouts)
+            ..where((tbl) => tbl.id.equals(workoutId)))
+          .write(WorkoutsCompanion(
+            sort: Value(newSort),
+          ));
+
+      log("✅ `sort` обновлен в БД для ID: $workoutId");
+  }
+
+  /// 🔄 **Обновление `setId` тренировки**
+  Future<void> updateWorkoutSetId(
+    {required String workoutId, 
+    required int newSetId,
+    required bool newIsSet,}) async {
+    await (database.update(database.workouts)
+          ..where((tbl) => tbl.id.equals(workoutId)))
+        .write(WorkoutsCompanion(
+          setId: Value(newSetId),
+          isSet: Value(newIsSet),
+        ));
   }
 }

@@ -47,6 +47,11 @@ class ExerciseRepeatBloc extends Bloc<ExerciseRepeatEvent, ExerciseRepeatState> 
       List<ExerciseRepeatsCompanion> newRepeats = [];
       var uuid = const uuid_lib.Uuid();
 
+      await exerciseRepeatRepository.deleteExerciseRepeatsByWorkoutAndExercise(
+        event.workoutOverview.workoutId,
+        event.workoutOverview.workoutExerciseId,
+      );
+
       for (var data in event.performData) {
         final exerciseRepeat = ExerciseRepeatsCompanion(
           id: Value(uuid.v4()),

@@ -38,6 +38,11 @@ class WorkoutCalendarDataBloc
       final workoutList =
           await workoutRepository.getExerciseListByDate(dateWithoutTime);
 
+
+      log("🏋️‍♂️ Workout List:");
+      workoutList.forEach((exercise) => log("${exercise} - Sort: ${exercise.sort}"));
+
+
       List<WorkoutOverview> workoutEntities = [];
 
       for (int i = 0; i < workoutList.length; i++) {

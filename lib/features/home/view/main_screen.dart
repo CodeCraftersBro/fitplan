@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:fitplan/features/home/bloc/workout_calendar_data_bloc.dart';
 import 'package:fitplan/features/home/widgets/widgets.dart';
 import 'package:fitplan/features/search/bloc/exercise_search_bloc.dart';
@@ -64,6 +66,11 @@ class _MainScreenState extends State<MainScreen> {
   void _showModalListExercise(
       BuildContext context, DateTime selectedDate,List<WorkoutOverview> workoutOverviewList) async {
     
+     log("workoutOverviewList - _showModalListExercise");
+    workoutOverviewList.forEach((exercise) => print(exercise.workoutExerciseName+ exercise.workoutSort.toString()));
+
+
+
     final workoutOverviewReorderableList = await showModalBottomSheet(
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
@@ -80,8 +87,18 @@ class _MainScreenState extends State<MainScreen> {
     }
     if (!mounted) return;
 
-    context.read<WorkoutEditorBloc>().add(UpdateWorkoutDate(selectedDate,workoutOverviewReorderableList));
+    // context.read<WorkoutEditorBloc>().add(UpdateWorkoutDate(selectedDate,workoutOverviewReorderableList));
+    
+
+    context.read<WorkoutEditorBloc>().add(ReorderWorkouts(
+      selectedDate: selectedDate,
+      oldWorkoutList: workoutOverviewList,
+      newWorkoutList: workoutOverviewReorderableList,
+    ));
+
+   
   }
+
 
   @override
   Widget build(BuildContext context) {
@@ -98,14 +115,17 @@ class _MainScreenState extends State<MainScreen> {
         ),
         BlocListener<WorkoutEditorBloc, WorkoutEditorState>(
           listener: (context, state) {
-
+            log("🔥 WorkoutEditorBloc получил состояние: ${state.runtimeType}");
             if (state is WorkoutEditorLoaded) {
               context
                   .read<WorkoutCalendarDataBloc>()
                   .add(LoadWorkoutCalendarData(selectedDate: _selectedDay));
             }
+          
           },
         ),
+        
+
         // BlocListener<ExerciseRepeatBloc, ExerciseRepeatState>(
         //   listener: (context, state) {
 

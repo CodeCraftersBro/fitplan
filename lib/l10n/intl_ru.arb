@@ -15,13 +15,17 @@
   "ringWorkout": "Подход: {ring}",
   "addExercise": "Добавить упражнение",
   "reps_none": "Нет данных",
-    "reps_strength": "{count, plural, one {{count} подход} few {{count} подхода} many {{count} подходов} other {{count} подхода}}",
-    "reps_cardio": "{count, plural, one {{count} сессия} few {{count} сессии} many {{count} сессий} other {{count} сессии}}",
-    "reps_stretching": "{count, plural, one {{count} упражнение} few {{count} упражнения} many {{count} упражнений} other {{count} упражнения}}",
-    "reps_generic": "{count, plural, one {{count} повторение} few {{count} повторения} many {{count} повторений} other {{count} повторения}}",
-    "searchCaption": "Искать",
+  "reps_strength": "{count, plural, one {{count} подход} few {{count} подхода} many {{count} подходов} other {{count} подхода}}",
+  "reps_cardio": "{count, plural, one {{count} сессия} few {{count} сессии} many {{count} сессий} other {{count} сессии}}",
+  "reps_stretching": "{count, plural, one {{count} упражнение} few {{count} упражнения} many {{count} упражнений} other {{count} упражнения}}",
+  "reps_generic": "{count, plural, one {{count} повторение} few {{count} повторения} many {{count} повторений} other {{count} повторения}}",
+  "searchCaption": "Искать",
   "nothingFound": "Ничего не найдено, попробуйте еще.",
   "@nothingFound": {
     "description": "Отображается, когда поиск или запрос не дал результатов."
-  }
+  },
+  "duration": "Время (минуты)",
+  "distance": "Дистанция (км)",
+  "repeats": "Повторы",
+  "weight": "Вес"
 }

@@ -188,7 +188,7 @@ class FitPlanScope extends StatelessWidget {
         ),
         BlocProvider(
           create: (context) =>
-              WorkoutEditorBloc(context.read<WorkoutRepository>()),
+              WorkoutEditorBloc(context.read<WorkoutRepository>(),context.read<ExerciseRepeatRepository>()),
         ),
         BlocProvider(
           create: (context) =>
@@ -207,6 +207,7 @@ class FitPlanScope extends StatelessWidget {
           create: (context) {
             final bloc = ExerciseSearchBloc(
               searchRepository: context.read<SearchRepository>(),
+              workoutRepository: context.read<WorkoutRepository>(),
             );
             bloc.add(FetchInitialData());
             return bloc;
