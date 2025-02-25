@@ -23,28 +23,53 @@ class MessageLookup extends MessageLookupByLibrary {
   static String m0(version, buildNumber) =>
       "Application version: ${version} (${buildNumber})";
 
-  static String m1(ring) => "Ring: ${ring}";
+  static String m1(count) =>
+      "${Intl.plural(count, one: '${count} session', other: '${count} sessions')}";
+
+  static String m2(count) =>
+      "${Intl.plural(count, one: '${count} rep', other: '${count} reps')}";
+
+  static String m3(count) =>
+      "${Intl.plural(count, one: '${count} set', other: '${count} sets')}";
+
+  static String m4(count) =>
+      "${Intl.plural(count, one: '${count} exercise', other: '${count} exercises')}";
+
+  static String m5(ring) => "Ring: ${ring}";
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
-        "addExercise":
-            MessageLookupByLibrary.simpleMessage("Добавить упражнение"),
-        "add_exercise": MessageLookupByLibrary.simpleMessage("Add excrcise"),
-        "appVersionAndBuildnumber": m0,
-        "clearHistory": MessageLookupByLibrary.simpleMessage("Clear history"),
-        "darkTheme": MessageLookupByLibrary.simpleMessage("Dark theme"),
-        "developerWebsite":
-            MessageLookupByLibrary.simpleMessage("Developer website"),
-        "enableAnalytics":
-            MessageLookupByLibrary.simpleMessage("Enable analytics"),
-        "home": MessageLookupByLibrary.simpleMessage("My plan"),
-        "notifications": MessageLookupByLibrary.simpleMessage("Notifications"),
-        "ringWorkout": m1,
-        "settings": MessageLookupByLibrary.simpleMessage("Settings"),
-        "support": MessageLookupByLibrary.simpleMessage("Support"),
-        "today": MessageLookupByLibrary.simpleMessage("Today"),
-        "unknownState": MessageLookupByLibrary.simpleMessage("Unknown state"),
-        "unlimitedWorkouts":
-            MessageLookupByLibrary.simpleMessage("Unlimited workouts")
-      };
+    "addExercise": MessageLookupByLibrary.simpleMessage("Add"),
+    "add_exercise": MessageLookupByLibrary.simpleMessage("Add excrcise"),
+    "appVersionAndBuildnumber": m0,
+    "clearHistory": MessageLookupByLibrary.simpleMessage("Clear history"),
+    "darkTheme": MessageLookupByLibrary.simpleMessage("Dark theme"),
+    "developerWebsite": MessageLookupByLibrary.simpleMessage(
+      "Developer website",
+    ),
+    "distance": MessageLookupByLibrary.simpleMessage("Distance"),
+    "duration": MessageLookupByLibrary.simpleMessage("Duration"),
+    "enableAnalytics": MessageLookupByLibrary.simpleMessage("Enable analytics"),
+    "home": MessageLookupByLibrary.simpleMessage("My plan"),
+    "nothingFound": MessageLookupByLibrary.simpleMessage(
+      "Nothing found, try again.",
+    ),
+    "notifications": MessageLookupByLibrary.simpleMessage("Notifications"),
+    "repeats": MessageLookupByLibrary.simpleMessage("Repetitions"),
+    "reps_cardio": m1,
+    "reps_generic": m2,
+    "reps_none": MessageLookupByLibrary.simpleMessage("No data"),
+    "reps_strength": m3,
+    "reps_stretching": m4,
+    "ringWorkout": m5,
+    "searchCaption": MessageLookupByLibrary.simpleMessage("Search"),
+    "settings": MessageLookupByLibrary.simpleMessage("Settings"),
+    "support": MessageLookupByLibrary.simpleMessage("Support"),
+    "today": MessageLookupByLibrary.simpleMessage("Today"),
+    "unknownState": MessageLookupByLibrary.simpleMessage("Unknown state"),
+    "unlimitedWorkouts": MessageLookupByLibrary.simpleMessage(
+      "Unlimited workouts",
+    ),
+    "weight": MessageLookupByLibrary.simpleMessage("Weight"),
+  };
 }

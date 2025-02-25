@@ -1,4 +1,4 @@
-import 'package:fitplan/repositories/workout/models/models.dart';
+import 'package:fitplan/repositories/workout/database.dart';
 
 abstract interface class ExerciseTypeRepositoryInterface {
   Future<void> updateExerciseTypesFromAPI();

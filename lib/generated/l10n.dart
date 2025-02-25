@@ -18,17 +18,20 @@ class S {
   static S? _current;
 
   static S get current {
-    assert(_current != null,
-        'No instance of S was loaded. Try to initialize the S delegate before accessing S.current.');
+    assert(
+      _current != null,
+      'No instance of S was loaded. Try to initialize the S delegate before accessing S.current.',
+    );
     return _current!;
   }
 
   static const AppLocalizationDelegate delegate = AppLocalizationDelegate();
 
   static Future<S> load(Locale locale) {
-    final name = (locale.countryCode?.isEmpty ?? false)
-        ? locale.languageCode
-        : locale.toString();
+    final name =
+        (locale.countryCode?.isEmpty ?? false)
+            ? locale.languageCode
+            : locale.toString();
     final localeName = Intl.canonicalizedLocale(name);
     return initializeMessages(localeName).then((_) {
       Intl.defaultLocale = localeName;
@@ -41,8 +44,10 @@ class S {
 
   static S of(BuildContext context) {
     final instance = S.maybeOf(context);
-    assert(instance != null,
-        'No instance of S present in the widget tree. Did you add S.delegate in localizationsDelegates?');
+    assert(
+      instance != null,
+      'No instance of S present in the widget tree. Did you add S.delegate in localizationsDelegates?',
+    );
     return instance!;
   }
 
@@ -52,22 +57,12 @@ class S {
 
   /// `My plan`
   String get home {
-    return Intl.message(
-      'My plan',
-      name: 'home',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('My plan', name: 'home', desc: '', args: []);
   }
 
   /// `Settings`
   String get settings {
-    return Intl.message(
-      'Settings',
-      name: 'settings',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Settings', name: 'settings', desc: '', args: []);
   }
 
   /// `Add excrcise`
@@ -92,12 +87,7 @@ class S {
 
   /// `Dark theme`
   String get darkTheme {
-    return Intl.message(
-      'Dark theme',
-      name: 'darkTheme',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Dark theme', name: 'darkTheme', desc: '', args: []);
   }
 
   /// `Notifications`
@@ -142,22 +132,12 @@ class S {
 
   /// `Support`
   String get support {
-    return Intl.message(
-      'Support',
-      name: 'support',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Support', name: 'support', desc: '', args: []);
   }
 
   /// `Today`
   String get today {
-    return Intl.message(
-      'Today',
-      name: 'today',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Today', name: 'today', desc: '', args: []);
   }
 
   /// `Unknown state`
@@ -190,14 +170,97 @@ class S {
     );
   }
 
-  /// `Добавить упражнение`
+  /// `Add`
   String get addExercise {
-    return Intl.message(
-      'Добавить упражнение',
-      name: 'addExercise',
+    return Intl.message('Add', name: 'addExercise', desc: '', args: []);
+  }
+
+  /// `No data`
+  String get reps_none {
+    return Intl.message('No data', name: 'reps_none', desc: '', args: []);
+  }
+
+  /// `{count, plural, one {{count} set} other {{count} sets}}`
+  String reps_strength(num count) {
+    return Intl.plural(
+      count,
+      one: '$count set',
+      other: '$count sets',
+      name: 'reps_strength',
       desc: '',
+      args: [count],
+    );
+  }
+
+  /// `{count, plural, one {{count} session} other {{count} sessions}}`
+  String reps_cardio(num count) {
+    return Intl.plural(
+      count,
+      one: '$count session',
+      other: '$count sessions',
+      name: 'reps_cardio',
+      desc: '',
+      args: [count],
+    );
+  }
+
+  /// `{count, plural, one {{count} exercise} other {{count} exercises}}`
+  String reps_stretching(num count) {
+    return Intl.plural(
+      count,
+      one: '$count exercise',
+      other: '$count exercises',
+      name: 'reps_stretching',
+      desc: '',
+      args: [count],
+    );
+  }
+
+  /// `{count, plural, one {{count} rep} other {{count} reps}}`
+  String reps_generic(num count) {
+    return Intl.plural(
+      count,
+      one: '$count rep',
+      other: '$count reps',
+      name: 'reps_generic',
+      desc: '',
+      args: [count],
+    );
+  }
+
+  /// `Search`
+  String get searchCaption {
+    return Intl.message('Search', name: 'searchCaption', desc: '', args: []);
+  }
+
+  /// `Nothing found, try again.`
+  String get nothingFound {
+    return Intl.message(
+      'Nothing found, try again.',
+      name: 'nothingFound',
+      desc: 'Displayed when a search or query returns no results.',
       args: [],
     );
+  }
+
+  /// `Duration`
+  String get duration {
+    return Intl.message('Duration', name: 'duration', desc: '', args: []);
+  }
+
+  /// `Distance`
+  String get distance {
+    return Intl.message('Distance', name: 'distance', desc: '', args: []);
+  }
+
+  /// `Repetitions`
+  String get repeats {
+    return Intl.message('Repetitions', name: 'repeats', desc: '', args: []);
+  }
+
+  /// `Weight`
+  String get weight {
+    return Intl.message('Weight', name: 'weight', desc: '', args: []);
   }
 }
 

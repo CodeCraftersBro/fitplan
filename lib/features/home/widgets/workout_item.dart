@@ -1,13 +1,18 @@
 
 import 'dart:developer';
 
+import 'package:fitplan/features/home/bloc/workout_calendar_data_bloc.dart';
+import 'package:fitplan/features/perform/bloc/exercise_repeat_bloc.dart';
 import 'package:fitplan/features/perform/perform.dart';
 import 'package:fitplan/repositories/workout/entity/entity.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:fitplan/generated/l10n.dart';
 
 class WorkoutItemWidget extends StatelessWidget {
   final WorkoutOverview workoutOverview;
-  const WorkoutItemWidget({super.key, required this.workoutOverview});
+  final DateTime selectedDate;
+  const WorkoutItemWidget({super.key, required this.workoutOverview, required this.selectedDate});
 
   @override
   Widget build(BuildContext context) {
@@ -39,7 +44,7 @@ class WorkoutItemWidget extends StatelessWidget {
                         ),
                   ),
                   Text(
-                    "Подход №"+workoutOverview.workoutSort.toString(),
+                    _getFormattedRepsText(context,workoutOverview),
                     style: Theme.of(context).textTheme.titleMedium?.copyWith(
                           fontSize: 14,
                         ),
@@ -52,7 +57,7 @@ class WorkoutItemWidget extends StatelessWidget {
             children: [
               IconButton(
                   onPressed: () {
-                    _showModalPerform(context,workoutOverview);
+                    _showModalPerform(context,workoutOverview,selectedDate);
                   },
                   icon: Icon(
                     Icons.wrap_text,
@@ -67,15 +72,41 @@ class WorkoutItemWidget extends StatelessWidget {
   }
 }
 
-void _showModalPerform(BuildContext context, WorkoutOverview workoutOverview) async {
-  // Пример данных, которые вы можете передавать в PerformScreen
-  final List<Map<String, String>> existingSets = [
-    // {'weight': '20', 'reps': '12'},
-    // {'weight': '30', 'reps': '10'},
-  ];
+/// **Форматирование текста повторений в зависимости от типа упражнения**
+  String _getFormattedRepsText(BuildContext context, WorkoutOverview workout) {
+    final int repeatsCount = workout.workoutExerciseRepeats;
+    final appLocalizations = S.of(context);
+    
 
-  log(workoutOverview.workoutExerciseTypeName);
-  log(workoutOverview.workoutExerciseTypeCategory);
+  if (repeatsCount == 0) {
+    return appLocalizations.reps_none;
+  }
+  switch (workout.workoutExerciseTypeCategory.toLowerCase()) {
+    case "strength":
+      return appLocalizations.reps_strength(repeatsCount);
+    case "cardio":
+      return appLocalizations.reps_cardio(repeatsCount);
+    case "stretching":
+      return appLocalizations.reps_stretching(repeatsCount);
+    default:
+      return appLocalizations.reps_generic(repeatsCount);
+  }
+  }
+void _showModalPerform(BuildContext context, WorkoutOverview workoutOverview,DateTime selectedDate) async {
+ 
+ List<Map<String, String>> existingSets = workoutOverview.workoutExerciseRepeatList.map((repeat) {
+    return {
+      if (repeat.weight != null) "weight": repeat.weight.toString(),
+      if (repeat.reps != null) "reps": repeat.reps.toString(),
+      if (repeat.distance != null) "distance": repeat.distance.toString(),
+      if (repeat.duration != null) "duration": repeat.duration.toString(),
+      if (repeat.stretchDuration != null) "stretchDuration": repeat.stretchDuration.toString(),
+    };
+  }).toList();
+
+  log("existingSets: ${workoutOverview.workoutExerciseRepeatList}");
+  log("Exercise: ${workoutOverview.workoutExerciseTypeName}");
+  log("Category: ${workoutOverview.workoutExerciseTypeCategory}");
   // Открываем PerformScreen с переданными данными
   final performData = await showModalBottomSheet(
     isScrollControlled: true,
@@ -91,9 +122,11 @@ void _showModalPerform(BuildContext context, WorkoutOverview workoutOverview) as
 
   // Обрабатываем данные, если пользователь ввел новые данные
   if (performData != null) {
-    // performData содержит новые или отредактированные данные от экрана
-    print("Полученные данные: $performData");
+    context.read<ExerciseRepeatBloc>()
+    .add(AddExerciseRepeat(workoutOverview: workoutOverview, performData: performData));
 
-    // Здесь вы можете сделать что-то с полученными данными, например, сохранить их в базе данных
   }
+    context.read<WorkoutCalendarDataBloc>().add(
+      LoadWorkoutCalendarData(selectedDate: selectedDate),
+    );
 }

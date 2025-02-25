@@ -13,5 +13,19 @@
   "unknownState": "Unknown state",
   "appVersionAndBuildnumber": "Application version: {version} ({buildNumber})",
   "ringWorkout": "Ring: {ring}",
-  "addExercise": "Добавить упражнение"
+  "addExercise": "Add",
+  "reps_none": "No data",
+  "reps_strength": "{count, plural, one {{count} set} other {{count} sets}}",
+  "reps_cardio": "{count, plural, one {{count} session} other {{count} sessions}}",
+  "reps_stretching": "{count, plural, one {{count} exercise} other {{count} exercises}}",
+  "reps_generic": "{count, plural, one {{count} rep} other {{count} reps}}",
+  "searchCaption": "Search",
+  "nothingFound": "Nothing found, try again.",
+  "@nothingFound": {
+    "description": "Displayed when a search or query returns no results."
+  },
+  "duration": "Duration",
+  "distance": "Distance",
+  "repeats": "Repetitions",
+  "weight": "Weight"
 }

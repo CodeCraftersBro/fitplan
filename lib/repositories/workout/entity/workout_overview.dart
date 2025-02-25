@@ -1,22 +1,29 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first
+import 'package:fitplan/repositories/workout/database.dart';
+
 class WorkoutOverview {
   final String workoutId;
   final int workoutSort;
   final bool workoutIsSet;
   final int workoutSetId;
   final String workoutExerciseIndicator;
-  
+
   // Поля из модели Exercise
   final String workoutExerciseId;
   final String workoutExerciseName;
-  
+
   // Поля из модели ExerciseType
   final String workoutExerciseTypeId;
   final String workoutExerciseTypeName;
   final String workoutExerciseTypeIcon;
   final String workoutExerciseTypeCategory;
 
-  WorkoutOverview( {
+  // Количество повторений
+  final int workoutExerciseRepeats;
+
+  // **Добавляем список повторений**
+  final List<ExerciseRepeat> workoutExerciseRepeatList;
+
+  WorkoutOverview({
     required this.workoutId,
     required this.workoutSort,
     required this.workoutIsSet,
@@ -28,6 +35,8 @@ class WorkoutOverview {
     required this.workoutExerciseTypeName,
     required this.workoutExerciseTypeIcon,
     required this.workoutExerciseTypeCategory,
+    required this.workoutExerciseRepeats,
+    required this.workoutExerciseRepeatList, // Новый параметр
   });
 
   WorkoutOverview copyWith({
@@ -42,6 +51,8 @@ class WorkoutOverview {
     String? workoutExerciseTypeName,
     String? workoutExerciseTypeCategory,
     String? workoutExerciseTypeIcon,
+    int? workoutExerciseRepeats,
+    List<ExerciseRepeat>? workoutExerciseRepeatList, // Добавили в copyWith
   }) {
     return WorkoutOverview(
       workoutId: workoutId ?? this.workoutId,
@@ -53,8 +64,10 @@ class WorkoutOverview {
       workoutExerciseName: workoutExerciseName ?? this.workoutExerciseName,
       workoutExerciseTypeId: workoutExerciseTypeId ?? this.workoutExerciseTypeId,
       workoutExerciseTypeName: workoutExerciseTypeName ?? this.workoutExerciseTypeName,
-      workoutExerciseTypeIcon: workoutExerciseTypeIcon ?? this.workoutExerciseTypeIcon, 
-      workoutExerciseTypeCategory: workoutExerciseTypeCategory ?? this.workoutExerciseTypeCategory
+      workoutExerciseTypeIcon: workoutExerciseTypeIcon ?? this.workoutExerciseTypeIcon,
+      workoutExerciseTypeCategory: workoutExerciseTypeCategory ?? this.workoutExerciseTypeCategory,
+      workoutExerciseRepeats: workoutExerciseRepeats ?? this.workoutExerciseRepeats,
+      workoutExerciseRepeatList: workoutExerciseRepeatList ?? this.workoutExerciseRepeatList, // Новый параметр
     );
   }
 }

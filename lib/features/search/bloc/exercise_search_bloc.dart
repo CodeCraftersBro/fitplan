@@ -1,12 +1,16 @@
 import 'dart:async';
+import 'dart:developer';
 
 import 'package:equatable/equatable.dart';
 import 'package:fitplan/repositories/search/models/models.dart';
 import 'package:fitplan/repositories/search/search.dart';
+import 'package:fitplan/repositories/workout/database.dart';
+import 'package:fitplan/repositories/workout/workout.dart';
+import 'package:fitplan/utils/date_time_utils.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-
-import 'package:fitplan/repositories/workout/models/models.dart';
 import 'package:uuid/uuid.dart' as uuid_lib;
+import 'package:drift/drift.dart';
 
 part 'exercise_search_event.dart';
 part 'exercise_search_state.dart';
@@ -14,63 +18,57 @@ part 'exercise_search_state.dart';
 class ExerciseSearchBloc
     extends Bloc<ExerciseSearchEvent, ExerciseSearchState> {
   final SearchRepository searchRepository;
+  final WorkoutRepository workoutRepository;
   List<ExerciseSearch> selectedExercises = [];
+
   ExerciseSearchBloc({
     required this.searchRepository,
+    required this.workoutRepository,
   }) : super(ExerciseSearchInitial()) {
     on<ExerciseSearchEvent>((event, emit) async => switch (event) {
-      FetchInitialData() => _onFetchInitialData(event, emit),
-      SearchExercises() => _onSearchExercises(event, emit),
-      SelectCategory() => _onSelectCategory(event, emit),
-      ToggleExerciseSelection() => _onToggleExerciseSelection(event, emit),
-      AddSelectedExercisesToWorkout() => _onAddSelectedExercisesToWorkout(event, emit),
-    });
+          FetchInitialData() => _onFetchInitialData(event, emit),
+          SearchExercises() => _onSearchExercises(event, emit),
+          SelectCategory() => _onSelectCategory(event, emit),
+          ToggleExerciseSelection() => _onToggleExerciseSelection(event, emit),
+          AddSelectedExercisesToWorkout() =>
+            _onAddSelectedExercisesToWorkout(event, emit)
+        });
   }
+
+
 
   Future<void> _onFetchInitialData(
     FetchInitialData event,
     Emitter<ExerciseSearchState> emit,
   ) async {
-     print('_onFetchInitialData');
+    emit(ExerciseSearchInitial());
+    log('_onFetchInitialData');
     try {
+      emit(ExerciseSearchLoading());
       final categories = await searchRepository.getExerciseCategories();
-
-      // for (var item in categories) {
-      //   print('ID: ${item.id} - ${item.name}');
-      // }
       emit(ExerciseSearchLoaded(items: categories));
     } catch (e) {
       emit(ExerciseSearchError(message: e.toString()));
     }
   }
 
-  void _onSearchExercises(
+  Future<void> _onSearchExercises(
     SearchExercises event,
     Emitter<ExerciseSearchState> emit,
   ) async {
     emit(ExerciseSearchLoading());
-    if (event.query.isEmpty) {
-      try {
-        final categories = await searchRepository.getExerciseCategories();
-        emit(ExerciseSearchLoaded(items: categories));
-      } catch (e) {
-        emit(ExerciseSearchError(message: e.toString()));
-      }
-    } else {
-      try {
-        final results =
-            await searchRepository.searchExercisesAndCategories(event.query);
-        for (var item in results) {
-          print('ID: ${item.id} - ${item.name} - type:${item.typeItem}');
-        }
-        emit(ExerciseSearchLoaded(items: results));
-      } catch (e) {
-        emit(ExerciseSearchError(message: e.toString()));
-      }
+    try {
+      final results = event.query.isEmpty
+          ? await searchRepository.getExerciseCategories()
+          : await searchRepository.searchExercisesAndCategories(event.query);
+
+      emit(ExerciseSearchLoaded(items: results));
+    } catch (e) {
+      emit(ExerciseSearchError(message: e.toString()));
     }
   }
 
-  void _onSelectCategory(
+  Future<void> _onSelectCategory(
     SelectCategory event,
     Emitter<ExerciseSearchState> emit,
   ) async {
@@ -78,80 +76,75 @@ class ExerciseSearchBloc
       emit(ExerciseSearchLoading());
       final exercises =
           await searchRepository.getExercisesByTypeId(event.exerciseTypeId);
-      // emit(ExerciseSearchLoaded(items: exercises));
       emit(ExerciseSearchCategorySelected(items: exercises));
     } catch (e) {
       emit(ExerciseSearchError(message: e.toString()));
     }
-    // if (state is ExerciseSearchLoaded) {
-    //   final loadedState = state as ExerciseSearchLoaded;
-    //   final filteredExercises = loadedState.allExercises
-    //       .where((exercise) => exercise.exerciseTypeId == event.typeId)
-    //       .toList();
-    //   emit(ExerciseCategorySelected(exercises: filteredExercises));
-    // }
   }
 
   void _onToggleExerciseSelection(
-    
-      ToggleExerciseSelection event, Emitter<ExerciseSearchState> emit) {
+    ToggleExerciseSelection event,
+    Emitter<ExerciseSearchState> emit,
+  ) {
+    log("_onToggleExerciseSelection");
 
-
-    print("_onToggleExerciseSelection");
-    if (selectedExercises.contains(event.exercise)) {
-      selectedExercises.remove(event.exercise);
+    if (selectedExercises
+        .any((e) => e.exerciseId == event.exercise.exerciseId)) {
+      selectedExercises
+          .removeWhere((e) => e.exerciseId == event.exercise.exerciseId);
     } else {
       selectedExercises.add(event.exercise);
     }
 
     if (state is ExerciseSearchLoaded) {
-        emit(ExerciseSearchLoaded(items:(state as ExerciseSearchLoaded).items));
+      emit(ExerciseSearchLoaded(items: (state as ExerciseSearchLoaded).items));
     } else if (state is ExerciseSearchCategorySelected) {
-        emit(ExerciseSearchCategorySelected(items:(state as ExerciseSearchCategorySelected).items));
+      emit(ExerciseSearchCategorySelected(
+          items: (state as ExerciseSearchCategorySelected).items));
     } else {
-        emit(ExerciseSelected(selectedExercises));
+      emit(ExerciseSelected(selectedExercises));
     }
   }
 
-  void _onAddSelectedExercisesToWorkout(
-      AddSelectedExercisesToWorkout event,
-      Emitter<ExerciseSearchState> emit) async {
+  Future<void> _onAddSelectedExercisesToWorkout(
+    AddSelectedExercisesToWorkout event,
+    Emitter<ExerciseSearchState> emit,
+  ) async {
     try {
       var uuid = uuid_lib.Uuid();
-      //TODO add data
-      // TODO add sort order
-      // final date = _getDateWithoutTime(DateTime.now());
-      final date = _getDateWithoutTime(event.selectedDate);
+      final date = DateTimeUtils.getDateWithoutTime(event.selectedDate);
+      List<WorkoutsCompanion> workoutList = [];
 
       for (var exerciseSearch in event.exercises) {
-        var workout = Workout(
-              uuid.v4(),
-              0,
-              date,
-              false,
-              0,
-              '',
-              exerciseSearch.exerciseId,
-            );
-        await searchRepository.addWorkout(workout);
-       
-        }
-      selectedExercises.clear();
-      // emit(ExerciseSearchInitial());
-      
-      final categories = await searchRepository.getExerciseCategories();
+        // 🆕 Получаем следующий номер сортировки
+        int sortOrder = await workoutRepository.getNextSortOrderForDate(date);
 
-      for (var item in categories) {
-        print('ID: ${item.id} - ${item.name}');
+        var workout = WorkoutsCompanion(
+          id: Value(uuid.v4()),
+          sort: Value(sortOrder), // ✅ Теперь `sort` заполняется правильно
+          date: Value(date),
+          isSet: Value(false),
+          setId: Value(0),
+          exerciseIndicator: Value(''),
+          exerciseId: Value(exerciseSearch.exerciseId),
+        );
+        workoutList.add(workout);
       }
-      emit(ExerciseSearchLoaded(items: categories));
 
-      
+      if (workoutList.isNotEmpty) {
+        await workoutRepository.addWorkouts(workoutList);
+        log("✅ Упражнения успешно добавлены в БД");
+      } else {
+        log("⚠️ Ошибка: Список упражнений `workoutList` пуст! Проверьте передаваемые данные.");
+      }
+
+      selectedExercises.clear();
+
+      final categories = await searchRepository.getExerciseCategories();
+      emit(ExerciseSearchLoaded(items: categories));
     } catch (e) {
+      log(e.toString());
       emit(ExerciseSearchError(message: e.toString()));
     }
   }
 }
-DateTime _getDateWithoutTime(DateTime dateTime) {
-    return DateTime(dateTime.year, dateTime.month, dateTime.day);
-  }

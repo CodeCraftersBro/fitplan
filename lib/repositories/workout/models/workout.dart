@@ -1,16 +1,15 @@
-import 'package:realm/realm.dart';
+import 'package:drift/drift.dart';
+import 'exercise.dart';
 
-part 'workout.realm.dart';
 
-@RealmModel()
-class _Workout {
-  @PrimaryKey()
-  late String id;
-  late int sort;
-  late DateTime date;
-  late bool isSet;
-  late int setId;
-  late String exerciseIndicator;
-  late String exerciseId; 
-  
+@DataClassName('Workout')
+class Workouts extends Table {
+  // TextColumn get id => text().customConstraint('PRIMARY KEY NOT NULL')();
+  TextColumn get id => text()(); 
+  IntColumn get sort => integer()();
+  DateTimeColumn get date => dateTime()();
+  BoolColumn get isSet => boolean().withDefault(const Constant(false))();
+  IntColumn get setId => integer()();
+  TextColumn get exerciseIndicator => text()();
+  TextColumn get exerciseId => text().references(Exercises, #id)();
 }

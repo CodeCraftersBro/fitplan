@@ -30,7 +30,7 @@ final class WorkoutCalendarLoaded extends WorkoutCalendarDataState {
 
 final class WorkoutCalendarFailure extends WorkoutCalendarDataState {
   final Object exception;
-
+  
   const WorkoutCalendarFailure(this.exception);
   @override
   List<Object> get props => [exception];

@@ -5,9 +5,11 @@
 *.swp
 .DS_Store
 .atom/
+.build/
 .buildlog/
 .history
 .svn/
+.swiftpm/
 migrate_working_dir/
 
 # IntelliJ related
@@ -63,3 +65,12 @@ doc/api/
 *.js_
 *.js.deps
 *.js.map
+
+# Исключаем файлы базы данных Realm
+*.realm
+*.realm.lock
+*.realm.management/
+*.realm.note
+*.realm.log
+*.realm.log_a
+*.realm.log_b

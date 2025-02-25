@@ -3,9 +3,9 @@ import 'dart:async';
 import 'package:fitplan/fitplanapp.dart';
 import 'package:fitplan/repositories/search/search.dart';
 import 'package:fitplan/repositories/settings/settings.dart';
+import 'package:fitplan/repositories/workout/database.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:realm/realm.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'repositories/workout/models/models.dart';
 import 'package:fitplan/repositories/workout/workout.dart';
@@ -16,44 +16,30 @@ void main() {
 
     final preferences = await SharedPreferences.getInstance();
 
-    final config = Configuration.local(
-      [
-        Workout.schema,
-        Exercise.schema,
-        ExerciseType.schema,
-      ],
-      schemaVersion: 3,
-      migrationCallback: (migration, oldSchemaVersion) {
-        if (oldSchemaVersion < 2) {
-          // Здесь можно выполнить действия по миграции, если они необходимы
-          // Например, если требуется изменить данные, можно написать логику здесь
-        }
-      },
-    );
-    final realm = Realm(config);
+    final database = AppDatabase();
 
     runApp(MultiRepositoryProvider(
       providers: [
         RepositoryProvider(
-          create: (context) => WorkoutRepository(realm: realm),
+          create: (context) => WorkoutRepository(database: database),
         ),
         RepositoryProvider(
           create: (context) => SettingsRepository(preferences: preferences),
         ),
         RepositoryProvider(
-          create: (context) => SearchRepository(realm: realm),
+          create: (context) => SearchRepository(database: database),
         ),
         RepositoryProvider(
-          create: (context) => ExerciseRepository(realm: realm),
+          create: (context) => ExerciseRepository(database: database),
         ),
         RepositoryProvider(
-          create: (context) => ExerciseTypeRepository(realm: realm),
+          create: (context) => ExerciseTypeRepository(database: database),
+        ),
+        RepositoryProvider(
+          create: (context) => ExerciseRepeatRepository(database: database),
         ),
       ],
-      child: const FitPlanApp(
-          // preferences: preferences,
-          // realm: realm,
-          ),
+      child: const FitPlanApp(),
     ));
   }, (error, stack) {});
 }
