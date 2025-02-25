@@ -25,23 +25,26 @@ class ExerciseSearchBloc
     required this.searchRepository,
     required this.workoutRepository,
   }) : super(ExerciseSearchInitial()) {
-  
     on<ExerciseSearchEvent>((event, emit) async => switch (event) {
           FetchInitialData() => _onFetchInitialData(event, emit),
           SearchExercises() => _onSearchExercises(event, emit),
           SelectCategory() => _onSelectCategory(event, emit),
           ToggleExerciseSelection() => _onToggleExerciseSelection(event, emit),
           AddSelectedExercisesToWorkout() =>
-            _onAddSelectedExercisesToWorkout(event, emit),
+            _onAddSelectedExercisesToWorkout(event, emit)
         });
   }
+
+
 
   Future<void> _onFetchInitialData(
     FetchInitialData event,
     Emitter<ExerciseSearchState> emit,
   ) async {
+    emit(ExerciseSearchInitial());
     log('_onFetchInitialData');
     try {
+      emit(ExerciseSearchLoading());
       final categories = await searchRepository.getExerciseCategories();
       emit(ExerciseSearchLoaded(items: categories));
     } catch (e) {
@@ -128,20 +131,19 @@ class ExerciseSearchBloc
         workoutList.add(workout);
       }
 
-     
       if (workoutList.isNotEmpty) {
         await workoutRepository.addWorkouts(workoutList);
         log("✅ Упражнения успешно добавлены в БД");
       } else {
         log("⚠️ Ошибка: Список упражнений `workoutList` пуст! Проверьте передаваемые данные.");
       }
-      
+
       selectedExercises.clear();
 
       final categories = await searchRepository.getExerciseCategories();
       emit(ExerciseSearchLoaded(items: categories));
     } catch (e) {
-       log(e.toString());
+      log(e.toString());
       emit(ExerciseSearchError(message: e.toString()));
     }
   }

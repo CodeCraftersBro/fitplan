@@ -24,8 +24,8 @@
   "@nothingFound": {
     "description": "Displayed when a search or query returns no results."
   },
-  "duration": "Duration (minutes)",
-  "distance": "Distance (km)",
+  "duration": "Duration",
+  "distance": "Distance",
   "repeats": "Repetitions",
   "weight": "Weight"
 }

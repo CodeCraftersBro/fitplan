@@ -48,7 +48,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Сайт разработчика",
     ),
     "distance": MessageLookupByLibrary.simpleMessage("Дистанция (км)"),
-    "duration": MessageLookupByLibrary.simpleMessage("Время (минуты)"),
+    "duration": MessageLookupByLibrary.simpleMessage("Время (сек)"),
     "enableAnalytics": MessageLookupByLibrary.simpleMessage(
       "Разрешить аналитику",
     ),
@@ -74,6 +74,6 @@ class MessageLookup extends MessageLookupByLibrary {
     "unlimitedWorkouts": MessageLookupByLibrary.simpleMessage(
       "Безлимитные тренировки",
     ),
-    "weight": MessageLookupByLibrary.simpleMessage("Вес"),
+    "weight": MessageLookupByLibrary.simpleMessage("Вес (кг)"),
   };
 }

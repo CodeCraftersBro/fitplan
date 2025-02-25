@@ -47,8 +47,8 @@ class MessageLookup extends MessageLookupByLibrary {
     "developerWebsite": MessageLookupByLibrary.simpleMessage(
       "Developer website",
     ),
-    "distance": MessageLookupByLibrary.simpleMessage("Distance (km)"),
-    "duration": MessageLookupByLibrary.simpleMessage("Duration (minutes)"),
+    "distance": MessageLookupByLibrary.simpleMessage("Distance"),
+    "duration": MessageLookupByLibrary.simpleMessage("Duration"),
     "enableAnalytics": MessageLookupByLibrary.simpleMessage("Enable analytics"),
     "home": MessageLookupByLibrary.simpleMessage("My plan"),
     "nothingFound": MessageLookupByLibrary.simpleMessage(

@@ -92,7 +92,7 @@ class _MainScreenState extends State<MainScreen> {
 
     context.read<WorkoutEditorBloc>().add(ReorderWorkouts(
       selectedDate: selectedDate,
-      oldWorkoutList: workoutOverviewList,
+      oldWorkoutList: workoutOverviewList,// TODO: выпилить !!!!!!
       newWorkoutList: workoutOverviewReorderableList,
     ));
 

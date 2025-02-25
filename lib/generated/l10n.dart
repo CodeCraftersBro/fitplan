@@ -243,19 +243,14 @@ class S {
     );
   }
 
-  /// `Duration (minutes)`
+  /// `Duration`
   String get duration {
-    return Intl.message(
-      'Duration (minutes)',
-      name: 'duration',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Duration', name: 'duration', desc: '', args: []);
   }
 
-  /// `Distance (km)`
+  /// `Distance`
   String get distance {
-    return Intl.message('Distance (km)', name: 'distance', desc: '', args: []);
+    return Intl.message('Distance', name: 'distance', desc: '', args: []);
   }
 
   /// `Repetitions`

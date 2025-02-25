@@ -112,9 +112,6 @@ class _FitPlanAppState extends State<FitPlanApp> {
     // }
   }
 
-  DateTime _getDateWithoutTime(DateTime dateTime) {
-    return DateTime(dateTime.year, dateTime.month, dateTime.day);
-  }
 
   @override
   Widget build(BuildContext context) {

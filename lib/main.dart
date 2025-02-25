@@ -39,10 +39,7 @@ void main() {
           create: (context) => ExerciseRepeatRepository(database: database),
         ),
       ],
-      child: const FitPlanApp(
-          // preferences: preferences,
-          // realm: realm,
-          ),
+      child: const FitPlanApp(),
     ));
   }, (error, stack) {});
 }

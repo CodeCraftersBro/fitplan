@@ -53,3 +53,4 @@ class AddSelectedExercisesToWorkout extends ExerciseSearchEvent {
   @override
   List<Object> get props => [exercises];
 }
+
