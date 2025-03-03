@@ -5,7 +5,7 @@ import 'package:fitplan/generated/l10n.dart';
 import 'package:fitplan/ui/ui.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-
+import 'package:purchases_flutter/purchases_flutter.dart';
 class SettingsScreen extends StatefulWidget {
   const SettingsScreen({super.key});
 
@@ -36,7 +36,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
               title: S.of(context).unlimitedWorkouts,
               iconData: Icons.rocket_launch,
               iconColor: Colors.red,
-              onTap: () {},
+              onTap: _purchaseSubscription, // Обработчик подписки
             ),
             SettingsToggleCard(
               title: S.of(context).darkTheme,
@@ -122,6 +122,28 @@ class _SettingsScreenState extends State<SettingsScreen> {
         ),
       ),
     );
+  }
+
+
+  /// Метод для покупки подписки через RevenueCat
+  Future<void> _purchaseSubscription() async {
+    try {
+      Offerings offerings = await Purchases.getOfferings();
+      if (offerings.current != null && offerings.current!.availablePackages.isNotEmpty) {
+        await Purchases.purchasePackage(offerings.current!.availablePackages.first);
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text("Подписка оформлена! 🎉")),
+        );
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text("Нет доступных подписок.")),
+        );
+      }
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("Ошибка при оформлении подписки: $e")),
+      );
+    }
   }
 
   void _setThemeBrightness(BuildContext context, bool value) {

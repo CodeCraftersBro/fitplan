@@ -28,6 +28,7 @@ dependencies:
   flutter_time_picker_spinner: ^2.0.0
   flutter_launcher_icons: ^0.14.3
   flutter_native_splash: ^2.4.4
+  purchases_flutter: ^8.6.0
 dev_dependencies:
   flutter_test:
     sdk: flutter

@@ -52,6 +52,7 @@ class WorkoutRepository implements WorkoutRepositoryInterface {
 
   @override
   Future<void> deleteWorkoutById(String id) async {
+    log("🛠 Удаление $id");
     await (database.delete(database.workouts)
           ..where((tbl) => tbl.id.equals(id)))
         .go();
@@ -103,7 +104,8 @@ class WorkoutRepository implements WorkoutRepositoryInterface {
   }
 
   @override
-  Future<void> deleteWorkoutsByDate(DateTime date) async {
+  Future<void> deleteWorkoutsByDate(DateTime date) async { 
+    log("🛠 Удаление $date");
     await (database.delete(database.workouts)
           ..where((tbl) => tbl.date.equals(date)))
         .go();

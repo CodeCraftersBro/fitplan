@@ -78,13 +78,13 @@ class _MainScreenState extends State<MainScreen> {
       context: context,
       builder: (context) => WorkoutScreen(selectedDate: selectedDate, workoutOverviewList: workoutOverviewList),
     );
-    if (!mounted) return;
-    if (workoutOverviewReorderableList == null) {
-      context
-        .read<WorkoutCalendarDataBloc>()
-        .add(LoadWorkoutCalendarData(selectedDate: _selectedDay));
-      return;
-    }
+    // if (!mounted) return;
+    // if (workoutOverviewReorderableList == null) {
+    //   context
+    //     .read<WorkoutCalendarDataBloc>()
+    //     .add(LoadWorkoutCalendarData(selectedDate: _selectedDay));
+    //   return;
+    // }
     if (!mounted) return;
 
     // context.read<WorkoutEditorBloc>().add(UpdateWorkoutDate(selectedDate,workoutOverviewReorderableList));

@@ -16,12 +16,13 @@ class WorkoutEditorBloc extends Bloc<WorkoutEditorEvent, WorkoutEditorState> {
   final WorkoutRepository workoutRepository;
   final ExerciseRepeatRepository exerciseRepeatRepository;
 
-  WorkoutEditorBloc(this.workoutRepository, this.exerciseRepeatRepository) : super(WorkoutEditorInitial()) {
+  WorkoutEditorBloc(this.workoutRepository, this.exerciseRepeatRepository)
+      : super(WorkoutEditorInitial()) {
     on<WorkoutEditorEvent>((event, emit) async => switch (event) {
           LoadWorkoutDate() => _onLoadWorkoutDate(event, emit),
           UpdateWorkoutDate() => _onUpdateWorkoutDate(event, emit),
           ReorderWorkouts() => _onReorderWorkouts(event, emit),
-      });
+        });
   }
 
   Future<void> _onLoadWorkoutDate(
@@ -29,8 +30,10 @@ class WorkoutEditorBloc extends Bloc<WorkoutEditorEvent, WorkoutEditorState> {
     Emitter<WorkoutEditorState> emit,
   ) async {
     try {
-      final dateWithoutTime = DateTimeUtils.getDateWithoutTime(event.selectedDate);
-      final workoutList = await workoutRepository.getExerciseListByDate(dateWithoutTime);
+      final dateWithoutTime =
+          DateTimeUtils.getDateWithoutTime(event.selectedDate);
+      final workoutList =
+          await workoutRepository.getExerciseListByDate(dateWithoutTime);
       emit(WorkoutEditorLoaded(workouts: workoutList));
     } catch (e) {
       emit(WorkoutEditorFailure(e));
@@ -42,7 +45,8 @@ class WorkoutEditorBloc extends Bloc<WorkoutEditorEvent, WorkoutEditorState> {
     Emitter<WorkoutEditorState> emit,
   ) async {
     try {
-      final dateWithoutTime = DateTimeUtils.getDateWithoutTime(event.selectedDate);
+      final dateWithoutTime =
+          DateTimeUtils.getDateWithoutTime(event.selectedDate);
       await workoutRepository.deleteWorkoutsByDate(dateWithoutTime);
 
       var uuid = const uuid_lib.Uuid();
@@ -50,7 +54,8 @@ class WorkoutEditorBloc extends Bloc<WorkoutEditorEvent, WorkoutEditorState> {
 
       for (int i = 0; i < event.workoutOverviewList.length; i++) {
         // 🆕 Используем `getNextSortOrderForDate` для получения следующего значения сортировки
-        int sortOrder = await workoutRepository.getNextSortOrderForDate(dateWithoutTime);
+        int sortOrder =
+            await workoutRepository.getNextSortOrderForDate(dateWithoutTime);
 
         var workout = WorkoutsCompanion(
           id: Value(uuid.v4()),
@@ -58,7 +63,8 @@ class WorkoutEditorBloc extends Bloc<WorkoutEditorEvent, WorkoutEditorState> {
           date: Value(dateWithoutTime),
           isSet: Value(event.workoutOverviewList[i].workoutIsSet),
           setId: Value(event.workoutOverviewList[i].workoutSetId),
-          exerciseIndicator: Value(event.workoutOverviewList[i].workoutExerciseIndicator),
+          exerciseIndicator:
+              Value(event.workoutOverviewList[i].workoutExerciseIndicator),
           exerciseId: Value(event.workoutOverviewList[i].workoutExerciseId),
         );
 
@@ -68,7 +74,8 @@ class WorkoutEditorBloc extends Bloc<WorkoutEditorEvent, WorkoutEditorState> {
       await workoutRepository.addWorkouts(workoutList);
 
       // Перезагружаем обновленные тренировки
-      final updatedWorkouts = await workoutRepository.getExerciseListByDate(dateWithoutTime);
+      final updatedWorkouts =
+          await workoutRepository.getExerciseListByDate(dateWithoutTime);
       emit(WorkoutEditorLoaded(workouts: updatedWorkouts));
     } catch (e) {
       log("====updateWorkouts WorkoutEditorFailure === ${e.toString()}");
@@ -82,55 +89,75 @@ class WorkoutEditorBloc extends Bloc<WorkoutEditorEvent, WorkoutEditorState> {
   ) async {
     try {
       log("🏋️‍♂️ BEFORE Reorder - Old Workout List:");
-      event.oldWorkoutList.forEach((exercise) => log("${exercise.workoutExerciseName} - Sort: ${exercise.workoutSort}"));
+      event.oldWorkoutList.forEach((exercise) => log(
+          "${exercise.workoutExerciseName} - Sort: ${exercise.workoutSort}"));
 
       log("🔄 AFTER Reorder - New Workout List:");
-      event.newWorkoutList.forEach((exercise) => log("${exercise.workoutExerciseName} - Sort: ${exercise.workoutSort}"));
+      event.newWorkoutList.forEach((exercise) => log(
+          "${exercise.workoutExerciseName} - Sort: ${exercise.workoutSort}"));
 
       // bool isChanged = _isWorkoutOrderChanged(event.oldWorkoutList, event.newWorkoutList);
 
       // if (isChanged) {
-        final DateTime workoutDate = event.selectedDate;
+      // final DateTime workoutDate = event.selectedDate;
+      final dateWithoutTime =
+          DateTimeUtils.getDateWithoutTime(event.selectedDate);
 
-        // 🔄 Обновляем `exerciseId` в `exercise_repeats`, если они изменились
-        for (int i = 0; i < event.oldWorkoutList.length; i++) {
-          final oldExerciseId = event.oldWorkoutList[i].workoutExerciseId;
-          final newExerciseId = event.newWorkoutList[i].workoutExerciseId;
-
-          if (oldExerciseId != newExerciseId) {
-            await exerciseRepeatRepository.updateExerciseRepeatIds(oldExerciseId, newExerciseId);
+      final currentWorkouts =
+          await workoutRepository.getExerciseListByDate(dateWithoutTime);
+      for (int i = 0; i < currentWorkouts.length; i++) {
+        var inList = false;
+        for (int j = 0; j < event.newWorkoutList.length; j++) {
+          if (event.newWorkoutList[j].workoutId == currentWorkouts[i].id){
+              inList = true;
           }
         }
-
-        // 🔄 Обновляем сортировку в базе данных
-        for (int i = 0; i < event.newWorkoutList.length; i++) {
-          final workoutOverview = event.newWorkoutList[i];
-
-          // 🆕 Используем `getNextSortOrderForDate` для обновления сортировки
-          int newSort =  i;//await workoutRepository.getNextSortOrderForDate(workoutDate);
-
-          await workoutRepository.updateWorkoutSort(
-            workoutId: workoutOverview.workoutId,
-            newSort: newSort,
-          );
-
-          await workoutRepository.updateWorkoutSetId(
-            workoutId: workoutOverview.workoutId, 
-            newSetId: workoutOverview.workoutSetId,
-            newIsSet: workoutOverview.workoutIsSet
-          );
-
+        if(!inList){
+          await workoutRepository.deleteWorkoutById(currentWorkouts[i].id);
         }
+      }
 
-        // 🔄 Загружаем обновленные тренировки из базы
-        final updatedWorkouts = await workoutRepository.getExerciseListByDate(workoutDate);
 
-        log("✅ Workout Order Updated Successfully");
+      // 🔄 Обновляем `exerciseId` в `exercise_repeats`, если они изменились
+      for (int i = 0; i < event.oldWorkoutList.length; i++) {
+        final oldExerciseId = event.oldWorkoutList[i].workoutExerciseId;
+        final newExerciseId = event.newWorkoutList[i].workoutExerciseId;
 
-        // ⏩ Отправляем новое состояние
-        emit(WorkoutReordered(reorderedWorkouts: updatedWorkouts));
-        emit(WorkoutEditorLoaded(workouts: updatedWorkouts));
-        log("🚀 emit(WorkoutReordered) и emit(WorkoutEditorLoaded) вызваны!");
+        if (oldExerciseId != newExerciseId) {
+          await exerciseRepeatRepository.updateExerciseRepeatIds(
+              oldExerciseId, newExerciseId);
+        }
+      }
+
+      // 🔄 Обновляем сортировку в базе данных
+      for (int i = 0; i < event.newWorkoutList.length; i++) {
+        final workoutOverview = event.newWorkoutList[i];
+
+        // 🆕 Используем `getNextSortOrderForDate` для обновления сортировки
+        int newSort =
+            i; //await workoutRepository.getNextSortOrderForDate(workoutDate);
+
+        await workoutRepository.updateWorkoutSort(
+          workoutId: workoutOverview.workoutId,
+          newSort: newSort,
+        );
+
+        await workoutRepository.updateWorkoutSetId(
+            workoutId: workoutOverview.workoutId,
+            newSetId: workoutOverview.workoutSetId,
+            newIsSet: workoutOverview.workoutIsSet);
+      }
+
+      // 🔄 Загружаем обновленные тренировки из базы
+      final updatedWorkouts =
+          await workoutRepository.getExerciseListByDate(dateWithoutTime);
+
+      log("✅ Workout Order Updated Successfully");
+
+      // ⏩ Отправляем новое состояние
+      emit(WorkoutReordered(reorderedWorkouts: updatedWorkouts));
+      emit(WorkoutEditorLoaded(workouts: updatedWorkouts));
+      log("🚀 emit(WorkoutReordered) и emit(WorkoutEditorLoaded) вызваны!");
       // }
     } catch (e) {
       log("⚠️ Error in Reorder: ${e.toString()}");
@@ -138,11 +165,12 @@ class WorkoutEditorBloc extends Bloc<WorkoutEditorEvent, WorkoutEditorState> {
     }
   }
 
-  bool _isWorkoutOrderChanged(List<WorkoutOverview> oldList, List<WorkoutOverview> newList) {
+  bool _isWorkoutOrderChanged(
+      List<WorkoutOverview> oldList, List<WorkoutOverview> newList) {
     if (oldList.length != newList.length) return true;
 
     for (int i = 0; i < oldList.length; i++) {
-      if (oldList[i].workoutExerciseId != newList[i].workoutExerciseId || 
+      if (oldList[i].workoutExerciseId != newList[i].workoutExerciseId ||
           oldList[i].workoutSort != newList[i].workoutSort) {
         return true;
       }

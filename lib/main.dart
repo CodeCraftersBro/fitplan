@@ -7,9 +7,8 @@ import 'package:fitplan/repositories/workout/database.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'repositories/workout/models/models.dart';
 import 'package:fitplan/repositories/workout/workout.dart';
-
+import 'package:purchases_flutter/purchases_flutter.dart';
 void main() {
   runZonedGuarded(() async {
     WidgetsFlutterBinding.ensureInitialized();
@@ -17,6 +16,10 @@ void main() {
     final preferences = await SharedPreferences.getInstance();
 
     final database = AppDatabase();
+
+    await Purchases.setLogLevel(LogLevel.debug);
+
+    await Purchases.configure(PurchasesConfiguration("appl_oLUPzzgMGVYEaOBjVROpmceEBkJ"));
 
     runApp(MultiRepositoryProvider(
       providers: [
