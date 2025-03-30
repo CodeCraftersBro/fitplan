@@ -25,7 +25,8 @@
     "description": "Displayed when a search or query returns no results."
   },
   "duration": "Duration",
-  "distance": "Distance",
+  "distance": "Distance (m)",
   "repeats": "Repetitions",
-  "weight": "Weight"
+  "weight": "Weight (kg)",
+  "selectDuration": "Select duration"
 }

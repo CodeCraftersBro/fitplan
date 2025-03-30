@@ -47,8 +47,8 @@ class MessageLookup extends MessageLookupByLibrary {
     "developerWebsite": MessageLookupByLibrary.simpleMessage(
       "Сайт разработчика",
     ),
-    "distance": MessageLookupByLibrary.simpleMessage("Дистанция (км)"),
-    "duration": MessageLookupByLibrary.simpleMessage("Время (сек)"),
+    "distance": MessageLookupByLibrary.simpleMessage("Дистанция (м)"),
+    "duration": MessageLookupByLibrary.simpleMessage("Время"),
     "enableAnalytics": MessageLookupByLibrary.simpleMessage(
       "Разрешить аналитику",
     ),
@@ -65,6 +65,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "reps_stretching": m4,
     "ringWorkout": m5,
     "searchCaption": MessageLookupByLibrary.simpleMessage("Искать"),
+    "selectDuration": MessageLookupByLibrary.simpleMessage(
+      "Выберите длительность",
+    ),
     "settings": MessageLookupByLibrary.simpleMessage("Настройки"),
     "support": MessageLookupByLibrary.simpleMessage("Поддержка"),
     "today": MessageLookupByLibrary.simpleMessage("Сегодня"),

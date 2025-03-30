@@ -10,9 +10,17 @@ PODS:
   - purchases_flutter (8.6.0):
     - Flutter
     - PurchasesHybridCommon (= 13.21.0)
+  - purchases_ui_flutter (8.6.0):
+    - Flutter
+    - PurchasesHybridCommonUI (= 13.21.0)
   - PurchasesHybridCommon (13.21.0):
     - RevenueCat (= 5.18.0)
+  - PurchasesHybridCommonUI (13.21.0):
+    - PurchasesHybridCommon (= 13.21.0)
+    - RevenueCatUI (= 5.18.0)
   - RevenueCat (5.18.0)
+  - RevenueCatUI (5.18.0):
+    - RevenueCat (= 5.18.0)
   - shared_preferences_foundation (0.0.1):
     - Flutter
     - FlutterMacOS
@@ -42,13 +50,16 @@ DEPENDENCIES:
   - package_info_plus (from `.symlinks/plugins/package_info_plus/ios`)
   - path_provider_foundation (from `.symlinks/plugins/path_provider_foundation/darwin`)
   - purchases_flutter (from `.symlinks/plugins/purchases_flutter/ios`)
+  - purchases_ui_flutter (from `.symlinks/plugins/purchases_ui_flutter/ios`)
   - shared_preferences_foundation (from `.symlinks/plugins/shared_preferences_foundation/darwin`)
   - sqlite3_flutter_libs (from `.symlinks/plugins/sqlite3_flutter_libs/darwin`)
 
 SPEC REPOS:
   trunk:
     - PurchasesHybridCommon
+    - PurchasesHybridCommonUI
     - RevenueCat
+    - RevenueCatUI
     - sqlite3
 
 EXTERNAL SOURCES:
@@ -62,6 +73,8 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/path_provider_foundation/darwin"
   purchases_flutter:
     :path: ".symlinks/plugins/purchases_flutter/ios"
+  purchases_ui_flutter:
+    :path: ".symlinks/plugins/purchases_ui_flutter/ios"
   shared_preferences_foundation:
     :path: ".symlinks/plugins/shared_preferences_foundation/darwin"
   sqlite3_flutter_libs:
@@ -73,8 +86,11 @@ SPEC CHECKSUMS:
   package_info_plus: c0502532a26c7662a62a356cebe2692ec5fe4ec4
   path_provider_foundation: 2b6b4c569c0fb62ec74538f866245ac84301af46
   purchases_flutter: 12a5fd3a702db1d0da86f12c0cf1fe462688cfff
+  purchases_ui_flutter: b6b1cf6a38254ceeb32fc39f012cd27d2a0b90ff
   PurchasesHybridCommon: 9691d74a051f30858360d78936d59dc14575014e
+  PurchasesHybridCommonUI: 19a14aea9521c58814d2fba56f584ec58363c12c
   RevenueCat: e825836f5d6baa870c53d7281be25a5fd91abd91
+  RevenueCatUI: f52648672be46e692955aab397a4a491f8aa196f
   shared_preferences_foundation: fcdcbc04712aee1108ac7fda236f363274528f78
   sqlite3: 4922312598b67e1825c6a6c821296dcbf6783046
   sqlite3_flutter_libs: 069c435986dd4b63461aecd68f4b30be4a9e9daa

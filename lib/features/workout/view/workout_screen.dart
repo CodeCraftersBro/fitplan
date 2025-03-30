@@ -100,7 +100,7 @@ class _WorkoutScreenState extends State<WorkoutScreen> {
       heroTag: 'break_superset',
       onPressed: _breakSuperset,
       tooltip: 'Разорвать набор',
-      child: const Icon(Icons.link_off, color: Colors.white),
+      child: const Icon(Icons.link_off),
     );
   
     } else if (selectedIndices.length == 1) {
@@ -115,7 +115,7 @@ class _WorkoutScreenState extends State<WorkoutScreen> {
         heroTag: 'superset',
         onPressed: _makeSuperset,
         tooltip: 'Суперсет',
-        child: const Icon(Icons.link, color: Colors.white),
+        child: const Icon(Icons.link),
       );
     } else {
       return Container();

@@ -25,10 +25,10 @@ dependencies:
   path_provider: ^2.1.5
   path: ^1.9.0 
   duration_picker: ^1.2.0
-  flutter_time_picker_spinner: ^2.0.0
   flutter_launcher_icons: ^0.14.3
   flutter_native_splash: ^2.4.4
   purchases_flutter: ^8.6.0
+  purchases_ui_flutter: ^8.6.0
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -43,6 +43,8 @@ flutter:
   uses-material-design: true
   assets:
     - assets/flutter_splash_screen.png
+    - assets/splash.jpg
+    - assets/splashx2.jpg
 flutter_intl:
   enabled: true
 
@@ -58,13 +60,13 @@ flutter_icons:
 
 flutter_native_splash:
   color: "#FFFFFF"  # Белый фон
-  image: assets/flutter_splash_screen.png  # Путь к сплэш-изображению
+  image: assets/splashx2.jpg  # Путь к сплэш-изображению
 
   android: true
   ios: true
 
   android_12:
-    image: assets/flutter_splash_screen.png
+    image: assets/splashx2.jpg
     icon_background_color: "#FFFFFF"
 
   

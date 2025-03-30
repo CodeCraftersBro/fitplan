@@ -248,9 +248,9 @@ class S {
     return Intl.message('Duration', name: 'duration', desc: '', args: []);
   }
 
-  /// `Distance`
+  /// `Distance (m)`
   String get distance {
-    return Intl.message('Distance', name: 'distance', desc: '', args: []);
+    return Intl.message('Distance (m)', name: 'distance', desc: '', args: []);
   }
 
   /// `Repetitions`
@@ -258,9 +258,19 @@ class S {
     return Intl.message('Repetitions', name: 'repeats', desc: '', args: []);
   }
 
-  /// `Weight`
+  /// `Weight (kg)`
   String get weight {
-    return Intl.message('Weight', name: 'weight', desc: '', args: []);
+    return Intl.message('Weight (kg)', name: 'weight', desc: '', args: []);
+  }
+
+  /// `Select duration`
+  String get selectDuration {
+    return Intl.message(
+      'Select duration',
+      name: 'selectDuration',
+      desc: '',
+      args: [],
+    );
   }
 }
 

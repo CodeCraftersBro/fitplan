@@ -146,7 +146,7 @@ class _FitPlanAppState extends State<FitPlanApp> {
           // );
           // } else {
           return MaterialApp(
-            title: "FitPlan",
+            title: "MuscleMemo",
             debugShowCheckedModeBanner: false,
             localizationsDelegates: const [
               S.delegate,
@@ -154,7 +154,7 @@ class _FitPlanAppState extends State<FitPlanApp> {
               GlobalWidgetsLocalizations.delegate,
               GlobalCupertinoLocalizations.delegate,
             ],
-            // locale: const Locale('ru'),
+            locale: const Locale('en'),
             supportedLocales: S.delegate.supportedLocales,
             theme: state.isDark ? themeDark : themeLight,
             routes: routes,

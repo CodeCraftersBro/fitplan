@@ -53,6 +53,7 @@ class WorkoutRepository implements WorkoutRepositoryInterface {
   @override
   Future<void> deleteWorkoutById(String id) async {
     log("🛠 Удаление $id");
+    //TODO: add delete in table repeats
     await (database.delete(database.workouts)
           ..where((tbl) => tbl.id.equals(id)))
         .go();

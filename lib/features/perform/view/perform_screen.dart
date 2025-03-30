@@ -1,10 +1,10 @@
 import 'dart:developer';
 
-import 'package:fitplan/features/perform/widgets/widgets.dart';
 import 'package:fitplan/generated/l10n.dart';
 import 'package:fitplan/ui/widgets/drag_indicator.dart';
+import 'package:fitplan/utils/duration_helper.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_time_picker_spinner/flutter_time_picker_spinner.dart';
 
 class PerformScreen extends StatefulWidget {
   final String exerciseName; // Название упражнения
@@ -40,6 +40,8 @@ class _PerformScreenState extends State<PerformScreen> {
         widget.exerciseType == 'Cardio') {
       if (widget.existingSets.isNotEmpty) {
         // Если есть данные, заполняем поля контроллерами с существующими значениями
+        // TODO: переписать на модели
+
         for (var set in widget.existingSets) {
           setsControllers.add({
             'weight': TextEditingController(text: set['weight'] ?? ''),
@@ -99,7 +101,7 @@ class _PerformScreenState extends State<PerformScreen> {
                                   ),
                             ),
                             const SizedBox(height: 20),
-      
+
                             // Ввод данных в зависимости от типа упражнения
                             if (widget.exerciseType == 'Strength')
                               _buildStrengthFields(),
@@ -107,9 +109,9 @@ class _PerformScreenState extends State<PerformScreen> {
                               _buildCardioFields(),
                             if (widget.exerciseType == 'Stretching')
                               _buildStretchingFields(),
-      
+
                             const SizedBox(height: 20),
-      
+
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                               children: [
@@ -139,19 +141,20 @@ class _PerformScreenState extends State<PerformScreen> {
         ),
         // Кнопка "Сохранить" фиксированная внизу экрана
         floatingActionButtonLocation: FloatingActionButtonLocation.endContained,
-      
+
         floatingActionButton: Padding(
-        padding: EdgeInsets.only(
-          bottom: MediaQuery.of(context).viewInsets.bottom + 16, // ✅ Двигаем кнопку вверх при появлении клавиатуры
+          padding: EdgeInsets.only(
+            bottom: MediaQuery.of(context).viewInsets.bottom +
+                16, // ✅ Двигаем кнопку вверх при появлении клавиатуры
+          ),
+          child: FloatingActionButton(
+            onPressed: _saveWorkout,
+            heroTag: 'save',
+            tooltip: 'Сохранить',
+            child: const Icon(Icons.save),
+          ),
         ),
-        child: FloatingActionButton(
-          onPressed: _saveWorkout,
-          heroTag: 'save',
-          tooltip: 'Сохранить',
-          child: const Icon(Icons.save),
-        ),
-      ),
-      
+
         // floatingActionButton: FloatingActionButton.extended(
         //   onPressed: _saveWorkout,
         //   label: const Text('Сохранить'),
@@ -244,85 +247,7 @@ class _PerformScreenState extends State<PerformScreen> {
   }
 
   // Поля для ввода данных по типу "Кардио" с несколькими подходами
-  Widget _buildCardioFields1212() {
-  return Column(
-    children: List.generate(setsControllers.length, (index) {
-      return Padding(
-        padding: const EdgeInsets.symmetric(vertical: 8.0),
-        child: Row(
-          children: [
-            // Номер подхода
-            Text(
-              "${index + 1}",
-              style: Theme.of(context)
-                  .textTheme
-                  .titleLarge
-                  ?.copyWith(fontWeight: FontWeight.bold),
-            ),
-            const SizedBox(width: 16),
-
-            // Поле для ввода дистанции
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  if (index == 0)
-                    Text(S.of(context).distance,
-                        style: TextStyle(fontSize: 16)),
-                  TextField(
-                    controller: setsControllers[index]['distance']!,
-                    keyboardType: TextInputType.number,
-                    decoration: InputDecoration(
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            const SizedBox(width: 16),
-
-            // **Новый выбор времени**
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  if (index == 0)
-                    Text(S.of(context).duration,
-                        style: TextStyle(fontSize: 16)),
-                  DurationPickerWidget(
-                      initialDurationSeconds: 10 ,//setsControllers[index]['time'],
-                      onDurationSelected: (seconds) {
-                        setState(() {
-                          // setsControllers[index]['time'] = 10; //seconds;
-                        });
-                      },
-                    ),
-                ],
-              ),
-            ),
-
-            IconButton(
-              onPressed: () {
-                setState(() {
-                  setsControllers.removeAt(index);
-                });
-              },
-              icon: const Icon(
-                Icons.delete,
-                color: Colors.red,
-              ),
-            ),
-          ],
-        ),
-      );
-    }),
-  );
-}
-
-  
-  Widget _buildCardioFields111() {
+  Widget _buildCardioFields() {
     return Column(
       children: List.generate(setsControllers.length, (index) {
         return Padding(
@@ -338,6 +263,7 @@ class _PerformScreenState extends State<PerformScreen> {
                     ?.copyWith(fontWeight: FontWeight.bold),
               ),
               const SizedBox(width: 16),
+
               // Поле для ввода дистанции
               Expanded(
                 child: Column(
@@ -345,9 +271,11 @@ class _PerformScreenState extends State<PerformScreen> {
                   children: [
                     if (index == 0)
                       Text(S.of(context).distance,
-                          style: TextStyle(fontSize: 16)),
+                          style: Theme.of(context).textTheme.titleSmall
+                          // ?.copyWith(fontWeight: FontWeight.normal)
+                          ),
                     TextField(
-                      controller: setsControllers[index]['distance']!,
+                      controller: setsControllers[index]['distance'],
                       keyboardType: TextInputType.number,
                       decoration: InputDecoration(
                         border: OutlineInputBorder(
@@ -359,36 +287,70 @@ class _PerformScreenState extends State<PerformScreen> {
                 ),
               ),
               const SizedBox(width: 16),
-              // Поле для ввода времени
+
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     if (index == 0)
                       Text(S.of(context).duration,
-                          style: TextStyle(fontSize: 16)),
-                    TextField(
-                      controller: setsControllers[index]['duration']!,
-                      keyboardType: TextInputType.number,
-                      decoration: InputDecoration(
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(8),
+                          style: Theme.of(context).textTheme.titleSmall),
+                    GestureDetector(
+                      onTap: () {
+                        _showTimePicker(index);
+                      },
+                      child: AbsorbPointer(
+                        child: TextField(
+                          controller: setsControllers[index]['duration'],
+                          readOnly: true,
+                          textAlign: TextAlign.center,
+                          decoration: InputDecoration(
+                            hintText: "00:00:00",
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                            filled: true,
+                            fillColor: Theme.of(context)
+                                .inputDecorationTheme
+                                .fillColor,
+                          ),
+                          // style: Theme.of(context)
+                          //     .textTheme
+                          //     .titleLarge
+                          //     ?.copyWith(fontWeight: FontWeight.normal),
                         ),
                       ),
+                      // child: Container(
+                      //   height: 58,
+                      //   padding:
+                      //       EdgeInsets.symmetric(vertical: 14, horizontal: 16),
+                      //   decoration: BoxDecoration(
+                      //     border: Border.all(color: Colors.grey),
+                      //     borderRadius: BorderRadius.circular(8),
+                      //   ),
+                      //   child: Text(
+                      //     _formatDuration(int.tryParse(
+                      //             setsControllers[index]['duration']!.text) ??
+                      //         0),
+                      //     style: Theme.of(context)
+                      //         .textTheme
+                      //         .titleLarge
+                      //         ?.copyWith(fontWeight: FontWeight.normal),
+                      //     textAlign: TextAlign.center,
+                      //   ),
+                      // ),
                     ),
                   ],
                 ),
               ),
+
               IconButton(
                 onPressed: () {
                   setState(() {
                     setsControllers.removeAt(index);
                   });
                 },
-                icon: const Icon(
-                  Icons.delete,
-                  color: Colors.red,
-                ),
+                icon: const Icon(Icons.delete, color: Colors.red),
               ),
             ],
           ),
@@ -397,144 +359,71 @@ class _PerformScreenState extends State<PerformScreen> {
     );
   }
 
-
-Widget _buildCardioFields() {
-  return Column(
-    children: List.generate(setsControllers.length, (index) {
-      return Padding(
-        padding: const EdgeInsets.symmetric(vertical: 8.0),
-        child: Row(
-          children: [
-            // Номер подхода
-            Text(
-              "${index + 1}",
-              style: Theme.of(context)
-                  .textTheme
-                  .titleLarge
-                  ?.copyWith(fontWeight: FontWeight.bold),
-            ),
-            const SizedBox(width: 16),
-
-            // Поле для ввода дистанции
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  if (index == 0)
-                    Text(S.of(context).distance, style: TextStyle(fontSize: 16)),
-                  TextField(
-                    controller: setsControllers[index]['distance'],
-                    keyboardType: TextInputType.number,
-                    decoration: InputDecoration(
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            const SizedBox(width: 16),
-
-            // Поле для выбора времени (нажимаем — открывается `TimePickerSpinner`)
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  if (index == 0)
-                    Text(S.of(context).duration, style: TextStyle(fontSize: 16)),
-                  GestureDetector(
-                    onTap: () {
-                      _showTimePicker(index);
-                    },
-                    child: Container(
-                      padding: EdgeInsets.symmetric(vertical: 14, horizontal: 16),
-                      decoration: BoxDecoration(
-                        border: Border.all(color: Colors.grey),
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                      child: Text(
-                        _formatDuration(int.tryParse(setsControllers[index]['duration']!.text) ?? 0),
-                        style: TextStyle(fontSize: 16, color: Colors.black),
-                        textAlign: TextAlign.center,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-
-            IconButton(
-              onPressed: () {
-                setState(() {
-                  setsControllers.removeAt(index);
-                });
-              },
-              icon: const Icon(Icons.delete, color: Colors.red),
-            ),
-          ],
-        ),
-      );
-    }),
-  );
-}
-
   void _showTimePicker(int index) {
+    Duration selectedDuration = Duration.zero;
 
-  showModalBottomSheet(
-    context: context,
-    builder: (context) {
-      return Container(
-        padding: EdgeInsets.all(16),
-        // height: 250,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text("Select Duration", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-            // SizedBox(height: 10),
-            TimePickerSpinner(
-              // is24HourMode: true,
-              // normalTextStyle: TextStyle(fontSize: 16, color: Colors.black),
-              // highlightedTextStyle: TextStyle(fontSize: 20, color: Colors.blue),
-              // spacing: 5,
-              // itemHeight: 40,
-              // isForce2Digits: true,
-              isShowSeconds:true,
-              // is24HourMode: false,
-              spacing: 50,
-              itemHeight: 80,
-              // isForce2Digits: false,
-      // minutesInterval: 15,
-              onTimeChange: (time) {
-                setState(() {
-                  setsControllers[index]['duration']!.text =
-                      (time.hour * 3600 + time.minute * 60 + time.second).toString();
-                });
-              },
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: Colors.transparent,
+      elevation: 0,
+      builder: (context) {
+        final theme = Theme.of(context);
+
+        return Container(
+          padding: const EdgeInsets.only(bottom: 20),
+          decoration: BoxDecoration(
+            color: theme.colorScheme.surface,
+            borderRadius: const BorderRadius.only(
+              topLeft: Radius.circular(20),
+              topRight: Radius.circular(20),
             ),
-            SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: () {
-                Navigator.pop(context);
-              },
-              child: Text("OK"),
-            ),
-          ],
-        ),
-      );
-    },
-  );
-}
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const Center(
+                child: DragIndicator(),
+              ),
+              // Text(
+              //   S.of(context).selectDuration,
+              //   style: theme.textTheme.titleLarge,
+              // ),
+              const SizedBox(height: 10),
+              SizedBox(
+                height: 200,
+                child: CupertinoTimerPicker(
+                  mode: CupertinoTimerPickerMode.hms,
+                  initialTimerDuration: selectedDuration,
+                  onTimerDurationChanged: (Duration newDuration) {
+                    selectedDuration = newDuration;
+                  },
+                ),
+              ),
+              const SizedBox(height: 20),
 
-String _formatDuration(int? durationSeconds) {
-  if (durationSeconds == null || durationSeconds == 0) return "00:00:00";
-
-  int hours = durationSeconds ~/ 3600;
-  int minutes = (durationSeconds % 3600) ~/ 60;
-  int seconds = durationSeconds % 60;
-
-  return "${hours.toString().padLeft(2, '0')}:${minutes.toString().padLeft(2, '0')}:${seconds.toString().padLeft(2, '0')}";
-}
+              SizedBox(
+                height: 50,
+                child: ElevatedButton(
+                  onPressed: () {
+                    setState(() {
+                      var durationInSeconds = selectedDuration.inSeconds;
+                      var formatedDuration =
+                          DurationHelper.formatDuration(durationInSeconds);
+                      setsControllers[index]['duration']!.text =
+                          formatedDuration;
+                      // selectedDuration.inSeconds.toString();
+                    });
+                    Navigator.pop(context);
+                  },
+                  child: const Text("Ok"),
+                ),
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
 
   // Поля для ввода данных по типу "Растяжка" с несколькими подходами
   Widget _buildStretchingFields() {
@@ -560,19 +449,37 @@ String _formatDuration(int? durationSeconds) {
                   children: [
                     if (index == 0)
                       Text(S.of(context).duration,
-                          style: TextStyle(fontSize: 16)),
-                    TextField(
-                      controller: setsControllers[index]['duration']!,
-                      keyboardType: TextInputType.number,
-                      decoration: InputDecoration(
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(8),
+                          style: Theme.of(context).textTheme.titleSmall),
+                    GestureDetector(
+                      onTap: () {
+                        _showTimePicker(index);
+                      },
+                      child: AbsorbPointer(
+                        child: TextField(
+                          controller: setsControllers[index]['duration'],
+                          readOnly: true,
+                          textAlign: TextAlign.center,
+                          decoration: InputDecoration(
+                            hintText: "00:00:00",
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                            filled: true,
+                            fillColor: Theme.of(context)
+                                .inputDecorationTheme
+                                .fillColor,
+                          ),
+                          // style: Theme.of(context)
+                          //     .textTheme
+                          //     .titleLarge
+                          //     ?.copyWith(fontWeight: FontWeight.normal),
                         ),
                       ),
                     ),
                   ],
                 ),
               ),
+
               IconButton(
                 onPressed: () {
                   setState(() {
@@ -617,20 +524,24 @@ String _formatDuration(int? durationSeconds) {
           sets.add({'weight': weight, 'reps': reps});
         }
       }
-      log("Силовые данные: $sets"); 
+      log("Силовые данные: $sets");
     }
 
     // Для кардио
     if (widget.exerciseType == 'Cardio') {
       for (var controllerMap in setsControllers) {
         final distance = controllerMap['distance']!.text;
+
         final duration = controllerMap['duration']!.text;
 
         if (distance.isNotEmpty && duration.isNotEmpty) {
-          sets.add({'distance': distance, 'duration': duration});
+          sets.add({
+            'distance': distance,
+            'duration': DurationHelper.parseDuration(duration).toString()
+          });
         }
       }
-      log("Кардио данные: $sets"); 
+      log("Кардио данные: $sets");
     }
 
     // Для растяжки
@@ -639,10 +550,11 @@ String _formatDuration(int? durationSeconds) {
         final duration = controllerMap['duration']!.text;
 
         if (duration.isNotEmpty) {
-          sets.add({'duration': duration});
+          sets.add(
+              {'duration': DurationHelper.parseDuration(duration).toString()});
         }
       }
-      log("Растяжка данные: $sets"); 
+      log("Растяжка данные: $sets");
     }
 
     Navigator.pop(context, sets);

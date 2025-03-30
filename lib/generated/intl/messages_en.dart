@@ -47,7 +47,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "developerWebsite": MessageLookupByLibrary.simpleMessage(
       "Developer website",
     ),
-    "distance": MessageLookupByLibrary.simpleMessage("Distance"),
+    "distance": MessageLookupByLibrary.simpleMessage("Distance (m)"),
     "duration": MessageLookupByLibrary.simpleMessage("Duration"),
     "enableAnalytics": MessageLookupByLibrary.simpleMessage("Enable analytics"),
     "home": MessageLookupByLibrary.simpleMessage("My plan"),
@@ -63,6 +63,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "reps_stretching": m4,
     "ringWorkout": m5,
     "searchCaption": MessageLookupByLibrary.simpleMessage("Search"),
+    "selectDuration": MessageLookupByLibrary.simpleMessage("Select duration"),
     "settings": MessageLookupByLibrary.simpleMessage("Settings"),
     "support": MessageLookupByLibrary.simpleMessage("Support"),
     "today": MessageLookupByLibrary.simpleMessage("Today"),
@@ -70,6 +71,6 @@ class MessageLookup extends MessageLookupByLibrary {
     "unlimitedWorkouts": MessageLookupByLibrary.simpleMessage(
       "Unlimited workouts",
     ),
-    "weight": MessageLookupByLibrary.simpleMessage("Weight"),
+    "weight": MessageLookupByLibrary.simpleMessage("Weight (kg)"),
   };
 }

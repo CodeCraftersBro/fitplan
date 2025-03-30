@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:fitplan/bloc/app_version/app_version_cubit.dart';
 import 'package:fitplan/bloc/theme/theme_cubit.dart';
 import 'package:fitplan/features/settings/widgets/widgets.dart';
@@ -6,6 +8,7 @@ import 'package:fitplan/ui/ui.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:purchases_flutter/purchases_flutter.dart';
+import 'package:purchases_ui_flutter/purchases_ui_flutter.dart';
 class SettingsScreen extends StatefulWidget {
   const SettingsScreen({super.key});
 
@@ -16,6 +19,20 @@ class SettingsScreen extends StatefulWidget {
 class _SettingsScreenState extends State<SettingsScreen> {
   bool notificationsEnabled = false; // Состояние переключателя уведомлений
   bool analyticsEnabled = false; // Состояние переключателя аналитики
+  bool _isSubscribed = false; // Состояние подписки
+
+  @override
+  void initState() {
+    super.initState();
+    _checkSubscription();
+  }
+
+   Future<void> _checkSubscription() async {
+    bool subscribed = await isUserSubscribed();
+    setState(() {
+      _isSubscribed = subscribed;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -33,7 +50,10 @@ class _SettingsScreenState extends State<SettingsScreen> {
           children: [
             const SizedBox(height: 16),
             SettingsActionCard(
-              title: S.of(context).unlimitedWorkouts,
+              // title: S.of(context).unlimitedWorkouts,
+              title: _isSubscribed
+                  ? "${S.of(context).unlimitedWorkouts} ✅"
+                  : S.of(context).unlimitedWorkouts,
               iconData: Icons.rocket_launch,
               iconColor: Colors.red,
               onTap: _purchaseSubscription, // Обработчик подписки
@@ -81,6 +101,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
               onTap: () {},
             ),
             const SizedBox(height: 16),
+            
             BlocBuilder<AppVersionCubit, AppVersionState>(
               builder: (context, state) {
                 if (state is AppVersionInitial) {
@@ -129,15 +150,12 @@ class _SettingsScreenState extends State<SettingsScreen> {
   Future<void> _purchaseSubscription() async {
     try {
       Offerings offerings = await Purchases.getOfferings();
+      
       if (offerings.current != null && offerings.current!.availablePackages.isNotEmpty) {
-        await Purchases.purchasePackage(offerings.current!.availablePackages.first);
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text("Подписка оформлена! 🎉")),
-        );
-      } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text("Нет доступных подписок.")),
-        );
+        // await Purchases.purchasePackage(offerings.current!.availablePackages.first);
+        // Открываем полноэкранный Paywall
+        final paywallResult = await  RevenueCatUI.presentPaywall();
+        log('Paywall result: $paywallResult');
       }
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -151,6 +169,23 @@ class _SettingsScreenState extends State<SettingsScreen> {
           value ? Brightness.dark : Brightness.light,
         );
   }
+
+  /// Проверяет, есть ли у пользователя активная подписка
+Future<bool> isUserSubscribed() async {
+  try {
+    CustomerInfo customerInfo = await Purchases.getCustomerInfo();
+     log("🏋️‍♂️ $customerInfo");
+    // Проверяем, есть ли активная подписка с entitlement "pro"
+    bool isSubscribed = customerInfo.entitlements.active.containsKey("Pro");
+    log("🏋️‍♂️ $isSubscribed");
+    
+    log("🛑 Доступные подписки: ${customerInfo.entitlements.active.keys}");
+    return isSubscribed;
+  } catch (e) {
+    log("❌ Ошибка при проверке подписки: $e");
+    return false; // В случае ошибки считаем, что подписки нет
+  }
+}
 
   _clearHistory(BuildContext context) {}
 }

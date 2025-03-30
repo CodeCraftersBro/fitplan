@@ -5,6 +5,7 @@ import 'package:fitplan/features/home/bloc/workout_calendar_data_bloc.dart';
 import 'package:fitplan/features/perform/bloc/exercise_repeat_bloc.dart';
 import 'package:fitplan/features/perform/perform.dart';
 import 'package:fitplan/repositories/workout/entity/entity.dart';
+import 'package:fitplan/utils/duration_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fitplan/generated/l10n.dart';
@@ -68,7 +69,7 @@ class WorkoutItemWidget extends StatelessWidget {
         ],
       ),
     );
-    ;
+    
   }
 }
 
@@ -93,14 +94,14 @@ class WorkoutItemWidget extends StatelessWidget {
   }
   }
 void _showModalPerform(BuildContext context, WorkoutOverview workoutOverview,DateTime selectedDate) async {
- 
+ // TODO: cnange Map<String, String> to Entity
  List<Map<String, String>> existingSets = workoutOverview.workoutExerciseRepeatList.map((repeat) {
     return {
       if (repeat.weight != null) "weight": repeat.weight.toString(),
       if (repeat.reps != null) "reps": repeat.reps.toString(),
       if (repeat.distance != null) "distance": repeat.distance.toString(),
-      if (repeat.duration != null) "duration": repeat.duration.toString(),
-      if (repeat.stretchDuration != null) "stretchDuration": repeat.stretchDuration.toString(),
+      if (repeat.duration != null) "duration": DurationHelper.formatDuration(repeat.duration),
+      if (repeat.stretchDuration != null) "stretchDuration": DurationHelper.formatDuration(repeat.stretchDuration),
     };
   }).toList();
 
