@@ -32,7 +32,27 @@ migrate_working_dir/
 .pub-cache/
 .pub/
 /build/
+.melos_tool/
+coverage/
+.sconsign.dblite
+.melody/
+.dartenv/
 
+# iOS
+ios/Flutter/Flutter.framework
+ios/Flutter/Flutter.podspec
+ios/ServiceDefinitions.json
+ios/Runner.xcworkspace/
+ios/Pods/
+ios/Podfile.lock
+ios/Flutter/Generated.xcconfig
+ios/.symlinks/
+ios/Runner/GeneratedPluginRegistrant.*
+*.xcworkspace
+*.xcuserstate
+*.xcuserdata/
+*.xcodeproj/project.xcworkspace/
+DerivedData/
 # Symbolication related
 app.*.symbols
 
@@ -74,3 +94,23 @@ doc/api/
 *.realm.log
 *.realm.log_a
 *.realm.log_b
+
+# Firebase & Push
+firebase.json
+GoogleService-Info.plist
+*.p8       # APNs auth key
+*.p12      # Apple сертификаты
+*.jks      # Android keystore
+*.keystore
+
+# CI/CD & Secrets
+.env
+*.env.*
+.secret
+*.key
+*.pem
+*.crt
+
+# Logs
+*.log
+pubspec.lock
