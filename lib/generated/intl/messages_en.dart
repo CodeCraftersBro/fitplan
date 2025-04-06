@@ -39,7 +39,10 @@ class MessageLookup extends MessageLookupByLibrary {
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
-    "addExercise": MessageLookupByLibrary.simpleMessage("Add"),
+    "addExercise": MessageLookupByLibrary.simpleMessage("Add exercise"),
+    "addRepetitionSet": MessageLookupByLibrary.simpleMessage(
+      "Add repetition set",
+    ),
     "add_exercise": MessageLookupByLibrary.simpleMessage("Add excrcise"),
     "appVersionAndBuildnumber": m0,
     "clearHistory": MessageLookupByLibrary.simpleMessage("Clear history"),

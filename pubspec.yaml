@@ -42,9 +42,9 @@ dev_dependencies:
 flutter:
   uses-material-design: true
   assets:
-    - assets/flutter_splash_screen.png
     - assets/splash.jpg
     - assets/splashx2.jpg
+    - assets/logo.png
 flutter_intl:
   enabled: true
 
@@ -53,20 +53,22 @@ flutter_icons:
   android: true
   ios: true
   image_path: "assets/ic_launcher.png"
-  adaptive_icon_background: "#ffffff"
-  adaptive_icon_foreground: "assets/ic_launcher_foreground.png"
   remove_alpha_ios: true
 
 
 flutter_native_splash:
-  color: "#FFFFFF"  # Белый фон
-  image: assets/splashx2.jpg  # Путь к сплэш-изображению
+  color: "#FEBE09"  
+  color_dark: "#FEBE09" 
+  image: assets/logo.png  
 
   android: true
   ios: true
-
+  fullscreen: true 
   android_12:
-    image: assets/splashx2.jpg
-    icon_background_color: "#FFFFFF"
+    color: "#FEBE09"
+    image: assets/logo.png
+    icon_background_color: "#FEBE09"
+    color_dark: "#FEBE09"
+    icon_background_color_dark: "#FEBE09"
 
   

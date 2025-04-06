@@ -28,5 +28,6 @@
   "distance": "Дистанция (м)",
   "repeats": "Повторы",
   "weight": "Вес (кг)",
-  "selectDuration": "Выберите длительность"
+  "selectDuration": "Выберите длительность",
+  "addRepetitionSet": "Добавить подход"
 }

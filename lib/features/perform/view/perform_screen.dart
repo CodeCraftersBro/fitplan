@@ -118,8 +118,8 @@ class _PerformScreenState extends State<PerformScreen> {
                                 // Кнопка добавления подхода
                                 FloatingActionButton.extended(
                                   onPressed: _addSet,
-                                  tooltip: 'Добавить подход',
-                                  label: const Text('Добавить подход'),
+                                  tooltip: S.of(context).addRepetitionSet,
+                                  label: Text(S.of(context).addRepetitionSet),
                                 ),
                                 // Кнопка сохранения
                                 // FloatingActionButton.extended(

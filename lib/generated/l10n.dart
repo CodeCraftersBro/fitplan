@@ -170,9 +170,14 @@ class S {
     );
   }
 
-  /// `Add`
+  /// `Add exercise`
   String get addExercise {
-    return Intl.message('Add', name: 'addExercise', desc: '', args: []);
+    return Intl.message(
+      'Add exercise',
+      name: 'addExercise',
+      desc: '',
+      args: [],
+    );
   }
 
   /// `No data`
@@ -268,6 +273,16 @@ class S {
     return Intl.message(
       'Select duration',
       name: 'selectDuration',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Add repetition set`
+  String get addRepetitionSet {
+    return Intl.message(
+      'Add repetition set',
+      name: 'addRepetitionSet',
       desc: '',
       args: [],
     );

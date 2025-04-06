@@ -13,7 +13,7 @@
   "unknownState": "Unknown state",
   "appVersionAndBuildnumber": "Application version: {version} ({buildNumber})",
   "ringWorkout": "Ring: {ring}",
-  "addExercise": "Add",
+  "addExercise": "Add exercise",
   "reps_none": "No data",
   "reps_strength": "{count, plural, one {{count} set} other {{count} sets}}",
   "reps_cardio": "{count, plural, one {{count} session} other {{count} sessions}}",
@@ -28,5 +28,6 @@
   "distance": "Distance (m)",
   "repeats": "Repetitions",
   "weight": "Weight (kg)",
-  "selectDuration": "Select duration"
+  "selectDuration": "Select duration",
+  "addRepetitionSet": "Add repetition set"
 }
